@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  round_type_id: 
+  dance_class_id: 
+  start_time: 2015-03-27 20:06:11
+
+two:
+  round_type_id: 
+  dance_class_id: 
+  start_time: 2015-03-27 20:06:11
