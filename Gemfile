@@ -25,6 +25,7 @@ gem 'rubocop'
 # gem 'capistrano-rails', group: :development
 
 group :development, :test do
+  gem 'pry'
   gem 'pry-doc'
   gem 'byebug'
   gem 'cucumber-rails', require: false

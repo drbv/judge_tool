@@ -254,6 +254,7 @@ DEPENDENCIES
   jquery-rails
   jquery-ui-rails
   mdb
+  pry
   pry-doc
   rails (= 4.2.1)
   rspec-rails
