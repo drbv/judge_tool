@@ -24,7 +24,7 @@ gem 'rubocop'
 
 group :development, :test do
   gem 'byebug'
-  gem 'cucumber-rails'
+  gem 'cucumber-rails', require: false
   gem 'rspec-rails'
   gem 'web-console', '~> 2.0'
   gem 'spring'
