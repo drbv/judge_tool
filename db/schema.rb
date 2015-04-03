@@ -45,9 +45,10 @@ ActiveRecord::Schema.define(version: 20150327192743) do
     t.integer  "startnumber"
     t.integer  "startbook_number"
     t.integer  "rank"
-    t.integer  "ranking_points"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
+    t.decimal  "ranking_points",   precision: 12, scale: 10
+    t.integer  "access_db_id"
+    t.datetime "created_at",                                 null: false
+    t.datetime "updated_at",                                 null: false
   end
 
   add_index "dance_teams", ["club_id"], name: "index_dance_teams_on_club_id"

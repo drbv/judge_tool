@@ -1,5 +1,12 @@
 == README
 
+If you want to use `rake import`, make sure, you have installed mdbtools.
+On ubuntu you can install it via:
+    aptitude install mdbtools-dev
+On Mac you can install it via:
+    brew install mdbtools
+
+
 This README would normally document whatever steps are necessary to get the
 application up and running.
 

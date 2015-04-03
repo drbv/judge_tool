@@ -7,8 +7,9 @@ class CreateDanceTeams < ActiveRecord::Migration
       t.integer :startnumber
       t.integer :startbook_number
       t.integer :rank
-      t.integer :ranking_points
+      t.decimal :ranking_points, precision: 12, scale: 10
 
+      t.integer :access_db_id
       t.timestamps null: false
     end
   end
