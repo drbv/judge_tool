@@ -1,0 +1,2 @@
+module Judges::BaseHelper
+end

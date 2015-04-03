@@ -1,0 +1,15 @@
+.navbar-header
+  %button.navbar-toggle.collapsed{data:{target: '#navbar', toggle: 'collapse'}, 'aria-expanded' => 'false', 'type' => 'button'}
+    %span.sr-only Toggle navigation
+    %span.icon-bar
+    %span.icon-bar
+    %span.icon-bar
+  =link_to 'Rock\'n Roll Judge Tool', root_path, class: 'navbar-brand active'
+
+.collapse.navbar-collapse#navbar{'aria-expanded' => 'false'}
+  %ul.nav.navbar-nav
+    %li{class: "#{'active' if controller_name == 'rounds'}" }= link_to 'Rundenübersicht', rounds_path
+
+  %ul.nav.navbar-nav.navbar-right
+    - %w[en de].each do |locale|
+      %li= link_to image_tag("flags/#{locale}.png"), locale_path(locale), :title => t("locales.#{locale}"), :method => :put

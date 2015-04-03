@@ -1,0 +1,35 @@
+!!
+%html
+  %head
+    %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+    %title JudgeTool
+    = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true
+    = javascript_include_tag 'application', 'data-turbolinks-track' => true
+    = csrf_meta_tags
+  %body
+    .container{style: 'padding:0px'}
+      %nav.navbar.navbar-inverse{role: 'navigation'}
+        = render :partial => '/shared/navigation'
+      #breadcrumbs
+      #flash
+        - flash.each do |flash_type, message|
+          %div{class: "alert alert-#{flash_type}"}= raw message
+      #notifications
+        #browser_warning.alert.alert-error{style: 'display:none;'}
+          Ihr Browser wird von uns nicht unterstützt. Sollte es zu Anzeigefehlern kommen, greifen Sie bitte auf eine aktuelle
+          Version von Firefox oder Chrome zurück.
+        = yield :notifications
+      %noscript
+        #javascript_warning.alert.alert-error
+          Sie haben Javascript nicht aktiviert. Es existieren Funktionalitäten auf Domain Transfer Agent, die Javascript
+          benötigen. Sie können also aktuell nicht den vollen Funktionsumfang von Domain Transfer Agent benutzen. Bitte
+          aktivieren Sie Javascript in Ihren Browsereinstellungen.
+    .container
+      = yield
+      #footer
+        %hr
+        = link_to t('footer.terms_of_service'), page_path(:terms_of_service)
+        %span.divider-line
+          |
+        = link_to t('footer.legal_notice'), page_path(:imprint)
+        %span.divider-line
