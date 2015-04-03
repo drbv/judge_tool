@@ -29,11 +29,13 @@ ActiveRecord::Schema.define(version: 20150327192743) do
 
   create_table "dance_rounds", force: :cascade do |t|
     t.integer  "round_id"
-    t.boolean  "finished",   default: false
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.integer  "dance_team_id"
+    t.boolean  "finished",      default: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
   end
 
+  add_index "dance_rounds", ["dance_team_id"], name: "index_dance_rounds_on_dance_team_id"
   add_index "dance_rounds", ["round_id"], name: "index_dance_rounds_on_round_id"
 
   create_table "dance_teams", force: :cascade do |t|

@@ -1,0 +1,16 @@
+%table.table.table-striped
+  %thead
+    %tr
+      %th Rundenart
+      %th Team
+      %th Wertung
+  %tbody
+    - @rounds.each do |round|
+      %tr
+        %th= round.round_type.name
+        %th{colspan: 2}
+      - round.dance_rounds.each do |dance_round|
+        %tr
+          %th
+          %th=dance_round.dance_team
+          %th= dance_round.evaluate if dance_round.finished
