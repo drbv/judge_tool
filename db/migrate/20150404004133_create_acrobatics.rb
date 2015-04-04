@@ -1,10 +1,9 @@
-class CreateCreates < ActiveRecord::Migration
+class CreateAcrobatics < ActiveRecord::Migration
   def change
-    create_table :creates do |t|
-      t.string :Acrobatic
+    create_table :acrobatics do |t|
       t.string :name
       t.string :short_name
-      t.decimal :max_points
+      t.decimal :max_points ,precision: 2, scale: 2
       t.integer :saftey_level
 
       t.timestamps null: false
