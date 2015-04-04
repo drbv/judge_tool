@@ -13,6 +13,14 @@ module MS
 
     def import
       import_dance_teams
+      import_rounds
+    end
+
+    def import_rounds
+      binding.pry
+      @access_database['Rundentab'].sort_by {|round| round[:Rundenreihenfolge].to_i}.each do |round|
+
+      end
     end
 
     def import_dance_teams
@@ -23,8 +31,6 @@ module MS
         dance_team.name = team[:Team_Name]
         dance_team.startbook_number = team[:Startbuch]
         dance_team.startnumber = team[:Startnr]
-        dance_team.ranking_points = team[:Ranglistenpunkte]
-        dance_team.rank = team[:Platz]
         dance_team.dancers.build first_name: team[:He_Vorname], last_name: team[:He_Nachname], age: team[:He_Alterskontrolle]
         dance_team.dancers.build first_name: team[:Da_Vorname], last_name: team[:Da_Nachname], age: team[:Da_Alterskontrolle]
         if club = Club.find_by(number: team[:Verein_nr])
