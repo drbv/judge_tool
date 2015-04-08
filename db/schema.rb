@@ -11,7 +11,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150327192743) do
+ActiveRecord::Schema.define(version: 20150404013857) do
+
+  create_table "acrobatic_ratings", force: :cascade do |t|
+    t.integer  "rating"
+    t.string   "mistakes"
+    t.integer  "acrobatic_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
+  add_index "acrobatic_ratings", ["acrobatic_id"], name: "index_acrobatic_ratings_on_acrobatic_id"
+
+  create_table "acrobatics", force: :cascade do |t|
+    t.string   "name"
+    t.string   "short_name"
+    t.decimal  "max_points",   precision: 2, scale: 2
+    t.integer  "saftey_level"
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
+  end
 
   create_table "clubs", force: :cascade do |t|
     t.string   "name"
@@ -27,15 +46,31 @@ ActiveRecord::Schema.define(version: 20150327192743) do
     t.datetime "updated_at",   null: false
   end
 
-  create_table "dance_rounds", force: :cascade do |t|
-    t.integer  "round_id"
+  create_table "dance_ratings", force: :cascade do |t|
+    t.integer  "female_base_rating"
+    t.integer  "female_turn_rating"
+    t.integer  "male_base_rating"
+    t.integer  "male_turn_rating"
+    t.integer  "choreo_rating"
+    t.integer  "dance_figure_rating"
+    t.integer  "team_presentation_rating"
+    t.string   "mistakes"
     t.integer  "dance_team_id"
-    t.boolean  "finished",      default: false
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
+    t.integer  "dance_round_id"
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
   end
 
-  add_index "dance_rounds", ["dance_team_id"], name: "index_dance_rounds_on_dance_team_id"
+  add_index "dance_ratings", ["dance_round_id"], name: "index_dance_ratings_on_dance_round_id"
+  add_index "dance_ratings", ["dance_team_id"], name: "index_dance_ratings_on_dance_team_id"
+
+  create_table "dance_rounds", force: :cascade do |t|
+    t.integer  "round_id"
+    t.boolean  "finished",   default: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+  end
+
   add_index "dance_rounds", ["round_id"], name: "index_dance_rounds_on_round_id"
 
   create_table "dance_teams", force: :cascade do |t|
@@ -69,6 +104,17 @@ ActiveRecord::Schema.define(version: 20150327192743) do
 
   add_index "dancers", ["club_id"], name: "index_dancers_on_club_id"
 
+  create_table "roles", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "resource_id"
+    t.string   "resource_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "roles", ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id"
+  add_index "roles", ["name"], name: "index_roles_on_name"
+
   create_table "round_types", force: :cascade do |t|
     t.string   "name"
     t.integer  "max_teams_per_round"
@@ -86,5 +132,24 @@ ActiveRecord::Schema.define(version: 20150327192743) do
 
   add_index "rounds", ["dance_class_id"], name: "index_rounds_on_dance_class_id"
   add_index "rounds", ["round_type_id"], name: "index_rounds_on_round_type_id"
+
+  create_table "users", force: :cascade do |t|
+    t.string   "login"
+    t.string   "licence"
+    t.string   "first_name"
+    t.string   "last_name"
+    t.string   "email"
+    t.string   "password_digest"
+    t.string   "name"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
+
+  create_table "users_roles", id: false, force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "role_id"
+  end
+
+  add_index "users_roles", ["user_id", "role_id"], name: "index_users_roles_on_user_id_and_role_id"
 
 end
