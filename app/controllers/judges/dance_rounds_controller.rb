@@ -1,2 +1,2 @@
-class Judges::DanceRoundsController < ApplicationController
+class Judges::DanceRoundsController < Judges::BaseController
 end

@@ -14,5 +14,13 @@ class ApplicationController < ActionController::Base
     @current_user ||= User.find_by id: session[:user_id]
   end
 
+  def generate_admin
+    admin = User.new login: 'admin'
+    admin.add_role :admin
+    admin.save
+    @current_user = admin
+    session[:user_id] = admin.id
+  end
+
 
 end

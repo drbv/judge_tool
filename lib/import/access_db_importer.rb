@@ -5,21 +5,48 @@ module MS
     class FileNotFound < StandardError
     end
 
-    def initialize()
+    def initialize
       guess_database
       raise FileNotFound.new("File at #{@path} not found!") unless File.exists?(@path)
       @access_database = Mdb.open @path
     end
 
-    def import
+    def import_persons
+      import_officials
       import_dance_teams
-      import_rounds
     end
 
-    def import_rounds
-      binding.pry
-      @access_database['Rundentab'].sort_by {|round| round[:Rundenreihenfolge].to_i}.each do |round|
+    def import_round
+      @access_database['Rundentab'].sort_by { |round| round[:Rundenreihenfolge].to_i }.each do |round|
+        next if find_round(round)
+        return create_round(round)
+      end
+      nil
+    end
 
+    def import_officials
+      update_admin
+      create_judges
+    end
+
+    def update_admin
+      @access_database[:Turnierleitung].select { |person| person[:Art] == 'TL' }.first.tap do |admin_data|
+        admin = User.find_by(login: 'admin')
+        if club = Club.find_by(number: admin_data[:Vereinsnr])
+          admin.club = club
+        end
+        admin.update_attributes first_name: admin_data[:TL_Vorname], last_name: admin_data[:TL_Nachname], licence: admin_data[:Lizenznr]
+      end
+    end
+
+    def create_judges
+      @access_database[:Wert_Richter].each do |judge_data|
+        judge = User.new(first_name: judge_data[:WR_Vorname], last_name: judge_data[:WR_Nachname], licence: judge_data[:WR_Lizenznr])
+        if club = Club.find_by(number: judge_data[:Vereinsnr])
+          judge.club = club
+        end
+        judge.add_role judge_data[:WR_Azubi] == '0' ? :judge : :trainee
+        judge.save
       end
     end
 
@@ -51,8 +78,7 @@ module MS
                 puts "Load mdb from: #{mdb_files_in_tmp.first}"
                 mdb_files_in_tmp.first
               else
-                puts "Cannot find .mdb file in tmp directory. Please tell me the full path to .mdb file, that I shall process:\n"
-                STDIN.gets
+                fail 'Datenbank nicht gefunden'
               end
     end
   end

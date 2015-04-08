@@ -3,8 +3,9 @@ class RoundsController < ApplicationController
     if User.empty?
       generate_admin
       redirect_to admin_users_path
+    else
+      @rounds = Round.all
     end
-    @rounds = Round.all
   end
 
   def show
