@@ -1,11 +1,10 @@
 class CreateAcrobatics < ActiveRecord::Migration
   def change
     create_table :acrobatics do |t|
-      t.string :name
-      t.string :short_name
-      t.decimal :max_points ,precision: 2, scale: 2
-      t.integer :saftey_level
-
+      t.references :dance_team, index: true, foreign_key: true
+      t.references :dance_round, index: true, foreign_key: true
+      t.references :acrobatic_type, index: true, foreign_key: true
+      t.integer :position
       t.timestamps null: false
     end
   end

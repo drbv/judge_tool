@@ -4,4 +4,6 @@ class DanceTeam < ActiveRecord::Base
   has_and_belongs_to_many :dancers
   has_many :dance_ratings
   has_many :acrobatic_ratings
+  has_and_belongs_to_many :dance_rounds
+  has_many :acrobatics
 end

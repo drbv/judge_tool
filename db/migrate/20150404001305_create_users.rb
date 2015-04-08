@@ -8,6 +8,7 @@ class CreateUsers < ActiveRecord::Migration
       t.string :email
       t.string :password_digest
       t.string :name
+      t.references :club, index: true, foreign_key: true
 
       t.timestamps null: false
     end
