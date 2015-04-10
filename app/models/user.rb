@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
   belongs_to :club
   has_many :dance_ratings
   has_many :acrobatic_ratings
-  before_create :generate_credentials
+  before_validation :generate_credentials
   validates :login, :pin, presence: true
 
   private

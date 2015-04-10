@@ -10,6 +10,8 @@
   %ul.nav.navbar-nav
     %li{class: "#{'active' if controller_name == 'rounds'}" }= link_to 'Rundenübersicht', root_path
 
-  -#%ul.nav.navbar-nav.navbar-right
-  -#  - %w[en de].each do |locale|
-  -#    %li= link_to image_tag("flags/#{locale}.png"), locale_path(locale), :title => t("locales.#{locale}"), :method => :put
+  %ul.nav.navbar-nav.navbar-right
+    - if current_user
+      %li= link_to 'Abmelden', logout_path, method: :delete
+    - else
+      %li= link_to 'Anmelden', login_path

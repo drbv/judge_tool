@@ -1,0 +1,14 @@
+= link_to 'Offizielle und Tänzer importieren', admin_users_path, method: :post, class: 'btn btn-primary'
+
+%table.table.table-striped
+  %thead
+    %tr
+      %th Benutzername
+      %th Lizenz
+      %th PIN
+  %tbody
+    - @users.each do |user|
+      %tr
+        %td= user.login
+        %td= user.licence
+        %td= user.pin

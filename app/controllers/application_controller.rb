@@ -3,15 +3,17 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
   rescue_from StandardError, with: :page_not_found unless Rails.env.development?
+  helper_method :current_user
+  include Pundit
 
   private
 
-  def page_not_found
-    render 'pages/page_not_found'
-  end
-
   def current_user
     @current_user ||= User.find_by id: session[:user_id]
+  end
+
+  def page_not_found
+    render 'pages/page_not_found'
   end
 
   def generate_admin
