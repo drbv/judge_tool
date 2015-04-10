@@ -11,19 +11,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150404013857) do
+ActiveRecord::Schema.define(version: 20150408214518) do
 
   create_table "acrobatic_ratings", force: :cascade do |t|
     t.integer  "rating"
     t.string   "mistakes"
     t.integer  "acrobatic_id"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.integer  "dance_team_id"
+    t.integer  "user_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
   end
 
   add_index "acrobatic_ratings", ["acrobatic_id"], name: "index_acrobatic_ratings_on_acrobatic_id"
+  add_index "acrobatic_ratings", ["dance_team_id"], name: "index_acrobatic_ratings_on_dance_team_id"
+  add_index "acrobatic_ratings", ["user_id"], name: "index_acrobatic_ratings_on_user_id"
 
-  create_table "acrobatics", force: :cascade do |t|
+  create_table "acrobatic_types", force: :cascade do |t|
     t.string   "name"
     t.string   "short_name"
     t.decimal  "max_points",   precision: 2, scale: 2
@@ -31,6 +35,19 @@ ActiveRecord::Schema.define(version: 20150404013857) do
     t.datetime "created_at",                           null: false
     t.datetime "updated_at",                           null: false
   end
+
+  create_table "acrobatics", force: :cascade do |t|
+    t.integer  "dance_team_id"
+    t.integer  "dance_round_id"
+    t.integer  "acrobatic_type_id"
+    t.integer  "position"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+  end
+
+  add_index "acrobatics", ["acrobatic_type_id"], name: "index_acrobatics_on_acrobatic_type_id"
+  add_index "acrobatics", ["dance_round_id"], name: "index_acrobatics_on_dance_round_id"
+  add_index "acrobatics", ["dance_team_id"], name: "index_acrobatics_on_dance_team_id"
 
   create_table "clubs", force: :cascade do |t|
     t.string   "name"
@@ -57,12 +74,14 @@ ActiveRecord::Schema.define(version: 20150404013857) do
     t.string   "mistakes"
     t.integer  "dance_team_id"
     t.integer  "dance_round_id"
+    t.integer  "user_id"
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
   end
 
   add_index "dance_ratings", ["dance_round_id"], name: "index_dance_ratings_on_dance_round_id"
   add_index "dance_ratings", ["dance_team_id"], name: "index_dance_ratings_on_dance_team_id"
+  add_index "dance_ratings", ["user_id"], name: "index_dance_ratings_on_user_id"
 
   create_table "dance_rounds", force: :cascade do |t|
     t.integer  "round_id"
@@ -72,6 +91,13 @@ ActiveRecord::Schema.define(version: 20150404013857) do
   end
 
   add_index "dance_rounds", ["round_id"], name: "index_dance_rounds_on_round_id"
+
+  create_table "dance_rounds_dance_teams", id: false, force: :cascade do |t|
+    t.integer "dance_round_id"
+    t.integer "dance_team_id"
+  end
+
+  add_index "dance_rounds_dance_teams", ["dance_round_id", "dance_team_id"], name: "dance_round_dance_team_mapping"
 
   create_table "dance_teams", force: :cascade do |t|
     t.integer  "dance_class_id"
@@ -97,12 +123,9 @@ ActiveRecord::Schema.define(version: 20150404013857) do
     t.string   "first_name"
     t.string   "last_name"
     t.integer  "age"
-    t.integer  "club_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
-
-  add_index "dancers", ["club_id"], name: "index_dancers_on_club_id"
 
   create_table "roles", force: :cascade do |t|
     t.string   "name"
@@ -139,11 +162,15 @@ ActiveRecord::Schema.define(version: 20150404013857) do
     t.string   "first_name"
     t.string   "last_name"
     t.string   "email"
-    t.string   "password_digest"
+    t.string   "pin"
     t.string   "name"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.integer  "club_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
+
+  add_index "users", ["club_id"], name: "index_users_on_club_id"
+  add_index "users", ["login"], name: "index_users_on_login"
 
   create_table "users_roles", id: false, force: :cascade do |t|
     t.integer "user_id"

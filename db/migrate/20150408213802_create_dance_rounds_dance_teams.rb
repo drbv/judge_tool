@@ -4,6 +4,6 @@ class CreateDanceRoundsDanceTeams < ActiveRecord::Migration
       t.integer :dance_round_id
       t.integer :dance_team_id
     end
-    add_index :dance_rounds_dance_teams, [:dance_round_id, :dance_team_id]
+    add_index :dance_rounds_dance_teams, [:dance_round_id, :dance_team_id], name: 'dance_round_dance_team_mapping'
   end
 end
