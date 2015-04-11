@@ -8,6 +8,10 @@ class UserPolicy < ApplicationPolicy
     user && user.has_role?(:admin)
   end
 
+  def create?
+    user && user.has_role?(:admin)
+  end
+
   class Scope < Scope
     def resolve
       scope
