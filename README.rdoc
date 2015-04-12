@@ -43,7 +43,7 @@ Tanzrunde: 1. Runde der Vorrunde Schüler
 
 Aufgaben:
 
-Turnierleiter:
+Turnierleiter: (admin)
 - Import der Stammdaten ( Tänzer, Offizielle, Vereine)
 - Import der Runden
 - Verteilen der Zugangsdaten
@@ -83,12 +83,4 @@ Nach der letzten Tanzrunde einer Runde werden die Werte in Access zurückgeschri
 1.) die Werte der Wertungsrichter werden im bekannten Format einzeln zurückgeschrieben
 => Das Turnierprogramm berechnet Plätze usw... wie gehabt
 2.) die Berechnung der Plätze/Punkte findet im judge_tool statt und es wird nur das Endergebnis eines Paares zurück geschrieben
-- Um 
-
-
-
-Grober Porcess Ablauf:
-1.) Eine komplette Runde wird aus dem Turnierprogramm importiert. 
-2.) Alle Tanzrunden der Runde werden durchgeführt. Während der Durchführung einer Tanzrunde werden die Paare durch den Wertungsrichter und den Observer be
-2.) Nach Ende der Runde werden Werte zurück in das Turnierprogramm geschrieben.
 
