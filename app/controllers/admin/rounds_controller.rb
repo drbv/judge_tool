@@ -25,6 +25,21 @@ class Admin::RoundsController < Admin::BaseController
     redirect_to admin_rounds_path
   end
 
+  def start
+    @round = Round.find params[:id]
+    authorize @round
+    @round.start!
+    access_database.import_dance_rounds!(@round) unless @round.dance_class.blank?
+    redirect_to admin_rounds_path
+  end
+
+  def close
+    @round = Round.find params[:id]
+    authorize @round
+    @round.close!
+    redirect_to admin_rounds_path
+  end
+
   def destroy
     @round = Round.find params[:id]
     authorize @round

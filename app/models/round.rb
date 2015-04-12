@@ -1,22 +1,49 @@
 class Round < ActiveRecord::Base
+  resourcify
   belongs_to :round_type
   belongs_to :dance_class
   has_many :dance_rounds
   after_create :set_random_judges
 
+  def self.active
+    where('started AND NOT closed').first
+  end
+
   def self.judge_role_for(index)
     case index
       when 0
         :observer
-      when index <= (User.count - 1) / 2
+      when (1..((User.count - 1) / 2))
         :acrobatics_judge
       else
         :dance_judge
     end
   end
 
+  def active?
+    started? && !closed?
+  end
+
   def started?
     started
+  end
+
+  def start!
+    self.started = true
+    self.start_time = Time.now
+    save
+  end
+
+  def closed?
+    closed
+  end
+
+  def close!
+    update_attribute :closed, true
+  end
+
+  def dance_judges
+    User.with_role
   end
 
   def set_random_judges
@@ -24,4 +51,5 @@ class Round < ActiveRecord::Base
       user.add_role Round.judge_role_for(index), self
     end if dance_class
   end
+
 end

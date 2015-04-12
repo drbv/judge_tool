@@ -16,6 +16,14 @@ class RoundPolicy < ApplicationPolicy
     user && user.has_role?(:admin) && !record.started?
   end
 
+  def start?
+    user && user.has_role?(:admin) && !record.started? && Round.where('start_time < ?', record.start_time).all?(&:closed?)
+  end
+
+  def close?
+    user && user.has_role?(:admin) && record.active? && record.dance_class.blank?
+  end
+
   class Scope < Scope
     def resolve
       scope

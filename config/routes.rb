@@ -1,6 +1,12 @@
 Rails.application.routes.draw do
   namespace :admin do
-    resources :users, :rounds
+    resources :users
+    resources :rounds do
+      member do
+        post :start
+        delete :close
+      end
+    end
   end
   namespace :judges do
     resource :dance_round
