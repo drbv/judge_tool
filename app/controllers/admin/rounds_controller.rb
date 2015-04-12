@@ -5,7 +5,27 @@ class Admin::RoundsController < Admin::BaseController
   end
 
   def create
+    authorize Round, :create?
     access_database.import_round!
     redirect_to admin_rounds_path
   end
+
+  def edit
+    @round = Round.find params[:id]
+    authorize @round
+  end
+
+  def update
+    @round = Round.find params[:id]
+    authorize @round
+    params[:judges].split(',').each_with_index do |judge_id, index|
+      @judge = User.find judge_id
+      @judge.add_role Round.judge_role_for(index), @round
+    end
+  end
+
+  def destroy
+    authorize Round, :destroy?
+  end
+
 end

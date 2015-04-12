@@ -150,8 +150,9 @@ ActiveRecord::Schema.define(version: 20150412020659) do
     t.integer  "round_type_id"
     t.integer  "dance_class_id"
     t.datetime "start_time"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.boolean  "started",        default: false
   end
 
   add_index "rounds", ["dance_class_id"], name: "index_rounds_on_dance_class_id"
