@@ -6,6 +6,10 @@ class User < ActiveRecord::Base
   before_validation :generate_credentials
   validates :login, :pin, presence: true
 
+  def full_name
+    "#{first_name} #{last_name}"
+  end
+
   private
 
   def generate_credentials
