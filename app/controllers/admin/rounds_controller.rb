@@ -22,10 +22,14 @@ class Admin::RoundsController < Admin::BaseController
       @judge = User.find judge_id
       @judge.add_role Round.judge_role_for(index), @round
     end
+    redirect_to admin_rounds_path
   end
 
   def destroy
-    authorize Round, :destroy?
+    @round = Round.find params[:id]
+    authorize @round
+    @round.destroy
+    redirect_to admin_rounds_path
   end
 
 end
