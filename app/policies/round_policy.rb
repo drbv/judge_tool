@@ -9,7 +9,7 @@ class RoundPolicy < ApplicationPolicy
   end
 
   def update?
-    user && user.has_role?(:admin) && !record.started? && !record.dance_class.blank?
+    user && user.has_role?(:admin) && !record.started? && !record.round_type.no_dance
   end
 
   def destroy?
@@ -21,7 +21,7 @@ class RoundPolicy < ApplicationPolicy
   end
 
   def close?
-    user && user.has_role?(:admin) && record.active? && record.dance_class.blank?
+    user && user.has_role?(:admin) && record.active? && record.round_type.no_dance
   end
 
   class Scope < Scope

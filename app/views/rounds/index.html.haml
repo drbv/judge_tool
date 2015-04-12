@@ -3,15 +3,19 @@
   %thead
     %tr
       %th Rundenart
-      %th Team
-      %th Wertung
+      %th
+      %th
   %tbody
     - @rounds.each do |round|
-      %tr
-        %th= round.round_type.name
-        %th{colspan: 2}
+      %tr{class: "#{'success' if round.active?}"}
+        %td= round.round_type.name
+        %td{colspan: 2}
       - round.dance_rounds.each do |dance_round|
-        %tr
-          %th
-          %th=dance_round.dance_team
-          %th= dance_round.evaluate if dance_round.finished
+        - dance_round.dance_teams.each do |dance_team|
+          %tr
+            %td
+            - if dance_team.dancers.empty?
+              %td{colspan: 2}= dance_team.name
+            - else
+              - dance_team.dancers.each do |dancer|
+                %td= dancer.full_name

@@ -30,22 +30,48 @@ module MS
     end
 
     def create_round(round)
-      Round.create dance_class_id: (round[:Startklasse] && dance_classes[round[:Startklasse].to_sym].id),
+      @round = Round.create dance_class_id: (round[:Startklasse] && dance_classes[round[:Startklasse].to_sym].id),
                    round_type_id: (round_types[round[:Runde].to_sym].id),
                    start_time: round[:Startzeit].gsub('1899', Time.now.year.to_s).to_time
+      @access_database[:Startklasse_Wertungsrichter].select {|mapping| mapping[:Startklasse] == round[:Startklasse]}.each do |judge_role|
+        next if judge_role[:WR_function] == 'X'
+        judge = User.find_by licence: @access_database[:Wert_Richter].select {|wr| wr[:WR_ID] == judge_role[:WR_ID]}.first[:WR_Lizenznr]
+        judge.add_role translate_role(judge_role[:WR_function]), @round
+      end
+    end
+
+    def translate_role(mdb_role_name)
+      case mdb_role_name
+        when 'Ak'
+          :acrobatics_judge
+        when 'Ft'
+          :dance_judge
+        when 'Ob'
+          :observer
+        else
+          fail 'not expected access database entry!'
+      end
     end
 
     def round_types
-      @round_types ||= Hash[(@access_database[:Tanz_Runden_erg] + @access_database[:Tanz_Runden_fix]).map { |round| [round[:Runde].to_sym, create_round_type(round)] }]
+      @round_types ||= Hash[fixed_dance_round_types + dancing_dance_round_types]
     end
 
     def dance_classes
       @dance_classes ||= Hash[@access_database[:Startklasse].map { |dance_class| [dance_class[:Startklasse].to_sym, create_dance_class(dance_class)] }]
     end
 
-    def create_round_type(round)
+    def fixed_dance_round_types
+      @access_database[:Tanz_Runden_erg].map { |round| [round[:Runde].to_sym, create_round_type(round, true)] }
+    end
+
+    def dancing_dance_round_types
+      @access_database[:Tanz_Runden_fix].map { |round| [round[:Runde].to_sym, create_round_type(round, false)] }
+    end
+
+    def create_round_type(round, no_dance)
       @round_type = RoundType.find_by name: round[:Rundentext]
-      @round_type = RoundType.create name: round[:Rundentext] unless @round_type
+      @round_type = RoundType.create name: round[:Rundentext], no_dance: no_dance unless @round_type
       @round_type
     end
 

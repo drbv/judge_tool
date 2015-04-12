@@ -18,5 +18,5 @@
         %td
           = link_to 'Runde beginnen', start_admin_round_path(round), method: :post, class: 'btn btn-success', confirm: 'Runde wird gestartet - Tanzpaare dieser Runde werden importiert und Runde kann danach nicht mehr gelöscht und neu importiert werden.' if policy(round).start?
           = link_to 'Runde beenden', close_admin_round_path(round), method: :delete, class: 'btn btn-danger', confirm: 'Ansprache / Pause beendet?' if policy(round).close?
-          = link_to 'Richter zuweisen', edit_admin_round_path(round), class: 'btn btn-primary' if policy(round).update?
+          = link_to 'Wertungsrichter', edit_admin_round_path(round), class: 'btn btn-primary' if policy(round).update?
           = link_to 'Löschen', admin_round_path(round), method: :delete, class: 'btn btn-danger', confirm: 'Sicher für Neuimport Löschen?' if index + 1 == @rounds.size && policy(round).destroy?

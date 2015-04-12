@@ -4,10 +4,12 @@ class RoundsController < ApplicationController
       generate_admin
       redirect_to admin_users_path
     else
-      if @dance_round = DanceRound.active
-        render :dance_round
-      elsif @round = Round.active
-        render :show
+      if request.xhr?
+        if @current_round = Round.active
+          render json: [@current_round.id]
+        else
+          render json: []
+        end
       else
         @rounds = Round.all
       end

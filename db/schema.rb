@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150412193821) do
+ActiveRecord::Schema.define(version: 20150412222848) do
 
   create_table "acrobatic_ratings", force: :cascade do |t|
     t.integer  "rating"
@@ -142,8 +142,9 @@ ActiveRecord::Schema.define(version: 20150412193821) do
   create_table "round_types", force: :cascade do |t|
     t.string   "name"
     t.integer  "max_teams_per_round"
-    t.datetime "created_at",          null: false
-    t.datetime "updated_at",          null: false
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+    t.boolean  "no_dance",            default: false
   end
 
   create_table "rounds", force: :cascade do |t|
