@@ -14,7 +14,7 @@
       %tr
         %td= round.round_type.name
         %td= round.dance_class && round.dance_class.name
-        %td= l round.start_time
+        %td= l round.start_time, format: :time
         %td
-          = link_to 'Richter zuweisen', edit_admin_round_path(round), method: :delete, class: 'btn btn-danger', confirm: 'Sicher für Neuimport Löschen?' if policy(round).update?
+          = link_to 'Richter zuweisen', edit_admin_round_path(round), method: :delete, class: 'btn btn-success', confirm: 'Sicher für Neuimport Löschen?' if policy(round).update?
           = link_to 'Löschen', admin_round_path(round), method: :delete, class: 'btn btn-danger', confirm: 'Sicher für Neuimport Löschen?' if index + 1 == @rounds.size && policy(round).destroy?
