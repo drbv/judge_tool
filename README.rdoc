@@ -33,3 +33,62 @@ Things you may want to cover:
 
 Please feel free to use a different markup language if you do not plan to run
 <tt>rake doc:app</tt>.
+
+Judge-Toll functionality and Porcess in words:
+
+Begriffsdefinition:
+Rundentyp: Vorrunde, Zwischenrunde, Hofnungsrunde, Endrunde ....
+Runde: Vorrunde Schüler, Endrunde A-Klasse Akro.....
+Tanzrunde: 1. Runde der Vorrunde Schüler 
+
+Aufgaben:
+
+Turnierleiter:
+- Import der Stammdaten ( Tänzer, Offizielle, Vereine)
+- Import der Runden
+- Verteilen der Zugangsdaten
+
+Observer:
+- eine Bewertung abgeben
+- die Gesamtwertung evaluieren
+- Nach Abschluss eine Runde den Export anstoßen
+
+Wertungsrichter ( Tanz oder Akrobatik)
+- Eine Bewertung abgeben
+
+Technische initial configuration.
+Die Access Datenbank muss dem judge_tool zugänglich gemacht werden
+
+Initiale Configuration ( Turnierleiter)
+Für den ersten Besucher des Judge_tools wird automatisch ein Benutzer mit admin Rechten angelegt.
+Der erste Besucher wird automatisch eingeloggt und kann sich seine Zugangsdaten anzeigen lassen.
+Als nächstes können aus der Access Datenbank die Stammdaten ( Tänzer, Vereine, Offizielle, Zeitplan) importiert werden.
+Dabei wird für jeden Offiziellen ein Benutzername + 4-stellige Pin erzeugt.
+Der Admin kann sich die generierten Logindaten anzeigen lassen, um diese an den Offiziellen weiterzugeben.
+Die initiale Configuration ist abgeschlosen.
+
+Turnierablauf:
+Der admin importiert eine/mehrere Runden
+ - Es ist kein updaten einer Runde vorgesehen
+ => Eine Runde kann jederzeit neu imporiert werden, ersetzt dann aber die alte, solange diese noch nicht begonnen hat
+ => Änderngen während einer Runde können im judge_tool durch den admin vorgenommen werden 
+Nachdem eine Runde importiert wurde können die einzelnen Tanzrunden durch den Observer freigegeben werden.
+=> Der Observer leitet das Wertungsgericht durch die gesamte  Runde
+Die Wertungsrichter bekommen in Ihrer Übersicht immer den passenden Werungsbogen passend zu Ihrer Rolle ( Akro oder Fußtechnik) angezeigt.
+Nachdem eine Tanzrunde beendet wurde, wartet der Observer auf alle Wertungen um diese zu validieren. 
+Nachdem die Wertungen durch den Observer bestätigt wurden, wird die nächste Tanzrunde freigegeben.
+Nach der letzten Tanzrunde einer Runde werden die Werte in Access zurückgeschrieben und damit an das Turnierleiterprogramm übergeben
+
+Übergabe an das Turnierprogramm: (zu definieren) 
+1.) die Werte der Wertungsrichter werden im bekannten Format einzeln zurückgeschrieben
+=> Das Turnierprogramm berechnet Plätze usw... wie gehabt
+2.) die Berechnung der Plätze/Punkte findet im judge_tool statt und es wird nur das Endergebnis eines Paares zurück geschrieben
+- Um 
+
+
+
+Grober Porcess Ablauf:
+1.) Eine komplette Runde wird aus dem Turnierprogramm importiert. 
+2.) Alle Tanzrunden der Runde werden durchgeführt. Während der Durchführung einer Tanzrunde werden die Paare durch den Wertungsrichter und den Observer be
+2.) Nach Ende der Runde werden Werte zurück in das Turnierprogramm geschrieben.
+
