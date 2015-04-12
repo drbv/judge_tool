@@ -4,6 +4,10 @@ class DanceRound < ActiveRecord::Base
   has_many :acrobatics
   has_many :dance_ratings
 
+  def self.active
+    find_by(started: true, finished: false)
+  end
+
   def evaluate
     # compute rating from ratings
   end

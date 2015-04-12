@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150408214518) do
+ActiveRecord::Schema.define(version: 20150412020659) do
 
   create_table "acrobatic_ratings", force: :cascade do |t|
     t.integer  "rating"
@@ -88,6 +88,7 @@ ActiveRecord::Schema.define(version: 20150408214518) do
     t.boolean  "finished",   default: false
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
+    t.boolean  "started",    default: false
   end
 
   add_index "dance_rounds", ["round_id"], name: "index_dance_rounds_on_round_id"

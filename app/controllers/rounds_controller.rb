@@ -4,11 +4,11 @@ class RoundsController < ApplicationController
       generate_admin
       redirect_to admin_users_path
     else
-      @rounds = Round.all
+      if @dance_round = DanceRound.active
+        render :show
+      else
+        @rounds = Round.all
+      end
     end
-  end
-
-  def show
-
   end
 end
