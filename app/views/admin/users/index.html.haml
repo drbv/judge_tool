@@ -30,5 +30,8 @@
         - @dance_teams.each do |dance_team|
           %tr
             %td= dance_team.startnumber
-            - dance_team.dancers.each do |dancer|
-              %td= dancer.full_name
+            - if dance_team.dancers.empty?
+              %td{colspan: 2}= dance_team.name
+            - else
+              - dance_team.dancers.each do |dancer|
+                %td= dancer.full_name

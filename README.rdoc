@@ -57,7 +57,7 @@ Wertungsrichter ( Tanz oder Akrobatik)
 - Eine Bewertung abgeben
 
 Technische initial configuration.
-Die Access Datenbank muss dem judge_tool zugänglich gemacht werden
+- Die Access Datenbank muss dem judge_tool zugänglich gemacht werden
 
 Initiale Configuration ( Turnierleiter)
 Für den ersten Besucher des Judge_tools wird automatisch ein Benutzer mit admin Rechten angelegt.

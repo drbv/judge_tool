@@ -3,7 +3,6 @@ class Round < ActiveRecord::Base
   belongs_to :round_type
   belongs_to :dance_class
   has_many :dance_rounds
-  after_create :set_random_judges
 
   def self.active
     where('started AND NOT closed').first
@@ -43,13 +42,21 @@ class Round < ActiveRecord::Base
   end
 
   def dance_judges
-    User.with_role
+    User.with_role :dance_judge, self
   end
 
-  def set_random_judges
-    User.with_role(:judge).order(ActiveRecord::Base.connection.instance_values["config"][:adapter].start_with?('mysql') ? 'RAND()' : 'RANDOM()').each_with_index do |user, index|
-      user.add_role Round.judge_role_for(index), self
-    end if dance_class
+  def acrobatics_judges
+    User.with_role :acrobatics_judge, self
   end
+
+  def observer
+    User.with_role(:observer, self).first
+  end
+
+  # def set_random_judges
+  #   User.with_role(:judge).order(ActiveRecord::Base.connection.instance_values["config"][:adapter].start_with?('mysql') ? 'RAND()' : 'RANDOM()').each_with_index do |user, index|
+  #     user.add_role Round.judge_role_for(index), self
+  #   end if dance_class
+  # end
 
 end
