@@ -1,0 +1,4 @@
+%h1 Es tanzen:
+%h2= @dance_round.dance_team.dancers.map(&:full_name).join ' und '
+%h3 von
+%h2= @dance_round.dance_team.club.name

@@ -7,7 +7,7 @@ class Admin::UsersController < Admin::BaseController
 
   def create
     authorize User
-    access_database.import_persons
+    access_database.import_persons!
     redirect_to admin_users_path
   end
 end

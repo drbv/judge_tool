@@ -11,17 +11,48 @@ module MS
       @access_database = Mdb.open @path
     end
 
-    def import_persons
+    def import_persons!
       import_officials
       import_dance_teams
     end
 
-    def import_round
+    def import_round!
       @access_database['Rundentab'].sort_by { |round| round[:Rundenreihenfolge].to_i }.each do |round|
         next if find_round(round)
         return create_round(round)
       end
       nil
+    end
+
+    def find_round(round)
+      Round.find_by dance_class_id: (round[:Startklasse] && dance_classes[round[:Startklasse].to_sym].id),
+                    round_type_id: (round_types[round[:Runde].to_sym].id)
+    end
+
+    def create_round(round)
+      Round.create dance_class_id: (round[:Startklasse] && dance_classes[round[:Startklasse].to_sym].id),
+                   round_type_id: (round_types[round[:Runde].to_sym].id),
+                   start_time: round[:Startzeit].gsub('1899', Time.now.year.to_s).to_time
+    end
+
+    def round_types
+      @round_types ||= Hash[(@access_database[:Tanz_Runden_erg] + @access_database[:Tanz_Runden_fix]).map { |round| [round[:Runde].to_sym, create_round_type(round)] }]
+    end
+
+    def dance_classes
+      @dance_classes ||= Hash[@access_database[:Startklasse].map { |dance_class| [dance_class[:Startklasse].to_sym, create_dance_class(dance_class)] }]
+    end
+
+    def create_round_type(round)
+      @round_type = RoundType.find_by name: round[:Rundentext]
+      @round_type = RoundType.create name: round[:Rundentext] unless @round_type
+      @round_type
+    end
+
+    def create_dance_class(dance_class)
+      @dance_class = DanceClass.find_by name: dance_class[:Startklasse_text]
+      @dance_class = DanceClass.create name: dance_class[:Startklasse_text] unless @dance_class
+      @dance_class
     end
 
     def import_officials

@@ -5,6 +5,8 @@ class RoundsController < ApplicationController
       redirect_to admin_users_path
     else
       if @dance_round = DanceRound.active
+        render :dance_round
+      elsif @round = Round.active
         render :show
       else
         @rounds = Round.all

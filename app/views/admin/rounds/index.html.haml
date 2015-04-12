@@ -1,1 +1,16 @@
 %h1 Rundenverwaltung
+
+= link_to 'Nächste Runde importieren', admin_rounds_path, method: :post, class: 'btn btn-primary'
+
+%table.table.table-striped
+  %thead
+    %tr
+      %th
+      %th Startklasse
+      %th Startzeit
+  %tbody
+    - @rounds.each do |round|
+      %tr
+        %td= round.round_type.name
+        %td= round.dance_class && round.dance_class.name
+        %td= l round.start_time
