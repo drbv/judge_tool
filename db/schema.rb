@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150412222848) do
+ActiveRecord::Schema.define(version: 20150408214518) do
 
   create_table "acrobatic_ratings", force: :cascade do |t|
     t.integer  "rating"
@@ -85,20 +85,22 @@ ActiveRecord::Schema.define(version: 20150412222848) do
 
   create_table "dance_rounds", force: :cascade do |t|
     t.integer  "round_id"
+    t.boolean  "started",    default: false
     t.boolean  "finished",   default: false
+    t.integer  "position"
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
-    t.boolean  "started",    default: false
   end
 
+  add_index "dance_rounds", ["position"], name: "index_dance_rounds_on_position"
   add_index "dance_rounds", ["round_id"], name: "index_dance_rounds_on_round_id"
 
-  create_table "dance_rounds_dance_teams", id: false, force: :cascade do |t|
+  create_table "dance_rounds_teams", id: false, force: :cascade do |t|
     t.integer "dance_round_id"
     t.integer "dance_team_id"
   end
 
-  add_index "dance_rounds_dance_teams", ["dance_round_id", "dance_team_id"], name: "dance_round_dance_team_mapping"
+  add_index "dance_rounds_teams", ["dance_round_id", "dance_team_id"], name: "dance_round_dance_team_mapping"
 
   create_table "dance_teams", force: :cascade do |t|
     t.integer  "dance_class_id"
@@ -114,6 +116,7 @@ ActiveRecord::Schema.define(version: 20150412222848) do
   end
 
   add_index "dance_teams", ["club_id"], name: "index_dance_teams_on_club_id"
+  add_index "dance_teams", ["startnumber"], name: "index_dance_teams_on_startnumber"
 
   create_table "dance_teams_dancers", id: false, force: :cascade do |t|
     t.integer "dancer_id"
@@ -141,24 +144,29 @@ ActiveRecord::Schema.define(version: 20150412222848) do
 
   create_table "round_types", force: :cascade do |t|
     t.string   "name"
-    t.integer  "max_teams_per_round"
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
-    t.boolean  "no_dance",            default: false
+    t.string   "acrobatics_from"
+    t.boolean  "no_dance",        default: false
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
   end
 
   create_table "rounds", force: :cascade do |t|
     t.integer  "round_type_id"
     t.integer  "dance_class_id"
+    t.boolean  "closed",         default: false
+    t.boolean  "started",        default: false
+    t.integer  "max_teams"
     t.datetime "start_time"
+    t.integer  "position"
     t.datetime "created_at",                     null: false
     t.datetime "updated_at",                     null: false
-    t.boolean  "started",        default: false
-    t.boolean  "closed",         default: false
   end
 
   add_index "rounds", ["dance_class_id"], name: "index_rounds_on_dance_class_id"
+  add_index "rounds", ["position"], name: "index_rounds_on_position"
   add_index "rounds", ["round_type_id"], name: "index_rounds_on_round_type_id"
+  add_index "rounds", ["start_time"], name: "index_rounds_on_start_time"
+  add_index "rounds", ["started", "closed"], name: "index_rounds_on_started_and_closed"
 
   create_table "users", force: :cascade do |t|
     t.string   "login"

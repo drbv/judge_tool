@@ -4,7 +4,7 @@ class CreateDanceTeams < ActiveRecord::Migration
       t.references :dance_class
       t.references :club, index: true, foreign_key: true
       t.string :name
-      t.integer :startnumber
+      t.integer :startnumber, index: true
       t.integer :startbook_number
       t.integer :rank
       t.decimal :ranking_points, precision: 12, scale: 10

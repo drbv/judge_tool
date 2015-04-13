@@ -29,7 +29,7 @@ class Admin::RoundsController < Admin::BaseController
     @round = Round.find params[:id]
     authorize @round
     @round.start!
-    access_database.import_dance_rounds!(@round) unless @round.dance_class.blank?
+    access_database.import_dance_rounds!(@round) unless @round.round_type.no_dance
     redirect_to admin_rounds_path
   end
 

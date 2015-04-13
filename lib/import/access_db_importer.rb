@@ -24,6 +24,39 @@ module MS
       nil
     end
 
+    def import_dance_rounds!(round)
+      dance_rounds(round).each do |dance_round_data|
+        team_data = @access_database[:Paare].select {|team| team[:TP_ID] == dance_round_data[:TP_ID]}.first
+        dance_round = round.dance_rounds.build position: dance_round_data[:Rundennummer]
+        team = DanceTeam.find_by startnumber: team_data[:Startnr]
+        dance_round.dance_teams << team
+        8.times do |k|
+          next if team_data[:"Akro#{k+1}_#{round.round_type.acrobatics_from}"].blank?
+          dance_round.acrobatics.build dance_team: team,
+                                       acrobatic_type: acrobatic_type(team_data[:"Akro#{k+1}_#{round.round_type.acrobatics_from}"], team_data[:"Wert#{k+1}_#{round.round_type.acrobatics_from}"])
+        end
+        dance_round.save
+      end
+    end
+
+    def acrobatic_type(short_name, value)
+      if @acrobatic_type = AcrobaticType.find_by(short_name: short_name)
+        @acrobatic_type
+      else
+        AcrobaticType.create short_name: short_name, max_points: value.to_f.to_d.round(2)
+      end
+    end
+
+    def dance_rounds(round)
+      @access_database[:Paare_Rundenqualifikation].select do |dance_round|
+        dance_round[:RT_ID] == rt_id(round)
+      end.sort_by { |dance_round| dance_round[:Rundennummer].to_i }
+    end
+
+    def rt_id(round)
+      @access_database[:Rundentab].select { |rt| rt[:Rundenreihenfolge].to_i == round.position }.first[:RT_ID]
+    end
+
     def find_round(round)
       Round.find_by dance_class_id: (round[:Startklasse] && dance_classes[round[:Startklasse].to_sym].id),
                     round_type_id: (round_types[round[:Runde].to_sym].id)
@@ -31,11 +64,12 @@ module MS
 
     def create_round(round)
       @round = Round.create dance_class_id: (round[:Startklasse] && dance_classes[round[:Startklasse].to_sym].id),
-                   round_type_id: (round_types[round[:Runde].to_sym].id),
-                   start_time: round[:Startzeit].gsub('1899', Time.now.year.to_s).to_time
-      @access_database[:Startklasse_Wertungsrichter].select {|mapping| mapping[:Startklasse] == round[:Startklasse]}.each do |judge_role|
+                            round_type_id: (round_types[round[:Runde].to_sym].id),
+                            start_time: round[:Startzeit].gsub('1899', Time.now.year.to_s).to_time,
+                            position: round[:Rundenreihenfolge].to_i
+      @access_database[:Startklasse_Wertungsrichter].select { |mapping| mapping[:Startklasse] == round[:Startklasse] }.each do |judge_role|
         next if judge_role[:WR_function] == 'X'
-        judge = User.find_by licence: @access_database[:Wert_Richter].select {|wr| wr[:WR_ID] == judge_role[:WR_ID]}.first[:WR_Lizenznr]
+        judge = User.find_by licence: @access_database[:Wert_Richter].select { |wr| wr[:WR_ID] == judge_role[:WR_ID] }.first[:WR_Lizenznr]
         judge.add_role translate_role(judge_role[:WR_function]), @round
       end
     end
@@ -71,7 +105,8 @@ module MS
 
     def create_round_type(round, no_dance)
       @round_type = RoundType.find_by name: round[:Rundentext]
-      @round_type = RoundType.create name: round[:Rundentext], no_dance: no_dance unless @round_type
+      @round_type = RoundType.create name: round[:Rundentext], no_dance: no_dance,
+                                     acrobatics_from: (round[:R_IS_ENDRUNDE] == '1' ? 'ER' : (%w(Vor_r Hoff_r).include?(round[:Runde]) ? 'VR' : 'ZR')) unless @round_type
       @round_type
     end
 
