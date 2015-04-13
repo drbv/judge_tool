@@ -1,0 +1,8 @@
+.mistakes
+  %div
+    - %w(U2 U10 U20).each do |mistake|
+      = link_to mistake, '#', class: 'btn btn-warning'
+  %div
+    - %w(S2 S10 S20).each do |mistake|
+      = link_to mistake, '#', class: 'btn btn-warning'
+.mistakes-list

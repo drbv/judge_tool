@@ -1,0 +1,7 @@
+%h1= "Nächste Tanzrunde"
+%h2 Es tanzen:
+- @dance_round.dance_teams.each do |dance_team|
+  %h3= dance_team.full_name
+
+%hr
+= button_to 'Runde beginnen', judges_dance_round_path, class: 'btn btn-primary'

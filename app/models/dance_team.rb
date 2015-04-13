@@ -6,4 +6,8 @@ class DanceTeam < ActiveRecord::Base
   has_many :acrobatic_ratings
   has_and_belongs_to_many :dance_rounds
   has_many :acrobatics
+
+  def full_name
+    name ? name : dancers.map(&:full_name).join(' und ')
+  end
 end

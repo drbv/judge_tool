@@ -1,0 +1,17 @@
+= form_for @dance_round, url: judges_dance_round_path do |f|
+  .row
+    - @dance_round.dance_teams.each do |dance_team|
+      .col-md-6
+        %h3= dance_team.full_name
+        - @dance_round.acrobatics.where(dance_team_id: dance_team.id).each do |acrobatic|
+          = acrobatic.acrobatic_type.name
+          = f.fields_for 'acrobatic_ratings[]', @dance_round.accrobatic_ratings.build do |r|
+            = r.hidden_field :dance_team_id, value: dance_team.id
+            = r.hidden_field :acrobatic_id, value: acrobatic.id
+            %div
+              = render partial: :rating_bar
+              = r.hidden_field :rating, autocomplete: 'off'
+            %div
+              = render partial: :mistakes_bar
+              = r.hidden_field :mistakes, autocomplete: 'off'
+  = f.submit 'Wertung absenden', data: { confirm: 'Sicher alles gewertet?' }, class: 'btn btn-primary'

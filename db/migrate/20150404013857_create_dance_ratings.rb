@@ -15,5 +15,7 @@ class CreateDanceRatings < ActiveRecord::Migration
 
       t.timestamps null: false
     end
+
+    add_index :dance_ratings, [:dance_round_id, :user_id], name: :find_by_judge_and_dance_round
   end
 end

@@ -5,8 +5,17 @@ class ApplicationController < ActionController::Base
   rescue_from StandardError, with: :page_not_found unless Rails.env.development?
   helper_method :current_user
   include Pundit
+  rescue_from Pundit::NotAuthorizedError, with: :redirect_to_login
 
   private
+
+  def redirect_to_login
+    if current_user
+      redirect_to root_path
+    else
+      redirect_to login_path
+    end
+  end
 
   def current_user
     @current_user ||= User.find_by id: session[:user_id]

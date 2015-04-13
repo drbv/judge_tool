@@ -5,7 +5,7 @@ class Round < ActiveRecord::Base
   has_many :dance_rounds
 
   def self.active
-    where('started AND NOT closed').first
+    where(started: true, closed: false).first
   end
 
   def self.judge_role_for(index)
@@ -39,6 +39,10 @@ class Round < ActiveRecord::Base
 
   def close!
     update_attribute :closed, true
+  end
+
+  def judges
+    @judges ||= [observer] + dance_judges + acrobatics_judges
   end
 
   def dance_judges

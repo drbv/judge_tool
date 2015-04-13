@@ -10,6 +10,10 @@ class User < ActiveRecord::Base
     "#{first_name} #{last_name}"
   end
 
+  def rated?(dance_round)
+    dance_round.dance_ratings.where(user_id: id).exists? || dance_round.acrobatic_ratings.where(user_id: id).exists?
+  end
+
   private
 
   def generate_credentials
