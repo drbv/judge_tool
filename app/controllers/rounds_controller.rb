@@ -11,7 +11,7 @@ class RoundsController < ApplicationController
           render json: []
         end
       else
-        @rounds = Round.all
+        @rounds = Round.order(:position)
       end
     end
   end

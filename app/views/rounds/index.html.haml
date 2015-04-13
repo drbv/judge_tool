@@ -3,17 +3,21 @@
   %thead
     %tr
       %th Rundenart
+      %th Startklasse
+      %th Startzeit
       %th
       %th
   %tbody
     - @rounds.each do |round|
       %tr{class: "#{'success' if round.active?}"}
         %td= round.round_type.name
+        %td= round.dance_class.name if round.dance_class
+        %td= l round.start_time, format: :time
         %td{colspan: 2}
-      - round.dance_rounds.each do |dance_round|
+      - round.dance_rounds.order(:position).each do |dance_round|
         - dance_round.dance_teams.each do |dance_team|
           %tr
-            %td
+            %td{colspan: 3}
             - if dance_team.dancers.empty?
               %td{colspan: 2}= dance_team.name
             - else
