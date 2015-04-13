@@ -17,7 +17,7 @@ class RoundPolicy < ApplicationPolicy
   end
 
   def start?
-    user && user.has_role?(:admin) && !record.started? && Round.where('start_time < ?', record.start_time).all?(&:closed?)
+    user && user.has_role?(:admin) && !record.started? && Round.where('position < ?', record.position).all?(&:closed?)
   end
 
   def close?

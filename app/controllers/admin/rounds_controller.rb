@@ -1,7 +1,7 @@
 class Admin::RoundsController < Admin::BaseController
   def index
     authorize Round, :admin_index?
-    @rounds = Round.order(:start_time).all
+    @rounds = Round.order(:position).all
   end
 
   def create
