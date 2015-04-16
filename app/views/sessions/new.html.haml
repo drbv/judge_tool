@@ -1,4 +1,4 @@
 = simple_form_for @user, url: login_path do |f|
   = f.input :login
   = f.input :pin, as: :password
-  = f.submit 'Anmelden'
+  = f.submit 'Anmelden', class: 'btn btn-primary'

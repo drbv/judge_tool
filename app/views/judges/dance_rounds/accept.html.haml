@@ -1,3 +1,48 @@
-- current_dance_round.judges.each do |judge|
-  .alert{class: (judge.rated?(current_dance_round) ? 'alert-success' : 'alert-danger')}
-    = judge.full_name
+#wait_for_ending
+  %div
+    %h2 Tanzwertungen
+    %div
+      .alert.alert-success
+        = current_dance_round.observer.full_name
+      - current_dance_round.dance_judges.each do |judge|
+        .alert{class: (judge.rated?(current_dance_round) ? 'alert-success' : 'alert-danger')}
+          = judge.full_name
+    .container
+      .row
+        - current_dance_round.dance_teams.each do |dance_team|
+          %div{class: "md-col-#{12 / current_dance_round.dance_teams.count}"}
+            %h3=dance_team.name_with_startnumber
+            %table.table.table-striped
+              %tbody
+                %tr
+                  - current_dance_round.dance_judges.each do |judge|
+                    %td= judge.full_name
+                  %td= current_dance_round.observer.full_name
+                - %i(female_base_rating female_turn_rating male_base_rating male_turn_rating choreo_rating dance_figure_rating team_presentation_rating full_mistakes).each do |attr|
+                  %tr{class: "#{'danger' if current_dance_round.diff_to_big(dance_team, attr)}"}
+                    - current_dance_round.dance_judges.each do |judge|
+                      %td= @ratings[judge.id][dance_team.id] && @ratings[judge.id][dance_team.id].first.send(attr)
+                    %td= @ratings[current_user.id][dance_team.id].first.full_mistakes if attr == :full_mistakes
+
+  %div
+    %h2 Akrobatikwertungen
+    - current_dance_round.acrobatics_judges.each do |judge|
+      .alert{class: (judge.rated?(current_dance_round) ? 'alert-success' : 'alert-danger')}
+        = judge.full_name
+    .container
+      .row
+        - current_dance_round.dance_teams.each do |dance_team|
+          %div{class: "md-col-#{12 / current_dance_round.dance_teams.count}"}
+            %h3=dance_team.name_with_startnumber
+            %table.table.table-striped
+              %tbody
+                %tr
+                  - current_dance_round.acrobatics_judges.each do |judge|
+                    %td= judge.full_name
+                - current_dance_round.acrobatics.each do |acrobatic|
+                  %tr{class: "#{'danger' if acrobatic.diff_to_big(dance_team)}"}
+                    - current_dance_round.acrobatics_judges.each do |judge|
+                      %td= @acrobatic_ratings[judge.id][acrobatic.id][dance_team.id].first.rating
+                  %tr{class: "#{'danger' if acrobatic.mistake_diff_to_big(dance_team)}"}
+                    - current_dance_round.acrobatics_judges.each do |judge|
+                      %td= @acrobatic_ratings[judge.id][acrobatic.id][dance_team.id].first.full_mistakes

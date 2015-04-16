@@ -5,11 +5,13 @@
       %th Art
       %th Startzeit
       %th
+        %th
   %tbody
     - @rounds.each do |round|
       %tr{class: "#{'info' if round.active?}"}
         %td= "#{round.round_type.name} #{round.dance_class.name if round.dance_class}"
         %td= l round.start_time, format: :time
+        %td
         %td
       - round.dance_rounds.order(:position).each do |dance_round|
         - dance_round.dance_teams.each do |dance_team|
@@ -17,3 +19,4 @@
             %td
             %td= l dance_round.started_at, format: :time if dance_round.started_at
             %td= dance_team.full_name
+            %td= raw dance_round.points_per_judge(dance_team).map { |rating_type, points|  "#{rating_type}: #{points.join(', ')}" }.join('<br/>') if dance_round.closed?

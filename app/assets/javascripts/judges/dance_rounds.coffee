@@ -1,5 +1,29 @@
 ready = ->
   calculateOverallRating = ->
+    points = 0
+    $('.points').each ->
+      max = 0
+      maxRating = 0
+      rating = 0
+      punishment = 0
+      if $(this).attr('max')
+        max = parseInt $(this).attr('max')
+      $(this).find('input').each ->
+        if $(this).attr('id').match(/rating$/)
+          maxRating += 100
+          rating += 100 - parseInt($(this).val())
+        if $(this).attr('id').match(/mistakes$/)
+          if $(this).val() != ''
+            $.each $(this).val().split(','), (index, val) ->
+              punishment += parseInt(val.substring(1, val.length))
+      if $(this).attr('mistake_type')=='rel'
+        points += Math.max.apply(Math, [0, ((rating / maxRating * max) - punishment)])
+      else
+        if maxRating > 0
+          points += (rating / maxRating * max) - punishment
+        else
+          points -= punishment
+    $('#total').text(points.toFixed(2))
 
   $(document).on 'click', '.mistakes a', ->
     $(this).addClass('active')

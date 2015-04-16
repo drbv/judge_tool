@@ -23,14 +23,21 @@ class Judges::DanceRoundsController < Judges::BaseController
 
   def update
     authorize current_dance_round
-    %i(dance_ratings acrobatic_ratings).each do |rating_type|
-      if dance_round_params[rating_type]
-        dance_round_params[rating_type].each do |attributes|
-          current_dance_round.dance_ratings.build attributes.merge(user_id: current_user.id)
-        end
+    if dance_round_params[:dance_ratings]
+      dance_round_params[:dance_ratings].each do |attributes|
+        current_dance_round.dance_ratings.build attributes.merge(user_id: current_user.id)
       end
     end
-    current_dance_round.save
+    acrobatics = []
+    if dance_round_params[:acrobatic_ratings]
+      dance_round_params[:acrobatic_ratings].each do |attributes|
+        acrobatic = current_dance_round.acrobatics.find(attributes[:acrobatic_id])
+        acrobatic.acrobatic_ratings.build attributes.merge(user_id: current_user.id)
+        acrobatics << acrobatic
+      end
+    end
+    current_dance_round.save!
+    acrobatics.each(&:save!)
     judge_dance_teams
   end
 
@@ -74,6 +81,18 @@ class Judges::DanceRoundsController < Judges::BaseController
   def observe_judgments
     if current_dance_round
       if current_user.rated?(current_dance_round)
+        @ratings = {}
+        (current_dance_round.dance_judges << current_user).each do |judge|
+          @ratings[judge.id] = current_dance_round.dance_ratings.where(user_id: judge.id).all.group_by(&:dance_team_id)
+        end
+        @acrobatic_ratings = {}
+        current_dance_round.acrobatics_judges.each do |judge|
+          @acrobatic_ratings[judge.id] = {}
+          current_dance_round.acrobatics.each do |acrobatic|
+            @acrobatic_ratings[judge.id][acrobatic.id] = {}
+            @acrobatic_ratings[judge.id][acrobatic.id] = acrobatic.acrobatic_ratings.where(user_id: judge.id).all.group_by(&:dance_team_id)
+          end
+        end
         render :accept
       else
         render :recognize_failures_only

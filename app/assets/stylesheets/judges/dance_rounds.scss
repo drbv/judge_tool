@@ -48,7 +48,7 @@
   }
 }
 
-.total {
+#total {
   display: inline-block;
   padding: 1em 0;
   text-align: center;
@@ -58,6 +58,12 @@
   border: 2px solid #000;
   @include border-radius(10px);
   margin-right: 2em;
+}
+
+#wait_for_ending {
+  div div {
+    display: inline-block;
+  }
 }
 
 .clearfix {

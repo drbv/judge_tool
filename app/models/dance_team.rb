@@ -10,4 +10,8 @@ class DanceTeam < ActiveRecord::Base
   def full_name
     name ? name : dancers.map(&:full_name).join(' und ')
   end
+
+  def name_with_startnumber
+    "#{startnumber} #{full_name}"
+  end
 end
