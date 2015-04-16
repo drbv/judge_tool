@@ -1,4 +1,3 @@
 - current_dance_round.judges.each do |judge|
   .alert{class: (judge.rated?(current_dance_round) ? 'alert-success' : 'alert-danger')}
     = judge.full_name
-    

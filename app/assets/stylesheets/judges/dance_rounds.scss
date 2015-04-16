@@ -1,8 +1,8 @@
 .mistakes {
-  padding-left: 8em;
+  margin: auto;
   div {
     display: inline-block;
-    margin-left: 1em;
+    margin-left: 0.5em;
   }
 }
 
@@ -12,9 +12,45 @@
   padding: 0.7em;
   border: 2px solid #000;
   @include border-radius(10px);
-  width: 100%;
   height: 4em;
   div {
     margin-right: 0.2em;
   }
+}
+
+.rating {
+  margin-bottom: 1em;
+  div {
+    margin: 0;
+    display: block;
+    float: left;
+    padding: 0.25em 0;
+    border: 1px solid #555;
+    font-size: 90%;
+    width: 2em;
+    text-align: center;
+    background-color: #5cb85c;
+  }
+  div:hover {
+    background-color: #f0ad4e;
+  }
+  .active {
+    background-color: #d9534f;
+  }
+}
+
+.total {
+  display: inline-block;
+  padding: 1em 0;
+  text-align: center;
+  width: 4em;
+  font-weight: bold;
+  font-size: 150%;
+  border: 2px solid #000;
+  @include border-radius(10px);
+  margin-right: 2em;
+}
+
+.clearfix {
+  clear: both;
 }

@@ -5,13 +5,13 @@
         %h3= dance_team.full_name
         - @dance_round.acrobatics.where(dance_team_id: dance_team.id).each do |acrobatic|
           = acrobatic.acrobatic_type.name
-          = f.fields_for 'acrobatic_ratings[]', @dance_round.accrobatic_ratings.build do |r|
+          = f.fields_for 'acrobatic_ratings[]', @dance_round.acrobatic_ratings.build do |r|
             = r.hidden_field :dance_team_id, value: dance_team.id
             = r.hidden_field :acrobatic_id, value: acrobatic.id
-            %div
-              = render partial: :rating_bar
+            .points{max: acrobatic.acrobatic_type.max_points,mistake_type: 'rel'}
+              = render partial: 'rating_bar', locals: {set_to: 0}
               = r.hidden_field :rating, autocomplete: 'off'
-            %div
-              = render partial: :mistakes_bar
+              = render partial: 'mistakes_bar', locals: {hide: 'T'}
               = r.hidden_field :mistakes, autocomplete: 'off'
+  .total= @dance_round.acrobatics.map {|acro| acro.acrobatic_type.max_points}.sum
   = f.submit 'Wertung absenden', data: { confirm: 'Sicher alles gewertet?' }, class: 'btn btn-primary'

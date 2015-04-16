@@ -1,0 +1,5 @@
+.rating
+  - 21.times do |k|
+    %div{class: "#{'active' if k*5 <= set_to}"}= k*5
+
+.clearfix
