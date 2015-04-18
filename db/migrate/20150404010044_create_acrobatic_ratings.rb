@@ -6,6 +6,7 @@ class CreateAcrobaticRatings < ActiveRecord::Migration
       t.references :acrobatic, index: true, foreign_key: true
       t.references :dance_team, index: true, foreign_key: true
       t.references :user, index: true, foreign_key: true
+      t.integer :reopened, default: 0
 
       t.timestamps null: false
     end

@@ -25,6 +25,10 @@ class DanceRound < ActiveRecord::Base
     finished
   end
 
+  def close!
+    update_attributes finished: true, finished_at: Time.now
+  end
+
   def start!
     update_attributes started: true, started_at: Time.now
   end
@@ -43,6 +47,10 @@ class DanceRound < ActiveRecord::Base
 
   def acrobatics_judges
     round.acrobatics_judges
+  end
+
+  def ready?
+    ! judges.any? {|judge| !judge.rated?(self)} && !dance_ratings.any? {|dance_rating| dance_rating.reopened?} && !acrobatic_ratings.any? {|dance_rating| dance_rating.reopened?}
   end
 
   def diff_to_big(dance_team, attr)

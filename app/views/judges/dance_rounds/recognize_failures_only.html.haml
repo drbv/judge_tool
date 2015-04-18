@@ -8,4 +8,4 @@
           %div
             = render partial: 'mistakes_bar'
             = r.hidden_field :mistakes, autocomplete: 'off'
-  = f.submit 'Wertung absenden', confirm: 'Sicher alles gewertet?', class: 'btn btn-primary'
+  = f.submit 'Wertung absenden', data: {confirm: 'Sicher alles gewertet?'}, class: 'btn btn-primary'

@@ -9,6 +9,7 @@ class CreateDanceRatings < ActiveRecord::Migration
       t.integer :dance_figure_rating, default: 0
       t.integer :team_presentation_rating, default: 0
       t.string :mistakes
+      t.integer :reopened, default: 0
       t.references :dance_team, index: true, foreign_key: true
       t.references :dance_round, index: true, foreign_key: true
       t.references :user, index: true, foreign_key: true

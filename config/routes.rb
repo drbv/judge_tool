@@ -9,7 +9,9 @@ Rails.application.routes.draw do
     end
   end
   namespace :judges do
-    resource :dance_round
+    resource :dance_round do
+      post :accept
+    end
   end
   resource :round, only: %i(show)
   resources :pages, only: :show

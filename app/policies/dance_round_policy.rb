@@ -11,6 +11,10 @@ class DanceRoundPolicy < ApplicationPolicy
     user && record && user_is_judge_for_this_round? && user_has_not_rated_already?
   end
 
+  def accept?
+    user && user.has_role?(:observer, record.round) && record.ready?
+  end
+
   def user_is_judge_for_this_round?
     (user.has_role?(:observer, record.round) || user.has_role?(:dance_judge, record.round) || user.has_role?(:acrobatics_judge, record.round))
   end
