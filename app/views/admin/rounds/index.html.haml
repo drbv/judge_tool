@@ -21,5 +21,5 @@
           - if policy(round).update?
             = link_to 'Wertungsrichter', edit_admin_round_path(round), class: 'btn btn-primary'
           - else
-            = link_to 'Wertungsrichter', admin_round_path(round), class: 'btn btn-primary'
+            = link_to 'Wertungsrichter', admin_round_path(round), class: 'btn btn-primary' if policy(round).show?
           = link_to 'Löschen', admin_round_path(round), method: :delete, class: 'btn btn-danger', data: {confirm: 'Sicher für Neuimport Löschen?'} if index + 1 == @rounds.size && policy(round).destroy?
