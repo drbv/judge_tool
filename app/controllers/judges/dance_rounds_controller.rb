@@ -112,7 +112,7 @@ class Judges::DanceRoundsController < Judges::BaseController
 
   def judge(judgment_type)
     if current_dance_round
-      if current_user.rate d?(current_dance_round)
+      if current_user.rated?(current_dance_round)
         if request.xhr?
           render :json, still_waiting: true, body: render_to_string(partial: 'waiting_table')
         else
