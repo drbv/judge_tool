@@ -13,6 +13,10 @@ class DanceRound < ActiveRecord::Base
     end
   end
 
+  def self.next
+    where(started: false, finished: false).order(:position).first
+  end
+
   def self.active
     find_by(started: true, finished: false)
   end

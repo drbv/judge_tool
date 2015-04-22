@@ -1,0 +1,18 @@
+%h1= "#{@round.round_type.name} #{@round.dance_class.name}"
+%table.table.table-striped
+  %thead
+    %tr
+      %th Richter
+      %th Rolle
+  %tbody
+    %tr
+      %td= @round.observer.full_name
+      %td Observer
+    - @round.dance_judges.each do |dance_judge|
+      %tr
+        %td= dance_judge.full_name
+        %td Tanzrichter
+    - @round.acrobatics_judges.each do |acro_judge|
+      %tr
+        %td= acro_judge.full_name
+        %td Akrobatikrichter
