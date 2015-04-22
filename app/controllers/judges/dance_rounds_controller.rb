@@ -72,9 +72,9 @@ class Judges::DanceRoundsController < Judges::BaseController
     if current_user.has_role?(:observer, current_round)
       observe_judgments
     elsif current_user.has_role?(:dance_judge, current_round)
-      judge_dance_technique
+      judge :dance_technique
     elsif current_user.has_role?(:acrobatics_judge, current_round)
-      judge_acrobatics
+      judge :acrobatics
     else
       render :pause
     end
@@ -95,7 +95,11 @@ class Judges::DanceRoundsController < Judges::BaseController
             @acrobatic_ratings[judge.id][acrobatic.id] = acrobatic.acrobatic_ratings.where(user_id: judge.id).all.group_by(&:dance_team_id)
           end
         end
-        render :accept
+        if request.xhr?
+          render :json, still_waiting: true, body: render_to_string(partial: :accept_tables)
+        else
+          render :accept
+        end
       else
         render :recognize_failures_only
       end
@@ -105,24 +109,16 @@ class Judges::DanceRoundsController < Judges::BaseController
     end
   end
 
-  def judge_dance_technique
+  def judge(judgment_type)
     if current_dance_round
       if current_user.rated?(current_dance_round)
-        render :wait_for_ending
+        if request.xhr?
+          render :json, still_waiting: true, body: render_to_string(partial: :waiting_table)
+        else
+          render :wait_for_ending
+        end
       else
-        render :judge_dance_technique
-      end
-    else
-      render :no_dance_round
-    end
-  end
-
-  def judge_acrobatics
-    if current_dance_round
-      if current_user.rated?(current_dance_round)
-        render :wait_for_ending
-      else
-        render :judge_acrobatics
+        render :"judge_#{judgment_type}"
       end
     else
       render :no_dance_round

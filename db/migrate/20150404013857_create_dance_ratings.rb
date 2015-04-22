@@ -18,5 +18,6 @@ class CreateDanceRatings < ActiveRecord::Migration
     end
 
     add_index :dance_ratings, [:dance_round_id, :user_id], name: :find_by_judge_and_dance_round
+    add_index :dance_ratings, [:dance_round_id, :user_id, :reopened], name: :find_by_judge_and_dance_round_and_reopened
   end
 end

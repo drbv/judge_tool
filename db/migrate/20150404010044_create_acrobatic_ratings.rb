@@ -10,5 +10,7 @@ class CreateAcrobaticRatings < ActiveRecord::Migration
 
       t.timestamps null: false
     end
+    add_index :acrobatic_ratings, [:user_id, :acrobatic_id]
+    add_index :acrobatic_ratings, [:user_id, :acrobatic_id, :reopened], name: 'reopened_user_acrobatic'
   end
 end

@@ -64,13 +64,15 @@ class DanceRound < ActiveRecord::Base
   end
 
   def points_per_judge(team)
-    points = { 'Akrobatiken' => [], 'Tanz' => [] }
+    points = { 'Akrobatiken' => [], 'Beintechnik' => [] }
     round.dance_judges.each do |judge|
-      points['Tanz'] << dance_ratings.from(judge, team).points
+      points['Beintechnik'] << dance_ratings.from(judge, team).points
     end
     round.acrobatics_judges.each do |judge|
       points['Akrobatiken'] << acrobatic_ratings.where(team_id: team.id, user_id: judge.id).map(&:points).sum
     end
+    points.delete 'Akrobatiken' if points['Akrobatiken'].empty?
+    points.delete 'Beintechnik' if points['Beintechnik'].empty?
     points
   end
 

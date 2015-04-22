@@ -14,17 +14,20 @@
 ActiveRecord::Schema.define(version: 20150408214518) do
 
   create_table "acrobatic_ratings", force: :cascade do |t|
-    t.integer  "rating"
+    t.integer  "rating",        default: 0
     t.string   "mistakes"
     t.integer  "acrobatic_id"
     t.integer  "dance_team_id"
     t.integer  "user_id"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.integer  "reopened",      default: 0
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
   end
 
   add_index "acrobatic_ratings", ["acrobatic_id"], name: "index_acrobatic_ratings_on_acrobatic_id"
   add_index "acrobatic_ratings", ["dance_team_id"], name: "index_acrobatic_ratings_on_dance_team_id"
+  add_index "acrobatic_ratings", ["user_id", "acrobatic_id", "reopened"], name: "reopened_user_acrobatic"
+  add_index "acrobatic_ratings", ["user_id", "acrobatic_id"], name: "index_acrobatic_ratings_on_user_id_and_acrobatic_id"
   add_index "acrobatic_ratings", ["user_id"], name: "index_acrobatic_ratings_on_user_id"
 
   create_table "acrobatic_types", force: :cascade do |t|
@@ -64,34 +67,40 @@ ActiveRecord::Schema.define(version: 20150408214518) do
   end
 
   create_table "dance_ratings", force: :cascade do |t|
-    t.integer  "female_base_rating"
-    t.integer  "female_turn_rating"
-    t.integer  "male_base_rating"
-    t.integer  "male_turn_rating"
-    t.integer  "choreo_rating"
-    t.integer  "dance_figure_rating"
-    t.integer  "team_presentation_rating"
+    t.integer  "female_base_rating",       default: 0
+    t.integer  "female_turn_rating",       default: 0
+    t.integer  "male_base_rating",         default: 0
+    t.integer  "male_turn_rating",         default: 0
+    t.integer  "choreo_rating",            default: 0
+    t.integer  "dance_figure_rating",      default: 0
+    t.integer  "team_presentation_rating", default: 0
     t.string   "mistakes"
+    t.integer  "reopened",                 default: 0
     t.integer  "dance_team_id"
     t.integer  "dance_round_id"
     t.integer  "user_id"
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
   end
 
+  add_index "dance_ratings", ["dance_round_id", "user_id", "reopened"], name: "find_by_judge_and_dance_round_and_reopened"
+  add_index "dance_ratings", ["dance_round_id", "user_id"], name: "find_by_judge_and_dance_round"
   add_index "dance_ratings", ["dance_round_id"], name: "index_dance_ratings_on_dance_round_id"
   add_index "dance_ratings", ["dance_team_id"], name: "index_dance_ratings_on_dance_team_id"
   add_index "dance_ratings", ["user_id"], name: "index_dance_ratings_on_user_id"
 
   create_table "dance_rounds", force: :cascade do |t|
     t.integer  "round_id"
-    t.boolean  "started",    default: false
-    t.boolean  "finished",   default: false
+    t.datetime "started_at"
+    t.datetime "finished_at"
+    t.boolean  "started",     default: false
+    t.boolean  "finished",    default: false
     t.integer  "position"
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
   end
 
+  add_index "dance_rounds", ["finished", "started"], name: "index_dance_rounds_on_finished_and_started"
   add_index "dance_rounds", ["position"], name: "index_dance_rounds_on_position"
   add_index "dance_rounds", ["round_id"], name: "index_dance_rounds_on_round_id"
 
