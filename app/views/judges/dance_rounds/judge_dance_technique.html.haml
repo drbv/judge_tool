@@ -1,7 +1,7 @@
 = form_for @dance_round, url: judges_dance_round_path do |f|
-  .row
+  #dance_teams.row
     - @dance_round.dance_teams.each do |dance_team|
-      %div{class: "col-md-#{12/[@dance_round.dance_teams.size, 2].max}"}
+      .dance_team{class: "col-md-#{12/[@dance_round.dance_teams.size, 2].max}"}
         %h3= dance_team.name_with_startnumber
         = f.fields_for 'dance_ratings[]', @dance_round.dance_ratings.build do |r|
           = r.hidden_field :dance_team_id, value: dance_team.id
@@ -41,5 +41,5 @@
             %div
               = render partial: 'mistakes_bar'
               = r.hidden_field :mistakes, autocomplete: 'off'
-  #total 40
+        .total 40
   = f.submit 'Wertung absenden', class: 'btn btn-primary', data: { confirm: 'Sicher alles gewertet?' }
