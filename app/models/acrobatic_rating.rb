@@ -7,6 +7,7 @@ class AcrobaticRating < ActiveRecord::Base
   validates_presence_of :dance_team, :acrobatic, :user, :rating
   validates_format_of :mistakes, with: /\A((S2|S10|S20|U2|U10|U20|V5)(,(S2|S10|S20|U2|U10|U20|V5))*)?\Z/
   validates_uniqueness_of :acrobatic_id, scope: %i[user_id dance_team_id]
+  validate :team_belongs_to_dance_round
 
   def permitted_attributes
     new_record? ? [:rating, :mistakes] : reopened_attributes
@@ -25,6 +26,10 @@ class AcrobaticRating < ActiveRecord::Base
   end
 
   private
+
+  def team_belongs_to_dance_round
+    errors.add :dance_team unless acrobatic.dance_round.dance_teams.include?(dance_team)
+  end
 
   def discussable_attributes
     %i[rating mistakes]
