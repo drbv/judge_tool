@@ -5,7 +5,7 @@ class RoundPolicy < ApplicationPolicy
   end
 
   def show?
-    user && user.has_role?(:admin)
+    user && user.has_role?(:admin) && !record.round_type.no_dance
   end
 
   def create?

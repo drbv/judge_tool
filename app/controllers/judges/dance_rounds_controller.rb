@@ -97,7 +97,7 @@ class Judges::DanceRoundsController < Judges::BaseController
           end
         end
         if request.xhr?
-          render :json, still_waiting: true, body: render_to_string(partial: :accept_tables)
+          render :json, still_waiting: true, body: render_to_string(partial: 'accept_tables')
         else
           render :accept
         end
@@ -114,7 +114,7 @@ class Judges::DanceRoundsController < Judges::BaseController
     if current_dance_round
       if current_user.rated?(current_dance_round)
         if request.xhr?
-          render :json, still_waiting: true, body: render_to_string(partial: :waiting_table)
+          render :json, still_waiting: true, body: render_to_string(partial: 'waiting_table')
         else
           render :wait_for_ending
         end
