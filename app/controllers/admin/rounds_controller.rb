@@ -10,6 +10,11 @@ class Admin::RoundsController < Admin::BaseController
     redirect_to admin_rounds_path
   end
 
+  def show
+    @round = Round.find params[:id]
+    authorize @round
+  end
+
   def edit
     @round = Round.find params[:id]
     authorize @round

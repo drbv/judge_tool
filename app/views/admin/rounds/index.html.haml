@@ -1,6 +1,6 @@
 %h1 Rundenverwaltung
 
-= link_to 'Nächste Runde importieren', admin_rounds_path, method: :post, class: 'btn btn-primary'
+= link_to 'Runden importieren', admin_rounds_path, method: :post, class: 'btn btn-primary'
 
 %table.table.table-striped
   %thead
@@ -18,5 +18,8 @@
         %td
           = link_to 'Runde beginnen', start_admin_round_path(round), method: :post, class: 'btn btn-success', data: { confirm: 'Runde wird gestartet - Tanzpaare dieser Runde werden importiert und Runde kann danach nicht mehr gelöscht und neu importiert werden.' } if policy(round).start?
           = link_to 'Runde beenden', close_admin_round_path(round), method: :delete, class: 'btn btn-danger', data: { confirm: 'Ansprache / Pause beendet?' } if policy(round).close?
-          = link_to 'Wertungsrichter', edit_admin_round_path(round), class: 'btn btn-primary' if policy(round).update?
+          - if policy(round).update?
+            = link_to 'Wertungsrichter', edit_admin_round_path(round), class: 'btn btn-primary'
+          - else
+            = link_to 'Wertungsrichter', admin_round_path(round), class: 'btn btn-primary'
           = link_to 'Löschen', admin_round_path(round), method: :delete, class: 'btn btn-danger', data: {confirm: 'Sicher für Neuimport Löschen?'} if index + 1 == @rounds.size && policy(round).destroy?

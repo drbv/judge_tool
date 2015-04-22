@@ -17,9 +17,11 @@ module MS
     end
 
     def import_round!
+      @round_created=false
       @access_database['Rundentab'].sort_by { |round| round[:Rundenreihenfolge].to_i }.each do |round|
-        next if find_round(round)
-        return create_round(round)
+        next if !@round_created && find_round(round)
+        @round_created = true
+        create_round(round)
       end
       nil
     end
