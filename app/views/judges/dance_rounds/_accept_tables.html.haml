@@ -47,4 +47,4 @@
                     %td= @acrobatic_ratings[judge.id][acrobatic.id][dance_team.id].first.full_mistakes
 
 %div
-  = link_to accept_judges_dance_round_path, method: :post, data: {confirm: 'Keine Änderungen notwendig!'}
+  = link_to "Accept", accept_judges_dance_round_path, method: :post, data: {confirm: 'Keine Änderungen notwendig!'}, class: "btn btn-primary"

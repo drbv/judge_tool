@@ -45,7 +45,7 @@ class Judges::DanceRoundsController < Judges::BaseController
   def accept
     authorize current_dance_round
     current_dance_round.close!
-    redirect_to judge_dance_round_path
+    redirect_to judges_dance_round_path
   end
 
   private
