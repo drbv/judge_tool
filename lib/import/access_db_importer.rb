@@ -27,15 +27,17 @@ module MS
     end
 
     def import_dance_rounds!(round)
-      dance_rounds(round).each do |dance_round_data|
-        team_data = @access_database[:Paare].select {|team| team[:TP_ID] == dance_round_data[:TP_ID]}.first
-        dance_round = round.dance_rounds.build position: dance_round_data[:Rundennummer]
-        team = DanceTeam.find_by startnumber: team_data[:Startnr]
-        dance_round.dance_teams << team
-        8.times do |k|
-          next if team_data[:"Akro#{k+1}_#{round.round_type.acrobatics_from}"].blank?
-          dance_round.acrobatics.build dance_team: team,
-                                       acrobatic_type: acrobatic_type(team_data[:"Akro#{k+1}_#{round.round_type.acrobatics_from}"], team_data[:"Wert#{k+1}_#{round.round_type.acrobatics_from}"])
+      dance_rounds(round).each do |dance_round_no, dance_teams|
+        dance_round = round.dance_rounds.build position: dance_round_no
+        dance_teams.each do |dance_round_data|
+          team_data = @access_database[:Paare].select { |team| team[:TP_ID] == dance_round_data[:TP_ID] }.first
+          team = DanceTeam.find_by startnumber: team_data[:Startnr]
+          dance_round.dance_teams << team
+          8.times do |k|
+            next if team_data[:"Akro#{k+1}_#{round.round_type.acrobatics_from}"].blank?
+            dance_round.acrobatics.build dance_team: team,
+                                         acrobatic_type: acrobatic_type(team_data[:"Akro#{k+1}_#{round.round_type.acrobatics_from}"], team_data[:"Wert#{k+1}_#{round.round_type.acrobatics_from}"])
+          end
         end
         dance_round.save
       end
@@ -52,7 +54,7 @@ module MS
     def dance_rounds(round)
       @access_database[:Paare_Rundenqualifikation].select do |dance_round|
         dance_round[:RT_ID] == rt_id(round)
-      end.sort_by { |dance_round| dance_round[:Rundennummer].to_i }
+      end.sort_by { |dance_round| dance_round[:Rundennummer].to_i }.group_by { |dance_round| dance_round[:Rundennummer].to_i }
     end
 
     def rt_id(round)
