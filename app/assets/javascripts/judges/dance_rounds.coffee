@@ -16,14 +16,15 @@ ready = ->
           if $(this).val() != ''
             $.each $(this).val().split(','), (index, val) ->
               punishment += parseInt(val.substring(1, val.length))
-      if $(this).attr('mistake_type')=='rel'
+      if $(this).attr('mistake_type') == 'rel'
         points += Math.max.apply(Math, [0, ((rating / maxRating * max) - punishment)])
       else
         if maxRating > 0
           points += (rating / maxRating * max) - punishment
         else
           points -= punishment
-    $('#total').text(points.toFixed(2))
+        points = Math.max.apply(Math, [0, points])
+        $('#total').text(points.toFixed(2))
 
   $(document).on 'click', '.mistakes a', ->
     $(this).addClass('active')
