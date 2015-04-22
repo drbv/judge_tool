@@ -5,7 +5,7 @@ class Admin::RoundsController < Admin::BaseController
   end
 
   def create
-    authorize Round, :create?
+    authorize Round
     access_database.import_round!
     redirect_to admin_rounds_path
   end
