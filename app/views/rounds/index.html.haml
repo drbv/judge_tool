@@ -17,5 +17,5 @@
         %tr{class: "#{'success' if dance_round.active?}"}
           %td
           %td= l dance_round.started_at, format: :time if dance_round.started_at
-          %td= raw dance_round.dance_teams.map(&:full_name).join("<br/>#{'<br/>' if dance_round.acrobatic_judges.size > 0}")
+          %td= raw dance_round.dance_teams.map(&:full_name).join("<br/>#{'<br/>' if round.acrobatics_judges.size > 0}")
           %td= raw dance_round.dance_teams.map { |dance_team| dance_round.points_per_judge(dance_team).map { |rating_type, points|  "#{rating_type}: #{points.join(', ')}" }.join('<br/>') if dance_round.closed? }.join('<br/>')
