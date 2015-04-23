@@ -15,5 +15,5 @@
               %div
                 = render partial: 'mistakes_bar', locals: {hide: 'T'}
                 = r.hidden_field :mistakes, autocomplete: 'off', id: "dance_round_acrobatic_ratings_#{index}_mistakes"
-        .total= @dance_round.acrobatics.map {|acro| acro.acrobatic_type.max_points}.sum
+        .total= @dance_round.acrobatics.where(dance_team_id: dance_team.id).map {|acro| acro.acrobatic_type.max_points}.sum
   = f.submit 'Wertung absenden', data: { confirm: 'Sicher alles gewertet?' }, class: 'btn btn-primary'
