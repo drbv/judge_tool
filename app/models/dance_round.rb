@@ -66,7 +66,7 @@ class DanceRound < ActiveRecord::Base
   def points_per_judge(team)
     points = { 'Akrobatiken' => [], 'Beintechnik' => [] }
     round.dance_judges.each do |judge|
-      points['Beintechnik'] << dance_ratings.where(dance_team_id: team.id, user_id: judge.id).first.points
+      points['Beintechnik'] << dance_ratings.where(dance_team_id: team.id, user_id: judge.id).first.points.round(2)
     end
     round.acrobatics_judges.each do |judge|
       points['Akrobatiken'] << acrobatic_ratings.where(team_id: team.id, user_id: judge.id).map(&:points).sum
