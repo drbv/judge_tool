@@ -15,7 +15,7 @@ class Acrobatic < ActiveRecord::Base
 
   def diff_to_big(team)
     ary = acrobatic_ratings.rating_detail(team)
-    return false if ary.empty
+    return false if ary.empty?
     ary.max - ary.min > 40
   end
 end
