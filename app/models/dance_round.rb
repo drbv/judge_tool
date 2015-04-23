@@ -7,10 +7,6 @@ class DanceRound < ActiveRecord::Base
     def rating_detail(team, attr)
       where(dance_team_id: team.id).pluck(attr).compact
     end
-
-    def from(judge, team)
-      find_by(dance_team_id: team.id, user_id: judge.id)
-    end
   end
 
   def self.next
@@ -70,7 +66,7 @@ class DanceRound < ActiveRecord::Base
   def points_per_judge(team)
     points = { 'Akrobatiken' => [], 'Beintechnik' => [] }
     round.dance_judges.each do |judge|
-      points['Beintechnik'] << dance_ratings.from(judge, team).points
+      points['Beintechnik'] << dance_ratings.where(team_id: team.id, user_id: judge.id).first.points
     end
     round.acrobatics_judges.each do |judge|
       points['Akrobatiken'] << acrobatic_ratings.where(team_id: team.id, user_id: judge.id).map(&:points).sum

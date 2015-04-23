@@ -25,6 +25,10 @@ class AcrobaticRating < ActiveRecord::Base
     @punishment ||= mistakes.split(',').map {|malus| malus[1..-1].to_i}.sum
   end
 
+  def points
+    @points ||= [acrobatic.acrobatic_type.max_points * (1 - rating.to_d / 100) - punishment, 0].max
+  end
+
   private
 
   def team_belongs_to_dance_round

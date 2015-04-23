@@ -14,9 +14,8 @@
         %td
         %td
       - round.dance_rounds.order(:position).each do |dance_round|
-        - dance_round.dance_teams.each do |dance_team|
-          %tr{class: "#{'success' if dance_round.active?}"}
-            %td
-            %td= l dance_round.started_at, format: :time if dance_round.started_at
-            %td= dance_team.full_name
-            %td= raw dance_round.points_per_judge(dance_team).map { |rating_type, points|  "#{rating_type}: #{points.join(', ')}" }.join('<br/>') if dance_round.closed?
+        %tr{class: "#{'success' if dance_round.active?}"}
+          %td
+          %td= l dance_round.started_at, format: :time if dance_round.started_at
+          %td= raw dance_round.dance_teams.map(&:full_name).join('<br\>')
+          %td= raw dance_round.points_per_judge(dance_team).map { |rating_type, points|  "#{rating_type}: #{points.join(', ')}" }.join('<br/>') if dance_round.closed?
