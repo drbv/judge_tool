@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
   helper_method :current_user
   include Pundit
   rescue_from Pundit::NotAuthorizedError, with: :redirect_to_login
-
+  http_basic_authenticate_with name: Rails.application.secrets.basic_auth.name, password: Rails.application.secrets.basic_auth.password if Rails.application.secrets.basic_auth
   private
 
   def redirect_to_login
