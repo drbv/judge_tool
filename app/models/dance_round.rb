@@ -41,6 +41,10 @@ class DanceRound < ActiveRecord::Base
     round.observer
   end
 
+  def observers
+    round.observers
+  end
+
   def dance_judges
     round.dance_judges
   end
