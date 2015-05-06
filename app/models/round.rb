@@ -57,6 +57,10 @@ class Round < ActiveRecord::Base
     User.with_role(:observer, self).first
   end
 
+  def observers
+    User.with_role :observer, self
+  end
+
   # def set_random_judges
   #   User.with_role(:judge).order(ActiveRecord::Base.connection.instance_values["config"][:adapter].start_with?('mysql') ? 'RAND()' : 'RANDOM()').each_with_index do |user, index|
   #     user.add_role Round.judge_role_for(index), self

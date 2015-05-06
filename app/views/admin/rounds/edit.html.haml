@@ -5,9 +5,10 @@
       %th Richter
       %th Rolle
   %tbody
-    %tr
-      %td= @round.observer.full_name
-      %td Observer
+    - @round.observers.each do |observer|
+      %tr
+        %td= observer.full_name
+        %td Observer
     - @round.dance_judges.each do |dance_judge|
       %tr
         %td= dance_judge.full_name
@@ -16,3 +17,5 @@
       %tr
         %td= acro_judge.full_name
         %td Akrobatikrichter
+
+= link_to 'zurück', admin_rounds_path, class: 'btn btn-primary'
