@@ -42,7 +42,7 @@ class Round < ActiveRecord::Base
   end
 
   def judges
-    @judges ||= [observer] + dance_judges + acrobatics_judges
+    @judges ||= observers + dance_judges + acrobatics_judges
   end
 
   def dance_judges
