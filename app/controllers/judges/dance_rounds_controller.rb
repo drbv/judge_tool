@@ -44,8 +44,13 @@ class Judges::DanceRoundsController < Judges::BaseController
 
   def accept
     authorize current_dance_round
-    current_dance_round.close!
-    current_dance_round.round.close! unless DanceRound.next
+    current_user.dance_ratings.where(dance_round_id: current_dance_round.id).each do |rating|
+      rating.final!
+    end
+    if current_dance_round.dance_ratings.where(user_id: current_round.observers.map(&:id)).all?(&:final?)
+      current_dance_round.close!
+      current_dance_round.round.close! unless DanceRound.next
+    end
     redirect_to judges_dance_round_path
   end
 
@@ -84,27 +89,33 @@ class Judges::DanceRoundsController < Judges::BaseController
 
   def observe_judgments
     if current_dance_round
-      if current_user.rated?(current_dance_round)
-        @ratings = {}
-        (current_dance_round.dance_judges << current_user).each do |judge|
-          @ratings[judge.id] = current_dance_round.dance_ratings.where(user_id: judge.id).all.group_by(&:dance_team_id)
-        end
-        @acrobatic_ratings = {}
-        current_dance_round.acrobatics_judges.each do |judge|
-          @acrobatic_ratings[judge.id] = {}
-          current_dance_round.acrobatics.each do |acrobatic|
-            @acrobatic_ratings[judge.id][acrobatic.id] = {}
-            @acrobatic_ratings[judge.id][acrobatic.id] = acrobatic.acrobatic_ratings.where(user_id: judge.id).all.group_by(&:dance_team_id)
+
+        if current_user.rated?(current_dance_round)
+          @ratings = {}
+          (current_dance_round.dance_judges << current_user).each do |judge|
+            @ratings[judge.id] = current_dance_round.dance_ratings.where(user_id: judge.id).all.group_by(&:dance_team_id)
           end
-        end
-        if request.xhr?
-          render :json, still_waiting: true, body: render_to_string(partial: 'accept_tables')
+          @acrobatic_ratings = {}
+          current_dance_round.acrobatics_judges.each do |judge|
+            @acrobatic_ratings[judge.id] = {}
+            current_dance_round.acrobatics.each do |acrobatic|
+              @acrobatic_ratings[judge.id][acrobatic.id] = {}
+              @acrobatic_ratings[judge.id][acrobatic.id] = acrobatic.acrobatic_ratings.where(user_id: judge.id).all.group_by(&:dance_team_id)
+            end
+          end
+          if request.xhr?
+            render :json, still_waiting: true, body: render_to_string(partial: 'accept_tables')
+          else
+            if current_dance_round.dance_ratings.where(user_id: current_user.id).all?(&:final?)
+              render :waiting_observer
+            else
+              render :accept
+            end
+          end
         else
-          render :accept
+          render :recognize_failures_only
         end
-      else
-        render :recognize_failures_only
-      end
+
     else
       @dance_round = DanceRound.where(started: false).order(:position).first
       render :start_dance_round
