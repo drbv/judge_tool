@@ -30,6 +30,15 @@ Things you may want to cover:
 
 * ...
 
+# Tutorials to get an Entry:
+## Base Knowladge about Rails
+http://railsforzombies.org/
+
+## mini Project for working with windows
+https://vimeo.com/44917909
+
+## Git Tutorial
+https://rogerdudler.github.io/git-guide/index.de.html
 
 Please feel free to use a different markup language if you do not plan to run
 <tt>rake doc:app</tt>.
