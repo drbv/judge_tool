@@ -6,6 +6,10 @@ class User < ActiveRecord::Base
   before_validation :generate_credentials
   validates :login, :pin, presence: true
 
+  def dance_teams(dance_round)
+    dance_round.dance_teams.where('dance_round_mappings.user_id = ?', id)
+  end
+
   def full_name
     "#{first_name} #{last_name}"
   end
