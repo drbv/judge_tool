@@ -27,12 +27,12 @@ module MS
     end
 
     def import_dance_rounds!(round)
+      observers = round.observers.order(:licence).to_a
       dance_rounds(round).each do |dance_round_no, dance_teams|
         dance_round = round.dance_rounds.build position: dance_round_no
-        dance_teams.each do |dance_round_data|
-          team_data = @access_database[:Paare].select { |team| team[:TP_ID] == dance_round_data[:TP_ID] }.first
-          team = DanceTeam.find_by startnumber: team_data[:Startnr]
-          dance_round.dance_teams << team
+        dance_teams.map { |dance_round_data| DanceTeam.find_by access_db_id: dance_round_data[:TP_ID] }.
+            sort_by(&:startnumber).each_with_index do |team, index|
+          dance_round.dance_round_mapping.build dance_team_id: team.id, user_id: observers[(index % observers.size)].id
           8.times do |k|
             next if team_data[:"Akro#{k+1}_#{round.round_type.acrobatics_from}"].blank?
             dance_round.acrobatics.build dance_team: team,

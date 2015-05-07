@@ -20,8 +20,9 @@ ActiveRecord::Schema.define(version: 20150408214518) do
     t.integer  "dance_team_id"
     t.integer  "user_id"
     t.integer  "reopened",      default: 0
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
+    t.boolean  "danced",        default: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
   end
 
   add_index "acrobatic_ratings", ["acrobatic_id"], name: "index_acrobatic_ratings_on_acrobatic_id"
@@ -79,8 +80,9 @@ ActiveRecord::Schema.define(version: 20150408214518) do
     t.integer  "dance_team_id"
     t.integer  "dance_round_id"
     t.integer  "user_id"
-    t.datetime "created_at",                           null: false
-    t.datetime "updated_at",                           null: false
+    t.boolean  "final",                    default: false
+    t.datetime "created_at",                               null: false
+    t.datetime "updated_at",                               null: false
   end
 
   add_index "dance_ratings", ["dance_round_id", "user_id", "reopened"], name: "find_by_judge_and_dance_round_and_reopened"
@@ -88,6 +90,15 @@ ActiveRecord::Schema.define(version: 20150408214518) do
   add_index "dance_ratings", ["dance_round_id"], name: "index_dance_ratings_on_dance_round_id"
   add_index "dance_ratings", ["dance_team_id"], name: "index_dance_ratings_on_dance_team_id"
   add_index "dance_ratings", ["user_id"], name: "index_dance_ratings_on_user_id"
+
+  create_table "dance_round_mappings", force: :cascade do |t|
+    t.integer "dance_round_id"
+    t.integer "dance_team_id"
+    t.integer "user_id"
+  end
+
+  add_index "dance_round_mappings", ["dance_round_id", "dance_team_id", "user_id"], name: "observer_dance_team_mapping"
+  add_index "dance_round_mappings", ["dance_round_id", "dance_team_id"], name: "dance_round_dance_team_mapping"
 
   create_table "dance_rounds", force: :cascade do |t|
     t.integer  "round_id"
@@ -103,13 +114,6 @@ ActiveRecord::Schema.define(version: 20150408214518) do
   add_index "dance_rounds", ["finished", "started"], name: "index_dance_rounds_on_finished_and_started"
   add_index "dance_rounds", ["position"], name: "index_dance_rounds_on_position"
   add_index "dance_rounds", ["round_id"], name: "index_dance_rounds_on_round_id"
-
-  create_table "dance_rounds_teams", id: false, force: :cascade do |t|
-    t.integer "dance_round_id"
-    t.integer "dance_team_id"
-  end
-
-  add_index "dance_rounds_teams", ["dance_round_id", "dance_team_id"], name: "dance_round_dance_team_mapping"
 
   create_table "dance_teams", force: :cascade do |t|
     t.integer  "dance_class_id"
@@ -179,7 +183,7 @@ ActiveRecord::Schema.define(version: 20150408214518) do
 
   create_table "users", force: :cascade do |t|
     t.string   "login"
-    t.string   "licence"
+    t.integer  "licence"
     t.string   "first_name"
     t.string   "last_name"
     t.string   "email"
