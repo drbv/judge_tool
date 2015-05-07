@@ -2,7 +2,7 @@
   %h2 Tanzwertungen
   %div
     .alert.alert-success
-      = current_dance_round.observer.full_name
+      = current_user.full_name
     - current_dance_round.dance_judges.each do |judge|
       .alert{class: (judge.rated?(current_dance_round) ? 'alert-success' : 'alert-danger')}
         = judge.full_name
