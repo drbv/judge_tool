@@ -31,7 +31,7 @@ Things you may want to cover:
 * ...
 
 # Tutorials to get an Entry:
-## Base Knowladge about Rails
+## Base Knowledge about Rails
 http://railsforzombies.org/
 
 ## mini Project for working with windows
