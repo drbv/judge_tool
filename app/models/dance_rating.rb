@@ -22,6 +22,14 @@ class DanceRating < ActiveRecord::Base
   def points
     @points ||= [(10 * (1 - (female_base_rating + female_turn_rating).to_d / 200) + 10 * (1 - (male_base_rating + male_turn_rating).to_d / 200) + 20 * (1 - (choreo_rating + dance_figure_rating + team_presentation_rating).to_d / 300)) - punishment, 0].max
   end
+
+  def final!
+    update_attributes final: true
+  end
+
+  def final?
+    final
+  end
   
   private
 

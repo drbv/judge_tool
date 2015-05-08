@@ -1,11 +1,16 @@
 class DanceRound < ActiveRecord::Base
   belongs_to :round
-  has_and_belongs_to_many :dance_teams
+  has_many :dance_round_mappings
+  has_many :dance_teams, :through => :dance_round_mappings
   has_many :acrobatics
   has_many :acrobatic_ratings, through: :acrobatics
   has_many :dance_ratings do
     def rating_detail(team, attr)
       where(dance_team_id: team.id).pluck(attr).compact
+    end
+
+    def validating(observer, judge, dance_round)
+      where(user_id: judge.id, dance_team_id: observer.dance_teams(dance_round).map(&:id))
     end
   end
 
@@ -15,6 +20,10 @@ class DanceRound < ActiveRecord::Base
 
   def self.active
     find_by(started: true, finished: false)
+  end
+
+  def accepted_by?(user)
+    dance_ratings.where(user_id: user.id).all?(&:final?)
   end
 
   def active?
@@ -39,6 +48,10 @@ class DanceRound < ActiveRecord::Base
 
   def observer
     round.observer
+  end
+
+  def observers
+    round.observers
   end
 
   def dance_judges

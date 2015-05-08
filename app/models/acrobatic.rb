@@ -6,6 +6,10 @@ class Acrobatic < ActiveRecord::Base
     def rating_detail(team)
       where(dance_team_id: team.id).pluck(:rating)
     end
+
+    def validating(observer, judge, dance_round)
+      where(user_id: judge.id, dance_team_id: observer.dance_teams(dance_round).map(&:id))
+    end
   end
 
   def mistake_diff_to_big(team)

@@ -24,11 +24,36 @@ class Judges::DanceRoundsController < Judges::BaseController
 
   def update
     authorize current_dance_round
+    set_dance_ratings
+    acrobatics = set_acrobatics_ratings(acrobatics)
+    current_dance_round.save!
+    acrobatics.each(&:save!)
+    judge_dance_teams
+  end
+
+  def accept
+    authorize current_dance_round
+    current_user.dance_ratings.where(dance_round_id: current_dance_round.id).each do |rating|
+      rating.final!
+    end
+    if current_dance_round.dance_ratings.where(user_id: current_round.observers.map(&:id)).all?(&:final?)
+      current_dance_round.close!
+      current_dance_round.round.close! unless DanceRound.next
+    end
+    redirect_to judges_dance_round_path
+  end
+
+  private
+  
+  def set_dance_ratings
     if dance_round_params[:dance_ratings]
       dance_round_params[:dance_ratings].each do |attributes|
         current_dance_round.dance_ratings.build attributes.merge(user_id: current_user.id)
       end
     end
+  end
+  
+  def set_acrobatics_ratings
     acrobatics = []
     if dance_round_params[:acrobatic_ratings]
       dance_round_params[:acrobatic_ratings].each do |attributes|
@@ -37,19 +62,8 @@ class Judges::DanceRoundsController < Judges::BaseController
         acrobatics << acrobatic
       end
     end
-    current_dance_round.save!
-    acrobatics.each(&:save!)
-    judge_dance_teams
+    acrobatics
   end
-
-  def accept
-    authorize current_dance_round
-    current_dance_round.close!
-    current_dance_round.round.close! unless DanceRound.next
-    redirect_to judges_dance_round_path
-  end
-
-  private
 
   def redirect_to_login
     if params[:action] == 'show'
@@ -84,30 +98,45 @@ class Judges::DanceRoundsController < Judges::BaseController
 
   def observe_judgments
     if current_dance_round
-      if current_user.rated?(current_dance_round)
-        @ratings = {}
-        (current_dance_round.dance_judges << current_user).each do |judge|
-          @ratings[judge.id] = current_dance_round.dance_ratings.where(user_id: judge.id).all.group_by(&:dance_team_id)
-        end
-        @acrobatic_ratings = {}
-        current_dance_round.acrobatics_judges.each do |judge|
-          @acrobatic_ratings[judge.id] = {}
-          current_dance_round.acrobatics.each do |acrobatic|
-            @acrobatic_ratings[judge.id][acrobatic.id] = {}
-            @acrobatic_ratings[judge.id][acrobatic.id] = acrobatic.acrobatic_ratings.where(user_id: judge.id).all.group_by(&:dance_team_id)
-          end
-        end
-        if request.xhr?
-          render :json, still_waiting: true, body: render_to_string(partial: 'accept_tables')
+      if current_user.has_to_rate?(current_dance_round)
+        if current_user.rated?(current_dance_round)
+          evaluate_ratings
         else
-          render :accept
+          render :recognize_failures_only
         end
       else
-        render :recognize_failures_only
+        render :waiting_observer
       end
     else
-      @dance_round = DanceRound.where(started: false).order(:position).first
+      @dance_round = current_round.dance_rounds.where(started: false).order(:position).first
       render :start_dance_round
+    end
+  end
+  
+  def evaluate_ratings
+    ratings_overview
+    if request.xhr?
+      render :json, still_waiting: true, body: render_to_string(partial: 'accept_tables')
+    else
+      if current_dance_round.accepted_by?(current_user)
+        render :waiting_observer
+      else
+        render :accept
+      end
+    end
+  end
+  
+  def ratings_overview
+    @ratings = {}
+    (current_dance_round.dance_judges << current_user).each do |judge|
+      @ratings[judge.id] = current_dance_round.dance_ratings.validating(current_user, judge, current_dance_round).to_a.group_by(&:dance_team_id)
+    end
+    @acrobatic_ratings = {}
+    current_dance_round.acrobatics_judges.each do |judge|
+      @acrobatic_ratings[judge.id] = {}
+      current_dance_round.acrobatics.each do |acrobatic|
+        @acrobatic_ratings[judge.id][acrobatic.id] = acrobatic.acrobatic_ratings.validating(current_user, judge, current_dance_round).to_a.group_by(&:dance_team_id)
+      end
     end
   end
 

@@ -13,6 +13,7 @@ class CreateDanceRatings < ActiveRecord::Migration
       t.references :dance_team, index: true, foreign_key: true
       t.references :dance_round, index: true, foreign_key: true
       t.references :user, index: true, foreign_key: true
+      t.boolean :final, default: false
 
       t.timestamps null: false
     end
