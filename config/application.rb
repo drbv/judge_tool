@@ -24,3 +24,5 @@ module JudgeTool
     config.active_record.raise_in_transactional_callbacks = true
   end
 end
+
+require "#{Rails.root}/lib/calculator/mistake_average"
