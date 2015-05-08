@@ -10,6 +10,10 @@ class User < ActiveRecord::Base
     dance_round.dance_teams.where('dance_round_mappings.user_id = ?', id)
   end
 
+  def has_to_rate?(dance_round)
+    !dance_teams(dance_round).empty?
+  end
+
   def full_name
     "#{first_name} #{last_name}"
   end

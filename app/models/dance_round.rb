@@ -8,6 +8,10 @@ class DanceRound < ActiveRecord::Base
     def rating_detail(team, attr)
       where(dance_team_id: team.id).pluck(attr).compact
     end
+
+    def validating(observer, judge, dance_round)
+      where(user_id: judge.id, dance_team_id: observer.dance_teams(dance_round).map(&:id))
+    end
   end
 
   def self.next
@@ -16,6 +20,10 @@ class DanceRound < ActiveRecord::Base
 
   def self.active
     find_by(started: true, finished: false)
+  end
+
+  def accepted_by?(user)
+    dance_ratings.where(user_id: user.id).all?(&:final?)
   end
 
   def active?

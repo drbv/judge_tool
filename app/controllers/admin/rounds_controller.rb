@@ -33,8 +33,8 @@ class Admin::RoundsController < Admin::BaseController
   def start
     @round = Round.find params[:id]
     authorize @round
-    @round.start!
     access_database.import_dance_rounds!(@round) unless @round.round_type.no_dance
+    @round.start!
     redirect_to admin_rounds_path
   end
 

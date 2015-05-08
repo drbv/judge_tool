@@ -89,35 +89,37 @@ class Judges::DanceRoundsController < Judges::BaseController
 
   def observe_judgments
     if current_dance_round
-
+      if current_user.has_to_rate?(current_dance_round)
         if current_user.rated?(current_dance_round)
           @ratings = {}
           (current_dance_round.dance_judges << current_user).each do |judge|
-            @ratings[judge.id] = current_dance_round.dance_ratings.where(user_id: judge.id).all.group_by(&:dance_team_id)
+            @ratings[judge.id] = current_dance_round.dance_ratings.validating(current_user, judge, current_dance_round).to_a.group_by(&:dance_team_id)
           end
           @acrobatic_ratings = {}
           current_dance_round.acrobatics_judges.each do |judge|
             @acrobatic_ratings[judge.id] = {}
             current_dance_round.acrobatics.each do |acrobatic|
-              @acrobatic_ratings[judge.id][acrobatic.id] = {}
-              @acrobatic_ratings[judge.id][acrobatic.id] = acrobatic.acrobatic_ratings.where(user_id: judge.id).all.group_by(&:dance_team_id)
+              @acrobatic_ratings[judge.id][acrobatic.id] = acrobatic.acrobatic_ratings.validating(current_user, judge, current_dance_round).to_a.group_by(&:dance_team_id)
             end
           end
           if request.xhr?
             render :json, still_waiting: true, body: render_to_string(partial: 'accept_tables')
           else
-            if current_dance_round.dance_ratings.where(user_id: current_user.id).all?(&:final?)
+            if current_dance_round.accepted_by?(current_user)
               render :waiting_observer
             else
               render :accept
             end
           end
+
         else
           render :recognize_failures_only
         end
-
+      else
+        render :waiting_observer
+      end
     else
-      @dance_round = DanceRound.where(started: false).order(:position).first
+      @dance_round = current_round.dance_rounds.where(started: false).order(:position).first
       render :start_dance_round
     end
   end
