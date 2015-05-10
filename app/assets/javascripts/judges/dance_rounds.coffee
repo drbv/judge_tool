@@ -59,6 +59,14 @@ ready = ->
     $(this).parent().parent().find('input[type=hidden]').val($(this).text())
     calculateOverallRating()
     false
+  $(document).on 'click', 'td.markable', ->
+    if $(this).hasClass('info')
+      $(this).removeClass('info')
+      $(this).find('input').val('0')
+    else
+      $(this).removeClass('danger')
+      $(this).addClass('info')
+      $(this).find('input').val('1')
 
 $(document).ready ready
 $(document).on('page:load', ready)
