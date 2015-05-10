@@ -67,6 +67,14 @@ ready = ->
       $(this).removeClass('danger')
       $(this).addClass('info')
       $(this).find('input').val('1')
+    if ('td.markable.info').size > 0
+      submit = $('#mark_ratings input[type="submit"]')
+      if submit.text() != 'Zur Diskussion freigeben!'
+        submit.attr('oldText', submit.text())
+        submit.text('Zur Diskussion freigeben!')
+    else
+      if submit.text() == 'Zur Diskussion freigeben!'
+        submit.text(submit.attr('oldText'))
 
 $(document).ready ready
 $(document).on('page:load', ready)
