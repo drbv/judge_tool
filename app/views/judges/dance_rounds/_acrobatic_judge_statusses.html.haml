@@ -1,4 +1,3 @@
 %h2 Akrobatikwertungen
   - current_dance_round.acrobatics_judges.each do |judge|
-    .alert{class: (judge.rated?(current_dance_round) ? 'alert-success' : 'alert-danger')}
-      = judge.full_name
+    = render partial: 'judge_status', locals: {judge: judge}
