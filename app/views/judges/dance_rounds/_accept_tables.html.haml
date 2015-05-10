@@ -39,13 +39,17 @@
                 %tr
                   - current_dance_round.acrobatics_judges.each do |judge|
                     %td= judge.full_name
+                  %td= current_user.full_name
                 - current_dance_round.acrobatics.each do |acrobatic|
                   %tr{class: "#{'danger' if acrobatic.diff_to_big(dance_team)}"}
                     - current_dance_round.acrobatics_judges.each do |judge|
                       %td= @acrobatic_ratings[judge.id][acrobatic.id][dance_team.id].first.rating
+                    %td= @acrobatic_ratings[current_user.id][acrobatic.id][dance_team.id].first.danced? ? 'Ja' : 'Nein'
                   %tr{class: "#{'danger' if acrobatic.mistake_diff_to_big(dance_team)}"}
                     - current_dance_round.acrobatics_judges.each do |judge|
                       %td= @acrobatic_ratings[judge.id][acrobatic.id][dance_team.id].first.full_mistakes
+                    %td= @acrobatic_ratings[current_user.id][acrobatic.id][dance_team.id].first.full_mistakes
 
 %div
-  = link_to "Accept", accept_judges_dance_round_path, method: :post, data: {confirm: 'Keine Änderungen notwendig!'}, class: "btn btn-primary"
+  = link_to (current_dance_round.mistakes_adjusting? ? '' : 'Akzeptieren'), accept_judges_dance_round_path, method: :post, data: {confirm: (current_dance_round.mistakes_adjusting? ? 'Wirklich nur Fehler angleichen?' : 'Keine Änderungen notwendig!')}, class: 'btn btn-primary'
+  = link_to 'Diskussion eröffnen', reopen_judges_dance_round_path, method: :post, data: {confirm: 'Alle Diskussionspunkte markiert!!'}, class: 'btn btn-primary'

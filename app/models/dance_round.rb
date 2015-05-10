@@ -42,6 +42,10 @@ class DanceRound < ActiveRecord::Base
     update_attributes started: true, started_at: Time.now
   end
 
+  def mistakes_adjusting?
+    acrobatics.any?(&:mistakes_adjusting?) || dance_ratings.map(&:mistakes).uniq.size > 1
+  end
+
   def judges
     round.judges
   end

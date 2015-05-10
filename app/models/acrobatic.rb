@@ -12,6 +12,10 @@ class Acrobatic < ActiveRecord::Base
     end
   end
 
+  def mistakes_adjusting?
+    acrobatic_ratings.map(&:mistakes).uniq.size > 1
+  end
+
   def mistake_diff_to_big(team)
     ary = acrobatic_ratings.where(dance_team_id: team.id).map(&:punishment)
     ary.max - ary.min > 10

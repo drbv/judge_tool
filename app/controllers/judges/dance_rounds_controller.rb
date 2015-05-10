@@ -76,10 +76,10 @@ class Judges::DanceRoundsController < Judges::BaseController
   def dance_round_params
     @attributes = params.require(:dance_round)
     if @attributes.has_key?(:dance_ratings)
-      @attributes[:dance_ratings].map! { |attr| attr.permit(policy(@dance_round).permitted_attributes) }
+      @attributes[:dance_ratings].map! { |attr| attr.permit(policy(@dance_round).permitted_dance_attributes) }
     end
     if @attributes.has_key?(:acrobatic_ratings)
-      @attributes[:acrobatic_ratings].map! { |attr| attr.permit(policy(@dance_round).permitted_attributes) }
+      @attributes[:acrobatic_ratings].map! { |attr| attr.permit(policy(@dance_round).permitted_acrobatic_attributes) }
     end
     @attributes
   end
@@ -132,7 +132,7 @@ class Judges::DanceRoundsController < Judges::BaseController
       @ratings[judge.id] = current_dance_round.dance_ratings.validating(current_user, judge, current_dance_round).to_a.group_by(&:dance_team_id)
     end
     @acrobatic_ratings = {}
-    current_dance_round.acrobatics_judges.each do |judge|
+    (current_dance_round.acrobatics_judges << current_user).each do |judge|
       @acrobatic_ratings[judge.id] = {}
       current_dance_round.acrobatics.each do |acrobatic|
         @acrobatic_ratings[judge.id][acrobatic.id] = acrobatic.acrobatic_ratings.validating(current_user, judge, current_dance_round).to_a.group_by(&:dance_team_id)
