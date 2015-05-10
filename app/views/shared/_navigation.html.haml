@@ -14,6 +14,7 @@
 
   %ul.nav.navbar-nav.navbar-right
     - if current_user
+      %li= "Hallo #{current_user.full_name}"
       %li= link_to 'Abmelden', logout_path, method: :delete
     - else
       %li= link_to 'Anmelden', login_path
