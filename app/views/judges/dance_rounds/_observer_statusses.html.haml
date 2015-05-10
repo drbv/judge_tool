@@ -1,0 +1,4 @@
+%h2 Observer
+  - current_dance_round.observers.each do |observer|
+    .alert{class: (observer.rated?(current_dance_round) ? 'alert-success' : 'alert-danger')}
+      = observer.full_name

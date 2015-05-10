@@ -23,6 +23,10 @@ class User < ActiveRecord::Base
     dance_round.dance_ratings.where(user_id: id).exists? || dance_round.acrobatic_ratings.where(user_id: id).exists?
   end
 
+  def reopened_ratings(team, dance_round)
+    @reopened_ratings ||= dance_round.dance_ratings.where('user_id = ? AND dance_team_id = ? AND reopen > 0', id, team.id) || dance_round.acrobatic_ratings.where('user_id = ? AND dance_team_id = ? AND reopen > 0', id, team.id)
+  end
+
   def open_discussion?(dance_round)
     dance_round.dance_ratings.where('user_id = ? AND reopen > 0', id).exists? || dance_round.acrobatic_ratings.where('user_id = ? AND reopen > 0', id).exists?
   end

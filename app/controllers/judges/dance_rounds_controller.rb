@@ -25,7 +25,7 @@ class Judges::DanceRoundsController < Judges::BaseController
   def update
     authorize current_dance_round
     set_dance_ratings
-    acrobatics = set_acrobatics_ratings(acrobatics)
+    acrobatics = set_acrobatics_ratings
     current_dance_round.save!
     acrobatics.each(&:save!)
     judge_dance_teams
@@ -46,7 +46,7 @@ class Judges::DanceRoundsController < Judges::BaseController
   private
 
   def reopen?
-    reopen_flags.any? {|value| value == '1'}
+    reopen_flags.any? { |value| value == '1' }
   end
 
   def reopen_flags
@@ -204,10 +204,14 @@ class Judges::DanceRoundsController < Judges::BaseController
   def judge(judgment_type)
     if current_dance_round
       if current_user.rated?(current_dance_round)
-        if request.xhr?
-          render :json, still_waiting: true, body: render_to_string(partial: 'waiting_table')
+        if current_user.open_discussion?(dance_round)
+          render :reopened
         else
-          render :wait_for_ending
+          if request.xhr?
+            render :json, still_waiting: true, body: render_to_string(partial: 'waiting_table')
+          else
+            render :wait_for_ending
+          end
         end
       else
         render :"judge_#{judgment_type}"

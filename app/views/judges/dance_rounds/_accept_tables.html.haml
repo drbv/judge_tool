@@ -1,12 +1,8 @@
+%div
+  = render partial: 'observer_statusses'
 = form_tag accept_judges_dance_round_path do
   %div
-    %h2 Tanzwertungen
-    %div
-      .alert.alert-success
-        = current_user.full_name
-      - current_dance_round.dance_judges.each do |judge|
-        .alert{class: (judge.rated?(current_dance_round) ? 'alert-success' : 'alert-danger')}
-          = judge.full_name
+    = render partial: 'dance_judge_statusses'
     .container
       .row
         - current_user.dance_teams(current_dance_round).each do |dance_team|
@@ -37,10 +33,7 @@
 
   - unless current_dance_round.acrobatics_judges.empty?
     %div
-      %h2 Akrobatikwertungen
-      - current_dance_round.acrobatics_judges.each do |judge|
-        .alert{class: (judge.rated?(current_dance_round) ? 'alert-success' : 'alert-danger')}
-          = judge.full_name
+      = render partial: 'acrobatic_judge_statusses'
       .container
         .row
           - current_user.dance_teams(current_dance_round).each do |dance_team|
@@ -75,4 +68,4 @@
                             = acrobatic.acrobatic_ratings.first.full_mistakes
 
   %div
-    = submit_tag (current_dance_round.mistakes_adjusting? ? '' : 'Akzeptieren'), data: {confirm: (current_dance_round.mistakes_adjusting? ? 'Wirklich nur Fehler angleichen?' : 'Keine Änderungen notwendig!')}, class: 'btn btn-primary'
+    = submit_tag (current_dance_round.mistakes_adjusting? ? 'Fehler angleichen und akzeptieren' : 'Akzeptieren'), data: {confirm: (current_dance_round.mistakes_adjusting? ? 'Wirklich nur Fehler angleichen?' : 'Wirklich keine Änderungen notwendig?')}, class: 'btn btn-primary'

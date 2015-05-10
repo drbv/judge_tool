@@ -3,8 +3,12 @@ module ReopenedAttributes
     reopened > 0
   end
 
+  def attr_reopened?(attribute)
+    reopened_attributes.include?(attribute.to_sym)
+  end
+
   def reopened_attributes
-    discussable_attributes.select.with_index {|_attr, index| bin_reopen[index] == '1'}
+    @reopened_attributes ||= discussable_attributes.select.with_index {|_attr, index| bin_reopen[index] == '1'}
   end
 
   def reopen!(attributes)

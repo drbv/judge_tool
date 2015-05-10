@@ -9,10 +9,6 @@ class AcrobaticRating < ActiveRecord::Base
   validates_uniqueness_of :acrobatic_id, scope: %i[user_id dance_team_id]
   validate :team_belongs_to_dance_round
 
-  def permitted_attributes
-    new_record? ? [:rating, :mistakes] : reopened_attributes
-  end
-
   def full_mistakes
     mistakes.blank? ? 'Keine Fehler' : mistakes
   end
@@ -23,6 +19,10 @@ class AcrobaticRating < ActiveRecord::Base
 
   def points
     @points ||= [acrobatic.acrobatic_type.max_points * (1 - rating.to_d / 100) - punishment, 0].max
+  end
+
+  def danced?
+    danced
   end
 
   private
