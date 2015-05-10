@@ -28,7 +28,7 @@ ready = ->
           points = Math.max.apply(Math, [0, points])
           $danceTeam.find('.total').text(points.toFixed(2))
 
-  $(document).on 'click', '.mistakes a', ->
+  $(document).on 'click', '.enabled .mistakes a', ->
     $(this).addClass('active')
     parentDiv = $(this).parent().parent().parent()
     parentDiv.find('.mistakes-list').append("<div class='btn-danger'>" + $(this).text() + "</div>")
@@ -39,7 +39,7 @@ ready = ->
     hiddenField.val(newVal)
     calculateOverallRating()
     false
-  $(document).on 'click', '.mistakes-list div', ->
+  $(document).on 'click', '.enabled .mistakes-list div', ->
     mistakeList = $(this).parent()
     mistakeList.children().addClass('count')
     $(this).removeClass 'count'
@@ -52,7 +52,7 @@ ready = ->
     $(this).remove()
     calculateOverallRating()
     false
-  $(document).on 'click', '.rating div', ->
+  $(document).on 'click', '.enabled .rating div', ->
     $(this).parent().children().removeClass('active')
     $(this).addClass('active')
     $(this).prevAll().addClass('active')

@@ -108,6 +108,14 @@ class DanceRound < ActiveRecord::Base
     points
   end
 
+  def points_from_judge(judge, team)
+    if judge.has_role?(:dance_judge, round)
+      dance_ratings.where(dance_team_id: team.id, user_id: judge.id).first.points.round(2)
+    else
+      acrobatic_ratings.where(team_id: team.id, user_id: judge.id).map(&:points).sum
+    end
+  end
+
   private
 
   def decider_rating?(observer)

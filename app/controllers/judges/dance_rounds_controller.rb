@@ -204,7 +204,7 @@ class Judges::DanceRoundsController < Judges::BaseController
     if current_dance_round
       if current_user.rated?(current_dance_round)
         if current_user.open_discussion?(dance_round)
-          render :reopened
+          render :"update_#{judgment_type}_rating"
         else
           if request.xhr?
             render :json, still_waiting: true, body: render_to_string(partial: 'waiting_table')
