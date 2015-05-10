@@ -33,6 +33,8 @@ class Judges::DanceRoundsController < Judges::BaseController
 
   def accept
     authorize current_dance_round
+    adjust_mistakes
+    adjust_acrobatic_mistakes
     current_user.dance_ratings.where(dance_round_id: current_dance_round.id).each do |rating|
       rating.final!
     end
@@ -44,7 +46,21 @@ class Judges::DanceRoundsController < Judges::BaseController
   end
 
   private
-  
+
+  def adjust_mistakes
+    return unless params[:adjusted]
+    params[:adjusted].each do |dance_team_id, updated_mistakes|
+      current_dance_round.dance_ratings.where(dance_team_id: dance_team_id).update_all mistakes: updated_mistakes
+    end
+  end
+
+  def adjust_acrobatic_mistakes
+    return unless params[:adjusted_acrobatic]
+    params[:adjusted_acrobatic].each do |acrobatic_id, updated_mistakes|
+      current_dance_round.acrobatics.find(acrobatic_id).update_all mistakes: updated_mistakes
+    end
+  end
+
   def set_dance_ratings
     if dance_round_params[:dance_ratings]
       dance_round_params[:dance_ratings].each do |attributes|
@@ -52,7 +68,7 @@ class Judges::DanceRoundsController < Judges::BaseController
       end
     end
   end
-  
+
   def set_acrobatics_ratings
     acrobatics = []
     if dance_round_params[:acrobatic_ratings]
@@ -112,20 +128,20 @@ class Judges::DanceRoundsController < Judges::BaseController
       render :start_dance_round
     end
   end
-  
+
   def evaluate_ratings
-    ratings_overview
-    if request.xhr?
-      render :json, still_waiting: true, body: render_to_string(partial: 'accept_tables')
+    if current_dance_round.accepted_by?(current_user)
+      render :waiting_observer
     else
-      if current_dance_round.accepted_by?(current_user)
-        render :waiting_observer
+      ratings_overview
+      if request.xhr?
+        render :json, still_waiting: true, body: render_to_string(partial: 'accept_tables')
       else
         render :accept
       end
     end
   end
-  
+
   def ratings_overview
     @ratings = {}
     (current_dance_round.dance_judges << current_user).each do |judge|
@@ -138,6 +154,7 @@ class Judges::DanceRoundsController < Judges::BaseController
         @acrobatic_ratings[judge.id][acrobatic.id] = acrobatic.acrobatic_ratings.validating(current_user, judge, current_dance_round).to_a.group_by(&:dance_team_id)
       end
     end
+    @rating_done = (current_dance_round.dance_judges + current_dance_round.acrobatics_judges).all? { |judge| judge.rated?(current_dance_round) }
   end
 
   def judge(judgment_type)

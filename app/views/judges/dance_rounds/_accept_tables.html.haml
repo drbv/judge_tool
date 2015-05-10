@@ -1,34 +1,12 @@
-%div
-  %h2 Tanzwertungen
+= form_tag accept_judges_dance_round_path do
   %div
-    .alert.alert-success
-      = current_user.full_name
-    - current_dance_round.dance_judges.each do |judge|
-      .alert{class: (judge.rated?(current_dance_round) ? 'alert-success' : 'alert-danger')}
-        = judge.full_name
-  .container
-    .row
-      - current_user.dance_teams(current_dance_round).each do |dance_team|
-        %div{class: "md-col-#{12 / current_dance_round.dance_teams.count}"}
-          %h3=dance_team.name_with_startnumber
-          %table.table.table-striped
-            %tbody
-              %tr
-                - current_dance_round.dance_judges.each do |judge|
-                  %td= judge.full_name
-                %td= current_dance_round.observer.full_name
-              - %i(female_base_rating female_turn_rating male_base_rating male_turn_rating choreo_rating dance_figure_rating team_presentation_rating full_mistakes).each do |attr|
-                %tr{class: "#{'danger' if current_dance_round.diff_to_big(dance_team, attr)}#{' observer-related' if attr == :full_mistakes}"}
-                  - current_dance_round.dance_judges.each do |judge|
-                    %td= @ratings[judge.id][dance_team.id] && @ratings[judge.id][dance_team.id].first.send(attr)
-                  %td= @ratings[current_user.id][dance_team.id].first.full_mistakes if attr == :full_mistakes
-
-- unless current_dance_round.acrobatics_judges.empty?
-  %div
-    %h2 Akrobatikwertungen
-    - current_dance_round.acrobatics_judges.each do |judge|
-      .alert{class: (judge.rated?(current_dance_round) ? 'alert-success' : 'alert-danger')}
-        = judge.full_name
+    %h2 Tanzwertungen
+    %div
+      .alert.alert-success
+        = current_user.full_name
+      - current_dance_round.dance_judges.each do |judge|
+        .alert{class: (judge.rated?(current_dance_round) ? 'alert-success' : 'alert-danger')}
+          = judge.full_name
     .container
       .row
         - current_user.dance_teams(current_dance_round).each do |dance_team|
@@ -37,19 +15,64 @@
             %table.table.table-striped
               %tbody
                 %tr
-                  - current_dance_round.acrobatics_judges.each do |judge|
+                  - current_dance_round.dance_judges.each do |judge|
                     %td= judge.full_name
-                  %td= current_user.full_name
-                - current_dance_round.acrobatics.each do |acrobatic|
-                  %tr{class: "#{'danger' if acrobatic.diff_to_big(dance_team)}"}
-                    - current_dance_round.acrobatics_judges.each do |judge|
-                      %td= @acrobatic_ratings[judge.id][acrobatic.id][dance_team.id].first.rating
-                    %td= @acrobatic_ratings[current_user.id][acrobatic.id][dance_team.id].first.danced? ? 'Ja' : 'Nein'
-                  %tr{class: "#{'danger' if acrobatic.mistake_diff_to_big(dance_team)}"}
-                    - current_dance_round.acrobatics_judges.each do |judge|
-                      %td= @acrobatic_ratings[judge.id][acrobatic.id][dance_team.id].first.full_mistakes
-                    %td= @acrobatic_ratings[current_user.id][acrobatic.id][dance_team.id].first.full_mistakes
+                  %td= current_dance_round.observer.full_name
+                  - if @rating_done
+                    %td Mehrheitsbildung
+                - %i(female_base_rating female_turn_rating male_base_rating male_turn_rating choreo_rating dance_figure_rating team_presentation_rating full_mistakes).each do |attr|
+                  %tr{class: "#{'danger' if current_dance_round.diff_to_big(dance_team, attr)}#{' observer-related' if attr == :full_mistakes}"}
+                    - current_dance_round.dance_judges.each do |judge|
+                      %td{class: "#{'markable' if @rating_done && attr != :full_mistakes}"}
+                        = @ratings[judge.id][dance_team.id] && @ratings[judge.id][dance_team.id].first.send(attr)
+                        = hidden_field_tag "reopen[#{judge.id}][#{dance_team.id}][#{attr}", '0' if @rating_done && attr != :full_mistakes
+                    %td= @ratings[current_user.id][dance_team.id].first.full_mistakes if attr == :full_mistakes
+                    - if @rating_done
+                      %td
+                        - if attr == :full_mistakes
+                          - if current_dance_round.dance_rating_mistakes_adjusting?
+                            = text_field_tag "adjusted[#{dance_team.id}]", current_dance_round.majority_mistakes(current_user)
+                          - else
+                            = current_dance_round.dance_ratings.first.full_mistakes
 
-%div
-  = link_to (current_dance_round.mistakes_adjusting? ? '' : 'Akzeptieren'), accept_judges_dance_round_path, method: :post, data: {confirm: (current_dance_round.mistakes_adjusting? ? 'Wirklich nur Fehler angleichen?' : 'Keine Änderungen notwendig!')}, class: 'btn btn-primary'
-  = link_to 'Diskussion eröffnen', reopen_judges_dance_round_path, method: :post, data: {confirm: 'Alle Diskussionspunkte markiert!!'}, class: 'btn btn-primary'
+  - unless current_dance_round.acrobatics_judges.empty?
+    %div
+      %h2 Akrobatikwertungen
+      - current_dance_round.acrobatics_judges.each do |judge|
+        .alert{class: (judge.rated?(current_dance_round) ? 'alert-success' : 'alert-danger')}
+          = judge.full_name
+      .container
+        .row
+          - current_user.dance_teams(current_dance_round).each do |dance_team|
+            %div{class: "md-col-#{12 / current_dance_round.dance_teams.count}"}
+              %h3=dance_team.name_with_startnumber
+              %table.table.table-striped
+                %tbody
+                  %tr
+                    - current_dance_round.acrobatics_judges.each do |judge|
+                      %td= judge.full_name
+                    %td= current_user.full_name
+                    - if @rating_done
+                      %td Mehrheitsbildung
+                  - current_dance_round.acrobatics.each do |acrobatic|
+                    %tr{class: "#{'danger' if acrobatic.diff_to_big(dance_team)}"}
+                      - current_dance_round.acrobatics_judges.each do |judge|
+                        %td{class: "#{'markable' if @rating_done}"}
+                          = @acrobatic_ratings[judge.id][acrobatic.id][dance_team.id].first.rating
+                          = hidden_field_tag "reopen_acrobatic[#{judge.id}][#{dance_team.id}][#{acrobatic.id}", '0'
+                      %td= @acrobatic_ratings[current_user.id][acrobatic.id][dance_team.id].first.danced? ? 'Ja' : 'Nein'
+                      - if @rating_done
+                        %td
+                    %tr{class: "#{'danger' if acrobatic.mistake_diff_to_big(dance_team)}"}
+                      - current_dance_round.acrobatics_judges.each do |judge|
+                        %td= @acrobatic_ratings[judge.id][acrobatic.id][dance_team.id].first.full_mistakes
+                      %td= @acrobatic_ratings[current_user.id][acrobatic.id][dance_team.id].first.full_mistakes
+                      - if @rating_done
+                        %td
+                          - if acrobatic.mistakes_adjusting?
+                            = text_field_tag "adjusted_acrobatic[#{acrobatic.id}]", acrobatic.majority_mistakes(current_user)
+                          - else
+                            = acrobatic.acrobatic_ratings.first.full_mistakes
+
+  %div
+    = submit_tag (current_dance_round.mistakes_adjusting? ? '' : 'Akzeptieren'), data: {confirm: (current_dance_round.mistakes_adjusting? ? 'Wirklich nur Fehler angleichen?' : 'Keine Änderungen notwendig!')}, class: 'btn btn-primary'
