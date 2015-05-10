@@ -3,11 +3,13 @@ class AcrobaticRating < ActiveRecord::Base
   belongs_to :acrobatic
   belongs_to :dance_team
   belongs_to :user
+  has_many :acrobatic_rating_history_entries
 
   validates_presence_of :dance_team, :acrobatic, :user, :rating
   validates_format_of :mistakes, with: /\A((S2|S10|S20|U2|U10|U20|V5)(,(S2|S10|S20|U2|U10|U20|V5))*)?\Z/
   validates_uniqueness_of :acrobatic_id, scope: %i[user_id dance_team_id]
   validate :team_belongs_to_dance_round
+  after_save :add_history_entry
 
   def full_mistakes
     mistakes.blank? ? 'Keine Fehler' : mistakes
@@ -26,6 +28,10 @@ class AcrobaticRating < ActiveRecord::Base
   end
 
   private
+
+  def add_history_entry
+    acrobatic_rating_history_entries.create rating: rating, mistakes: mistakes, danced: danced, reopened: reopened
+  end
 
   def team_belongs_to_dance_round
     errors.add :dance_team unless acrobatic.dance_round.dance_teams.include?(dance_team)
