@@ -27,10 +27,10 @@ class Acrobatic < ActiveRecord::Base
     ary.max - ary.min > 10
   end
 
-  def diff_to_big(team)
-    ary = acrobatic_ratings.rating_detail(team)
-    return false if ary.empty?
-    ary.max - ary.min > 40
+  def ratings_average
+    @ratings_average ||= acrobatic_ratings.where(user_id: dance_round.acrobatics_judges.map(&:id)).pluck(:rating).tap do |rating_values|
+      rating_values.inject{ |sum, el| sum + el }.to_f / rating_values.size
+    end
   end
 
   private

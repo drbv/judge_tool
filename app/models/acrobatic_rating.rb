@@ -27,6 +27,10 @@ class AcrobaticRating < ActiveRecord::Base
     danced
   end
 
+  def diff_to_big?
+    (acrobatic.ratings_average - rating).abs >= 20
+  end
+
   private
 
   def add_history_entry

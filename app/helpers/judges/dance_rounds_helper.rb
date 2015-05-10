@@ -10,4 +10,20 @@ module Judges::DanceRoundsHelper
       'alert-danger'
     end
   end
+
+  def dance_rating_tablecell(attr, rating)
+    html_classes = []
+    if attr != :full_mistakes
+      html_classes << 'markable' if @rating_done
+      html_classes << 'danger' if rating.diff_to_big?(attr)
+    end
+    html_classes.empty? && html_classes.join(' ')
+  end
+
+  def acrobatic_rating_tablecell(rating)
+    html_classes = []
+    html_classes << 'markable' if @rating_done
+    html_classes << 'danger' if rating.diff_to_big?
+    html_classes.empty? && html_classes.join(' ')
+  end
 end

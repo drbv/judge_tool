@@ -32,6 +32,10 @@ class DanceRating < ActiveRecord::Base
   def final?
     final
   end
+
+  def diff_to_big?(attr)
+    (dance_round.dance_ratings_average(attr, dance_team) - send(attr)).abs >= 20
+  end
   
   private
 

@@ -79,13 +79,10 @@ class DanceRound < ActiveRecord::Base
     !judges.any? { |judge| !judge.rated?(self) } && !dance_ratings.any? { |dance_rating| dance_rating.reopened? } && !acrobatic_ratings.any? { |dance_rating| dance_rating.reopened? }
   end
 
-  def diff_to_big(dance_team, attr)
-    if attr == :full_mistakes
-      ary = dance_ratings.where(dance_team_id: dance_team.id).map(&:punishment)
-      ary.max - ary.min > 10
-    else
-      ary = dance_ratings.rating_detail(dance_team, attr)
-      ary.max - ary.min > 40
+  def dance_ratings_average(attr, team)
+    @averages ||= {}
+    @averages[attr] ||= dance_ratings.where(dance_team_id: team.id, user_id: dance_judges.map(&:id)).pluck(attr).tap do |rating_values|
+      rating_values.inject{ |sum, el| sum + el }.to_f / rating_values.size
     end
   end
 

@@ -17,10 +17,11 @@
                   - if @rating_done
                     %td Mehrheitsbildung
                 - %i(female_base_rating female_turn_rating male_base_rating male_turn_rating choreo_rating dance_figure_rating team_presentation_rating full_mistakes).each do |attr|
-                  %tr{class: "#{'danger' if current_dance_round.diff_to_big(dance_team, attr)}#{' observer-related' if attr == :full_mistakes}"}
+                  %tr{class: "#{'observer-related' if attr == :full_mistakes}"}
                     - current_dance_round.dance_judges.each do |judge|
-                      %td{class: "#{'markable' if @rating_done && attr != :full_mistakes}"}
-                        = @ratings[judge.id][dance_team.id] && @ratings[judge.id][dance_team.id].first.send(attr)
+                      - rating = @ratings[judge.id][dance_team.id] && @ratings[judge.id][dance_team.id].first
+                      %td{class: dance_rating_tablecell(attr, rating)}
+                        = rating.send(attr)
                         = hidden_field_tag "reopen[#{judge.id}][#{dance_team.id}][#{attr}]", '0' if @rating_done && attr != :full_mistakes
                     %td= @ratings[current_user.id][dance_team.id].first.full_mistakes if attr == :full_mistakes
                     - if @rating_done
@@ -48,10 +49,11 @@
                     - if @rating_done
                       %td Mehrheitsbildung
                   - current_dance_round.acrobatics.each do |acrobatic|
-                    %tr{class: "#{'danger' if acrobatic.diff_to_big(dance_team)}"}
+                    %tr
                       - current_dance_round.acrobatics_judges.each do |judge|
-                        %td{class: "#{'markable' if @rating_done}"}
-                          = @acrobatic_ratings[judge.id][acrobatic.id][dance_team.id].first.rating
+                        - rating = @acrobatic_ratings[judge.id][acrobatic.id][dance_team.id].first
+                        %td{class: acrobatic_rating_tablecell(rating)}
+                          = rating.rating
                           = hidden_field_tag "reopen_acrobatic[#{judge.id}][#{acrobatic.id}", '0'
                       %td= @acrobatic_ratings[current_user.id][acrobatic.id][dance_team.id].first.danced? ? 'Ja' : 'Nein'
                       - if @rating_done
