@@ -35,6 +35,53 @@ class Judges::DanceRoundsController < Judges::BaseController
     authorize current_dance_round
     adjust_mistakes
     adjust_acrobatic_mistakes
+    if reopen?
+      reopen!
+    else
+      close!
+    end
+    redirect_to judges_dance_round_path
+  end
+
+  private
+
+  def reopen?
+    reopen_flags.any? {|value| value == '1'}
+  end
+
+  def reopen_flags
+    params[:reopen].values.flatten.map(&:values).flatten.map(&:values).flatten.map(&:values).flatten +
+      params[:reopen_acrobatic].values.flatten.map(&:values).flatten.map(&:values).flatten
+  end
+
+  def reopen!
+    reopen_dance_ratings!
+    reopen_acrobatic_ratings!
+  end
+
+  def reopen_acrobatic_ratings!
+    params[:reopen_acrobatic].each do |judge_id, acrobatics|
+      acrobatics.each do |acrobatic_id, reopen|
+        acrobatic_rating = current_dance_round.acrobatic_ratings.where(user_id: judge_id, acrobatic_id: acrobatic_id)
+        acrobatic_rating.reopen! :rating if reopen == '1'
+      end
+    end
+  end
+
+  def reopen_dance_ratings!
+    params[:reopen].each do |judge_id, dance_teams_attributes|
+      dance_teams_attributes.each do |dance_team_id, attributes|
+        dance_rating = current_dance_round.dance_ratings.find_by(user_id: judge_id, dance_team_id: dance_team_id)
+        reopen_attributes = []
+        attributes.each do |attribute, reopen|
+          reopen_attributes << attribute if reopen == '1'
+        end
+        dance_rating.reopen! reopen_attributes
+      end
+    end
+  end
+
+  def close!
     current_user.dance_ratings.where(dance_round_id: current_dance_round.id).each do |rating|
       rating.final!
     end
@@ -42,10 +89,7 @@ class Judges::DanceRoundsController < Judges::BaseController
       current_dance_round.close!
       current_dance_round.round.close! unless DanceRound.next
     end
-    redirect_to judges_dance_round_path
   end
-
-  private
 
   def adjust_mistakes
     return unless params[:adjusted]

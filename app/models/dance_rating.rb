@@ -38,6 +38,6 @@ class DanceRating < ActiveRecord::Base
   end
   
   def discussable_attributes
-    %i(female_base_rating female_turn_rating male_base_rating male_turn_rating choreo_rating dance_figure_rating team_presentation_rating mistakes)
+    %i(female_base_rating female_turn_rating male_base_rating male_turn_rating choreo_rating dance_figure_rating team_presentation_rating)
   end
 end

@@ -3,6 +3,14 @@ module ReopenedAttributes
     reopened > 0
   end
 
+  def reopened_attributes
+    discussable_attributes.select.with_index {|_attr, index| bin_reopen[index] == '1'}
+  end
+
+  def reopen!(attributes)
+    update_attribute :reopen, (attributes.inject(0) {|memo, attr| memo += reopen_value(attr)})
+  end
+
   private
 
   def bin_reopen
@@ -15,10 +23,6 @@ module ReopenedAttributes
 
   def reopen_value(attr)
     reopen_mapping[attr.to_sym]
-  end
-
-  def reopened_attributes
-    discussable_attributes.select.with_index {|_attr, index| bin_reopen[index] == '1'}
   end
 
 end

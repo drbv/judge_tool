@@ -13,10 +13,6 @@ class AcrobaticRating < ActiveRecord::Base
     new_record? ? [:rating, :mistakes] : reopened_attributes
   end
 
-  def reopen!(attributes)
-    update_attribute :reopen, attributes.inject(0) {|memo, attr| memo += reopen_value(attr)}
-  end
-
   def full_mistakes
     mistakes.blank? ? 'Keine Fehler' : mistakes
   end
@@ -36,7 +32,7 @@ class AcrobaticRating < ActiveRecord::Base
   end
 
   def discussable_attributes
-    %i[rating mistakes]
+    %i[rating]
   end
 
 end
