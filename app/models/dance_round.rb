@@ -3,7 +3,11 @@ class DanceRound < ActiveRecord::Base
   has_many :dance_round_mappings
   has_many :dance_teams, :through => :dance_round_mappings
   has_many :acrobatics
-  has_many :acrobatic_ratings, through: :acrobatics
+  has_many :acrobatic_ratings, through: :acrobatics do
+    def observer(observer, dance_round)
+      where('acrobatic_ratings.dance_team_id = ?', observer.dance_teams(dance_round).map(&:id))
+    end
+  end
   has_many :dance_ratings do
     def rating_detail(team, attr)
       where(dance_team_id: team.id).pluck(attr).compact
@@ -11,6 +15,10 @@ class DanceRound < ActiveRecord::Base
 
     def validating(observer, judge, dance_round)
       where(user_id: judge.id, dance_team_id: observer.dance_teams(dance_round).map(&:id))
+    end
+
+    def observer(observer, dance_round)
+      where(dance_team_id: observer.dance_teams(dance_round).map(&:id))
     end
   end
 
@@ -43,10 +51,10 @@ class DanceRound < ActiveRecord::Base
   end
 
   def mistakes_adjusting?(dance_team)
-    acrobatics.any? { |r| r.mistakes_adjusting?(dance_team) } || dance_rating_mistakes_adjusting?(dance_team)
+    acrobatics.any? { |r| r.mistakes_adjusting?(dance_team) } || adjusting_dance_mistakes?(dance_team)
   end
 
-  def dance_rating_mistakes_adjusting?(dance_team)
+  def adjusting_dance_mistakes?(dance_team)
     dance_ratings.where(dance_team_id: dance_team.id).map(&:mistakes).uniq.size > 1
   end
 
@@ -75,8 +83,9 @@ class DanceRound < ActiveRecord::Base
     round.acrobatics_judges
   end
 
-  def ready?
-    !judges.any? { |judge| !judge.rated?(self) } && !dance_ratings.any? { |dance_rating| dance_rating.reopened? } && !acrobatic_ratings.any? { |dance_rating| dance_rating.reopened? }
+  def ready?(observer)
+    return @ready unless @ready.nil?
+    @ready = !judges.any? { |judge| !judge.rated?(self) } && !dance_ratings.observer(observer, self).any? { |dance_rating| dance_rating.reopened? } && !acrobatic_ratings.observer(observer, self).any? { |dance_rating| dance_rating.reopened? }
   end
 
   def dance_ratings_average(attr, team)

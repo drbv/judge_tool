@@ -198,7 +198,6 @@ class Judges::DanceRoundsController < Judges::BaseController
         @acrobatic_ratings[judge.id][acrobatic.id] = acrobatic.acrobatic_ratings.validating(current_user, judge, current_dance_round).to_a.group_by(&:dance_team_id)
       end
     end
-    @rating_done = (current_dance_round.dance_judges + current_dance_round.acrobatics_judges).all? { |judge| judge.rated?(current_dance_round) }
   end
 
   def judge(judgment_type)

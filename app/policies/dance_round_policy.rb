@@ -12,7 +12,7 @@ class DanceRoundPolicy < ApplicationPolicy
   end
 
   def accept?
-    user && user.has_role?(:observer, record.round) && record.ready?
+    user && user.has_role?(:observer, record.round) && record.ready?(user)
   end
 
   def user_is_judge_for_this_round?
