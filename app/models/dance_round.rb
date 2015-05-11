@@ -3,7 +3,11 @@ class DanceRound < ActiveRecord::Base
   has_many :dance_round_mappings
   has_many :dance_teams, :through => :dance_round_mappings
   has_many :acrobatics
-  has_many :acrobatic_ratings, through: :acrobatics
+  has_many :acrobatic_ratings, through: :acrobatics do
+    def observer(observer, dance_round)
+      where('acrobatic_ratings.dance_team_id = ?', observer.dance_teams(dance_round).map(&:id))
+    end
+  end
   has_many :dance_ratings do
     def rating_detail(team, attr)
       where(dance_team_id: team.id).pluck(attr).compact
@@ -11,6 +15,10 @@ class DanceRound < ActiveRecord::Base
 
     def validating(observer, judge, dance_round)
       where(user_id: judge.id, dance_team_id: observer.dance_teams(dance_round).map(&:id))
+    end
+
+    def observer(observer, dance_round)
+      where(dance_team_id: observer.dance_teams(dance_round).map(&:id))
     end
   end
 
@@ -42,6 +50,19 @@ class DanceRound < ActiveRecord::Base
     update_attributes started: true, started_at: Time.now
   end
 
+  def mistakes_adjusting?(dance_team)
+    acrobatics.any? { |r| r.mistakes_adjusting?(dance_team) } || adjusting_dance_mistakes?(dance_team)
+  end
+
+  def adjusting_dance_mistakes?(dance_team)
+    dance_ratings.where(dance_team_id: dance_team.id).map(&:mistakes).uniq.size > 1
+  end
+
+  def majority_mistakes(dance_team, observer)
+    decider_rating = decider_rating?(observer) ? observer_ratings(observer, dance_team).first.mistakes : nil
+    Calculator::MistakeAverage.new(dance_ratings.rating_detail(dance_team, :mistakes), decider_rating).calculate
+  end
+
   def judges
     round.judges
   end
@@ -62,17 +83,15 @@ class DanceRound < ActiveRecord::Base
     round.acrobatics_judges
   end
 
-  def ready?
-    ! judges.any? {|judge| !judge.rated?(self)} && !dance_ratings.any? {|dance_rating| dance_rating.reopened?} && !acrobatic_ratings.any? {|dance_rating| dance_rating.reopened?}
+  def ready?(observer)
+    return @ready unless @ready.nil?
+    @ready = !judges.any? { |judge| !judge.rated?(self) } && !dance_ratings.observer(observer, self).any? { |dance_rating| dance_rating.reopened? } && !acrobatic_ratings.observer(observer, self).any? { |dance_rating| dance_rating.reopened? }
   end
 
-  def diff_to_big(dance_team, attr)
-    if attr == :full_mistakes
-      ary = dance_ratings.where(dance_team_id: dance_team.id).map(&:punishment)
-      ary.max - ary.min > 10
-    else
-      ary = dance_ratings.rating_detail(dance_team, attr)
-      ary.max - ary.min > 40
+  def dance_ratings_average(attr, team)
+    @averages ||= {}
+    @averages[attr] ||= dance_ratings.where(dance_team_id: team.id, user_id: dance_judges.map(&:id)).pluck(attr).tap do |rating_values|
+      rating_values.inject{ |sum, el| sum + el }.to_f / rating_values.size
     end
   end
 
@@ -87,6 +106,26 @@ class DanceRound < ActiveRecord::Base
     points.delete 'Akrobatiken' if points['Akrobatiken'].empty?
     points.delete 'Beintechnik' if points['Beintechnik'].empty?
     points
+  end
+
+  def points_from_judge(judge, team)
+    if judge.has_role?(:dance_judge, round)
+      dance_ratings.where(dance_team_id: team.id, user_id: judge.id).first.points.round(2)
+    else
+      acrobatic_ratings.where(team_id: team.id, user_id: judge.id).map(&:points).sum
+    end
+  end
+
+  private
+
+  def decider_rating?(observer)
+    @decider_rating ||= {}
+    return @decider_rating unless @decider_rating[observer.id].nil?
+    @decider_rating[observer.id] = dance_ratings.where(user_id: observer.id).count == 1
+  end
+
+  def observer_ratings(observer, dance_team)
+    dance_ratings.where(user_id: observer.id, dance_team_id: dance_team.id)
   end
 
 end

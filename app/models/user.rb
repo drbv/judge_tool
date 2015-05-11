@@ -5,6 +5,7 @@ class User < ActiveRecord::Base
   has_many :acrobatic_ratings
   before_validation :generate_credentials
   validates :login, :pin, presence: true
+  validates :login, uniqueness: true
 
   def dance_teams(dance_round)
     dance_round.dance_teams.where('dance_round_mappings.user_id = ?', id)
@@ -22,6 +23,10 @@ class User < ActiveRecord::Base
     dance_round.dance_ratings.where(user_id: id).exists? || dance_round.acrobatic_ratings.where(user_id: id).exists?
   end
 
+  def reopened_ratings(team, dance_round)
+    @reopened_ratings ||= dance_round.dance_ratings.where('user_id = ? AND dance_team_id = ? AND reopen > 0', id, team.id) || dance_round.acrobatic_ratings.where('user_id = ? AND dance_team_id = ? AND reopen > 0', id, team.id)
+  end
+
   def open_discussion?(dance_round)
     dance_round.dance_ratings.where('user_id = ? AND reopen > 0', id).exists? || dance_round.acrobatic_ratings.where('user_id = ? AND reopen > 0', id).exists?
   end
@@ -30,7 +35,8 @@ class User < ActiveRecord::Base
 
   def generate_credentials
     50.times do |k|
-      break if !User.find_by(login: "#{first_name[0].downcase}.#{last_name.downcase}#{k if k>0}") && self.login="#{first_name[0].downcase}.#{last_name.downcase}#{k if k>0}"
+      generated_login = "#{first_name[0].downcase}.#{last_name.downcase}#{k if k>0}"
+      break if User.find_by(login: generated_login).blank? && self.login = generated_login
     end unless login
     self.pin = SecureRandom.random_number(10000).to_s.rjust(4, '0')
   end

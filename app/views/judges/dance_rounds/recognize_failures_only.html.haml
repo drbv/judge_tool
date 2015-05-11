@@ -3,9 +3,19 @@
     - current_user.dance_teams(current_dance_round).each do |dance_team|
       .col-md-6
         %h3= dance_team.full_name
+        - current_dance_round.acrobatics.where(dance_team_id: dance_team.id).each_with_index do |acrobatic, index|
+          = f.fields_for 'acrobatic_ratings[]', current_dance_round.acrobatic_ratings.build do |r|
+            %h4
+              = "Akrobatik: #{acrobatic.acrobatic_type.short_name}"
+              = r.check_box :danced
+            = r.hidden_field :dance_team_id, value: dance_team.id, id: "dance_round_acrobatic_ratings_#{index}_dance_team_id"
+            = r.hidden_field :acrobatic_id, value: acrobatic.id, id: "dance_round_acrobatic_ratings_#{index}_acrobatic_id"
+            %div
+              = render partial: 'mistakes_bar', locals: {hide: 'T'}
+              = r.hidden_field :mistakes, autocomplete: 'off', id: "dance_round_acrobatic_ratings_#{index}_mistakes"
         = f.fields_for 'dance_ratings[]', current_dance_round.dance_ratings.build do |r|
           = r.hidden_field :dance_team_id, value: dance_team.id
           %div
             = render partial: 'mistakes_bar'
             = r.hidden_field :mistakes, autocomplete: 'off'
-  = f.submit 'Wertung absenden', data: {confirm: 'Sicher alles gewertet?'}, class: 'btn btn-primary'
+  = f.submit 'Wertung absenden', data: {confirm: 'Sicher alle Fehler angegeben und alle gesehenen Akrobatiken markiert?'}, class: 'btn btn-primary'

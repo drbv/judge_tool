@@ -13,6 +13,8 @@ module Calculator
       end.select {|e| e!=''}.join(',')
     end
 
+    private
+
     def mean_values(mistakes_set, decider_mistakes)
       number_of_mistakes(mistakes_set, decider_mistakes).times.map do
         mean_value mistakes_set.map(&:shift), decider_mistakes && decider_mistakes.shift

@@ -1,15 +1,6 @@
 %div
-  %h2 Observer
-  - current_dance_round.observers.each do |observer|
-    .alert{class: (observer.rated?(current_dance_round) ? 'alert-success' : 'alert-danger')}
-      = observer.full_name
+  = render partial: 'observer_statusses'
 %div
-  %h2 Tanzwertungen
-  - current_dance_round.dance_judges.each do |judge|
-    .alert{class: (judge.rated?(current_dance_round) ? 'alert-success' : 'alert-danger')}
-      = judge.full_name
+  = render partial: 'dance_judge_statusses'
 %div
-  %h2 Akrobatikwertungen
-  - current_dance_round.acrobatics_judges.each do |judge|
-    .alert{class: (judge.rated?(current_dance_round) ? 'alert-success' : 'alert-danger')}
-      = judge.full_name
+  = render partial: 'acrobatic_judge_statusses'

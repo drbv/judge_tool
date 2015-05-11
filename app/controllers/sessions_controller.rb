@@ -5,10 +5,11 @@ class SessionsController < ApplicationController
 
   def create
     @user = User.find_by login: params[:user][:login]
-    if @user.pin == params[:user][:pin]
+    if @user && @user.pin == params[:user][:pin]
       session[:user_id] = @user.id
       redirect_to (@user.has_role?(:admin) ? admin_users_path : judges_dance_round_path)
     else
+      @user = User.new login: params[:user][:login]
       render :new
     end
   end

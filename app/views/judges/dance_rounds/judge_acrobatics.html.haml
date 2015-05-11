@@ -9,10 +9,10 @@
             = r.hidden_field :dance_team_id, value: dance_team.id, id: "dance_round_acrobatic_ratings_#{index}_dance_team_id"
             = r.hidden_field :acrobatic_id, value: acrobatic.id, id: "dance_round_acrobatic_ratings_#{index}_acrobatic_id"
             .points{max: acrobatic.acrobatic_type.max_points,mistake_type: 'rel'}
-              %div
+              .enabled
                 = render partial: 'rating_bar', locals: {set_to: 0}
                 = r.hidden_field :rating, autocomplete: 'off', id: "dance_round_acrobatic_ratings_#{index}_rating"
-              %div
+              .enabled
                 = render partial: 'mistakes_bar', locals: {hide: 'T'}
                 = r.hidden_field :mistakes, autocomplete: 'off', id: "dance_round_acrobatic_ratings_#{index}_mistakes"
         .total= @dance_round.acrobatics.where(dance_team_id: dance_team.id).map {|acro| acro.acrobatic_type.max_points}.sum
