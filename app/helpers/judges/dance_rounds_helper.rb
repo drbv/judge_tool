@@ -26,4 +26,8 @@ module Judges::DanceRoundsHelper
     html_classes << 'danger' if rating.diff_to_big?
     html_classes.empty? && html_classes.join(' ')
   end
+
+  def any_mistakes_adjusting?
+    current_user.dance_teams(current_dance_round).any?{|team| current_dance_round.mistakes_adjusting?(team)}
+  end
 end
