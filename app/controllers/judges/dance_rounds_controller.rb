@@ -50,8 +50,8 @@ class Judges::DanceRoundsController < Judges::BaseController
   end
 
   def reopen_flags
-    params[:reopen].values.flatten.map(&:values).flatten.map(&:values).flatten.map(&:values).flatten +
-      params[:reopen_acrobatic].values.flatten.map(&:values).flatten.map(&:values).flatten
+    params[:reopen].values.flatten.map(&:values).flatten.map(&:values).flatten +
+      params[:reopen_acrobatic].values.flatten.map(&:values).flatten
   end
 
   def reopen!
@@ -204,7 +204,7 @@ class Judges::DanceRoundsController < Judges::BaseController
     if current_dance_round
       if current_user.rated?(current_dance_round)
         if current_user.open_discussion?(current_dance_round)
-          render :"update_#{judgment_type}_rating"
+          render :"update_#{judgme}_rating"
         else
           if request.xhr?
             render :json, still_waiting: true, body: render_to_string(partial: 'waiting_table')
