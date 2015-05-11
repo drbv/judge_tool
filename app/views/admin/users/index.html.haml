@@ -1,3 +1,5 @@
+= render partial: 'file_exchange'
+
 %h1 Übersicht aller Teilnehmer
 = link_to 'Offizielle und Tänzer importieren', admin_users_path, method: :post, class: 'btn btn-primary' if policy(User).create?
 
