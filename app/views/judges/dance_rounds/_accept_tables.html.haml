@@ -13,7 +13,7 @@
                 %tr
                   - current_dance_round.dance_judges.each do |judge|
                     %td= judge.full_name
-                  %td= current_dance_round.observer.full_name
+                  %td= current_user.full_name
                   - if current_dance_round.ready?(current_user)
                     %td Mehrheitsbildung
                 - %i(female_base_rating female_turn_rating male_base_rating male_turn_rating choreo_rating dance_figure_rating team_presentation_rating full_mistakes).each do |attr|
