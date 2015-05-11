@@ -28,8 +28,8 @@ class Acrobatic < ActiveRecord::Base
   end
 
   def ratings_average
-    @ratings_average ||= acrobatic_ratings.where(user_id: dance_round.acrobatics_judges.map(&:id)).pluck(:rating).tap do |rating_values|
-      rating_values.inject{ |sum, el| sum + el }.to_f / rating_values.size
+    acrobatic_ratings.where(user_id: dance_round.acrobatics_judges.map(&:id)).pluck(:rating).tap do |rating_values|
+      @ratings_average ||= rating_values.inject{ |sum, el| sum + el }.to_f / rating_values.size
     end
   end
 

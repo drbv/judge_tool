@@ -90,8 +90,8 @@ class DanceRound < ActiveRecord::Base
 
   def dance_ratings_average(attr, team)
     @averages ||= {}
-    @averages[attr] ||= dance_ratings.where(dance_team_id: team.id, user_id: dance_judges.map(&:id)).pluck(attr).tap do |rating_values|
-      rating_values.inject{ |sum, el| sum + el }.to_f / rating_values.size
+    dance_ratings.where(dance_team_id: team.id, user_id: dance_judges.map(&:id)).pluck(attr).tap do |rating_values|
+      @averages[attr] ||= rating_values.inject{ |sum, el| sum + el }.to_f / rating_values.size
     end
   end
 
