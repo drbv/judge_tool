@@ -203,7 +203,7 @@ class Judges::DanceRoundsController < Judges::BaseController
   def judge(judgment_type)
     if current_dance_round
       if current_user.rated?(current_dance_round)
-        if current_user.open_discussion?(dance_round)
+        if current_user.open_discussion?(current_dance_round)
           render :"update_#{judgment_type}_rating"
         else
           if request.xhr?
