@@ -21,7 +21,7 @@
                     - current_dance_round.dance_judges.each do |judge|
                       - rating = @ratings[judge.id][dance_team.id] && @ratings[judge.id][dance_team.id].first
                       %td{class: dance_rating_tablecell(attr, rating)}
-                        = rating.send(attr)
+                        = rating.send(attr) if rating
                         = hidden_field_tag "reopen[#{judge.id}][#{dance_team.id}][#{attr}]", '0' if current_dance_round.ready?(current_user) && attr != :full_mistakes
                     %td= @ratings[current_user.id][dance_team.id].first.full_mistakes if attr == :full_mistakes
                     - if current_dance_round.ready?(current_user)
@@ -53,7 +53,7 @@
                       - current_dance_round.acrobatics_judges.each do |judge|
                         - rating = @acrobatic_ratings[judge.id][acrobatic.id][dance_team.id].first
                         %td{class: acrobatic_rating_tablecell(rating)}
-                          = rating.rating
+                          = rating.rating if rating
                           = hidden_field_tag "reopen_acrobatic[#{judge.id}][#{acrobatic.id}", '0'
                       %td= @acrobatic_ratings[current_user.id][acrobatic.id][dance_team.id].first.danced? ? 'Ja' : 'Nein'
                       - if current_dance_round.ready?(current_user)

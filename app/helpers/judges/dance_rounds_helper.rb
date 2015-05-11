@@ -15,7 +15,7 @@ module Judges::DanceRoundsHelper
     html_classes = []
     if attr != :full_mistakes
       html_classes << 'markable' if current_dance_round.ready?(current_user)
-      html_classes << 'danger' if rating.diff_to_big?(attr)
+      html_classes << 'danger' if rating && rating.diff_to_big?(attr)
     end
     html_classes.empty? && html_classes.join(' ')
   end
