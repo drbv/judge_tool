@@ -202,7 +202,7 @@ class Judges::DanceRoundsController < Judges::BaseController
     (current_dance_round.acrobatics_judges << current_user).each do |judge|
       @acrobatic_ratings[judge.id] = {}
       current_dance_round.acrobatics.each do |acrobatic|
-        @acrobatic_ratings[judge.id][acrobatic.id] = acrobatic.acrobatic_ratings.validating(current_user, judge, current_dance_round).to_a.group_by(&:dance_team_id)
+        @acrobatic_ratings[judge.id][acrobatic.id] = acrobatic.acrobatic_ratings.validating(current_user, judge, current_dance_round).first
       end
     end
   end

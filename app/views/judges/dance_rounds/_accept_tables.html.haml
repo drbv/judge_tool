@@ -48,20 +48,20 @@
                     %td= current_user.full_name
                     - if current_dance_round.ready?(current_user)
                       %td Mehrheitsbildung
-                  - current_dance_round.acrobatics.each do |acrobatic|
+                  - current_dance_round.acrobatics.where(dance_team_id: dance_team.id).each do |acrobatic|
                     %tr
                       - current_dance_round.acrobatics_judges.each do |judge|
-                        - rating = @acrobatic_ratings[judge.id][acrobatic.id][dance_team.id].first
+                        - rating = @acrobatic_ratings[judge.id][acrobatic.id]
                         %td{class: acrobatic_rating_tablecell(rating)}
                           = rating.rating if rating
                           = hidden_field_tag "reopen_acrobatic[#{judge.id}][#{acrobatic.id}", '0'
-                      %td= @acrobatic_ratings[current_user.id][acrobatic.id][dance_team.id].first.danced? ? 'Ja' : 'Nein'
+                      %td= @acrobatic_ratings[current_user.id][acrobatic.id].danced? ? 'Ja' : 'Nein'
                       - if current_dance_round.ready?(current_user)
                         %td
                     %tr{class: "#{'danger' if acrobatic.mistake_diff_to_big(dance_team)}"}
                       - current_dance_round.acrobatics_judges.each do |judge|
-                        %td= @acrobatic_ratings[judge.id][acrobatic.id][dance_team.id].first.full_mistakes
-                      %td= @acrobatic_ratings[current_user.id][acrobatic.id][dance_team.id].first.full_mistakes
+                        %td= @acrobatic_ratings[judge.id][acrobatic.id].full_mistakes if @acrobatic_ratings[judge.id][acrobatic.id]
+                      %td= @acrobatic_ratings[current_user.id][acrobatic.id].full_mistakes
                       - if current_dance_round.ready?(current_user)
                         %td
                           - if acrobatic.mistakes_adjusting?(dance_team)
