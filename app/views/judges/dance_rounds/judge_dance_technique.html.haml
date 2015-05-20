@@ -7,38 +7,38 @@
           = r.hidden_field :dance_team_id, value: dance_team.id
           .points{max: 10}
             %h4 Technik Dame - Grundtechnik
-            %div
+            .enabled
               = render partial: 'rating_bar', locals: {set_to: 0}
               = r.hidden_field :female_base_rating, autocomplete: 'off'
             %h4 Technik Dame - Haltung- und Drehtechnik
-            %div
+            .enabled
               = render partial: 'rating_bar', locals: {set_to: 0}
               = r.hidden_field :female_turn_rating, autocomplete: 'off'
           .points{max: 10}
             %h4 Technik Herr - Grundtechnik
-            %div
+            .enabled
               = render partial: 'rating_bar', locals: {set_to: 0}
               = r.hidden_field :male_base_rating, autocomplete: 'off'
             %h4 Technik Herr - Haltung- und Drehtechnik
-            %div
+            .enabled
               = render partial: 'rating_bar', locals: {set_to: 0}
               = r.hidden_field :male_turn_rating, autocomplete: 'off'
           .points{max: 20}
             %h4 Tanz - Choreographie
-            %div
+            .enabled
               = render partial: 'rating_bar', locals: {set_to: 0}
-              = r.hidden_field :choreo_rating
+              = r.hidden_field :choreo_rating, autocomplete: 'off'
             %h4 Tanz - Tanzfiguren
-            %div
+            .enabled
               = render partial: 'rating_bar', locals: {set_to: 0}
               = r.hidden_field :dance_figure_rating, autocomplete: 'off'
             %h4 Tanz - Tänzerische Darstellung
-            %div
+            .enabled
               = render partial: 'rating_bar', locals: {set_to: 0}
               = r.hidden_field :team_presentation_rating, autocomplete: 'off'
           .points{mistake_type: 'abs'}
             %h4 Fehler
-            %div
+            .enabled
               = render partial: 'mistakes_bar'
               = r.hidden_field :mistakes, autocomplete: 'off'
         .total 40

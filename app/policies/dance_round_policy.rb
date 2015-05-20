@@ -12,7 +12,7 @@ class DanceRoundPolicy < ApplicationPolicy
   end
 
   def accept?
-    user && user.has_role?(:observer, record.round) && record.ready?
+    user && user.has_role?(:observer, record.round) && record.ready?(user)
   end
 
   def user_is_judge_for_this_round?
@@ -35,7 +35,7 @@ class DanceRoundPolicy < ApplicationPolicy
 
   def permitted_acrobatic_attributes
     if user.has_role?(:observer, record.round)
-      %i[dance_team_id acrobatic_id mistakes]
+      %i[dance_team_id acrobatic_id done mistakes]
     elsif user.has_role?(:acrobatics_judge, record.round)
       %i(dance_team_id acrobatic_id rating mistakes)
     else

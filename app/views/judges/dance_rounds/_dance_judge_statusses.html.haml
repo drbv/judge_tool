@@ -1,0 +1,3 @@
+%h2 Tanzwertungen
+- current_dance_round.dance_judges.each do |judge|
+  = render partial: 'judge_status', locals: {judge: judge}

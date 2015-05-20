@@ -20,5 +20,7 @@ class CreateDanceRatings < ActiveRecord::Migration
 
     add_index :dance_ratings, [:dance_round_id, :user_id], name: :find_by_judge_and_dance_round
     add_index :dance_ratings, [:dance_round_id, :user_id, :reopened], name: :find_by_judge_and_dance_round_and_reopened
+    add_index :dance_ratings, [:dance_round_id, :dance_team_id], name: :find_by_round_and_dance_team
+    add_index :dance_ratings, [:dance_round_id, :user_id, :dance_team_id], name: :find_by_round_and_observer_and_dance_team
   end
 end
