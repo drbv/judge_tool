@@ -50,8 +50,15 @@ class Judges::DanceRoundsController < Judges::BaseController
   end
 
   def reopen_flags
-    params[:reopen].values.flatten.map(&:values).flatten.map(&:values).flatten +
-      params[:reopen_acrobatic].values.flatten.map(&:values).flatten
+    params[:reopen].values.flatten.map(&:values).flatten.map(&:values).flatten + reopen_acrobatic_flags
+  end
+
+  def reopen_acrobatic_flags
+    if params[:reopen_acrobatics]
+      params[:reopen_acrobatic].values.flatten.map(&:values).flatten if params[:reopen_acrobatic]
+    else
+      []
+    end
   end
 
   def reopen!
