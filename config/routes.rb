@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
 
-  get 'utilities/index'
+  get 'admin/utilities/index'
 
     namespace :admin do
     resources :users do
