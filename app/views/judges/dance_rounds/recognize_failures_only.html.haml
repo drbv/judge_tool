@@ -10,12 +10,12 @@
               = r.check_box :danced
             = r.hidden_field :dance_team_id, value: dance_team.id, id: "dance_round_acrobatic_ratings_#{index}_dance_team_id"
             = r.hidden_field :acrobatic_id, value: acrobatic.id, id: "dance_round_acrobatic_ratings_#{index}_acrobatic_id"
-            %div
+            .enabled
               = render partial: 'mistakes_bar', locals: {hide: 'T'}
               = r.hidden_field :mistakes, autocomplete: 'off', id: "dance_round_acrobatic_ratings_#{index}_mistakes"
         = f.fields_for 'dance_ratings[]', current_dance_round.dance_ratings.build do |r|
           = r.hidden_field :dance_team_id, value: dance_team.id
-          %div
+          .enabled
             = render partial: 'mistakes_bar'
             = r.hidden_field :mistakes, autocomplete: 'off'
   = f.submit 'Wertung absenden', data: {confirm: 'Sicher alle Fehler angegeben und alle gesehenen Akrobatiken markiert?'}, class: 'btn btn-primary'
