@@ -28,7 +28,10 @@
                       %td
                         - if attr == :full_mistakes
                           - if current_dance_round.adjusting_dance_mistakes?(dance_team)
-                            = text_field_tag "adjusted[#{dance_team.id}]", current_dance_round.majority_mistakes(dance_team, current_user)
+                            .enabled
+                              = render partial: 'mistakes_bar', locals: {hide_mistakes_list: true}
+                              = render partial: 'mistakes_list', locals: {mistakes: current_dance_round.majority_mistakes(dance_team, current_user)}
+                              = text_field_tag "adjusted[#{dance_team.id}]", current_dance_round.majority_mistakes(dance_team, current_user)
                           - else
                             = current_dance_round.dance_ratings.first.full_mistakes
 
@@ -65,7 +68,10 @@
                       - if current_dance_round.ready?(current_user)
                         %td
                           - if acrobatic.mistakes_adjusting?(dance_team)
-                            = text_field_tag "adjusted_acrobatic[#{acrobatic.id}]", acrobatic.majority_mistakes(dance_team, current_user)
+                            .enabled
+                              = render partial: 'mistakes_bar', locals: {hide: 'T', hide_mistakes_list: true}
+                              = render partial: 'mistakes_list', locals: {mistakes: acrobatic.majority_mistakes(dance_team, current_user)}
+                              = hidden_field_tag "adjusted_acrobatic[#{acrobatic.id}]", acrobatic.majority_mistakes(dance_team, current_user)
                           - else
                             = acrobatic.acrobatic_ratings.first.full_mistakes
 
