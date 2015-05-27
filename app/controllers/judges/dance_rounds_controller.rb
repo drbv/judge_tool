@@ -108,7 +108,7 @@ class Judges::DanceRoundsController < Judges::BaseController
   def adjust_acrobatic_mistakes
     return unless params[:adjusted_acrobatic]
     params[:adjusted_acrobatic].each do |acrobatic_id, updated_mistakes|
-      current_dance_round.acrobatics.find(acrobatic_id).update_all mistakes: updated_mistakes
+      current_dance_round.acrobatics.find(acrobatic_id).acrobatic_ratings.update_all mistakes: updated_mistakes
     end
   end
 

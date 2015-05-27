@@ -5,7 +5,7 @@ class DanceRound < ActiveRecord::Base
   has_many :acrobatics
   has_many :acrobatic_ratings, through: :acrobatics do
     def observer(observer, dance_round)
-      where('acrobatic_ratings.dance_team_id = ?', observer.dance_teams(dance_round).map(&:id))
+      where('acrobatic_ratings.dance_team_id IN (?)', observer.dance_teams(dance_round).map(&:id))
     end
   end
   has_many :dance_ratings do
@@ -117,13 +117,13 @@ class DanceRound < ActiveRecord::Base
     end
   end
 
-  private
-
   def decider_rating?(observer)
     @decider_rating ||= {}
     return @decider_rating unless @decider_rating[observer.id].nil?
     @decider_rating[observer.id] = dance_ratings.where(user_id: observer.id).count == 1
   end
+
+  private
 
   def observer_ratings(observer, dance_team)
     dance_ratings.where(user_id: observer.id, dance_team_id: dance_team.id)
