@@ -1,11 +1,11 @@
 Rails.application.routes.draw do
 
   get 'admin/utilities/index'
+  get 'admin/utilities/db_upload'
 
     namespace :admin do
     resources :users do
       collection do
-        post :upload
       end
     end
     resources :rounds do

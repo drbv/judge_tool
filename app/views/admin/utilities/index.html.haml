@@ -1,2 +1,6 @@
-%h1 Utilities#index
-%p Find me in app/views/utilities/index.html.haml
+.bg-info
+  %h1 Datenbank Upload
+  = form_tag admin_utilities_db_upload_path, html: {class: "bg-info"},multipart: true do
+    = file_field_tag :database_file
+    = submit_tag "Import"
+%h1 Bewertungs Download
