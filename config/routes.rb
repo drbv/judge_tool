@@ -1,19 +1,8 @@
 Rails.application.routes.draw do
-  get 'utilities/rating_download'
-
-  get 'utilities/db_upload'
-
-  get 'utilities/db_reset'
 
   get 'utilities/index'
 
-  get 'utilities/rating_download'
-
-  get 'utilities/db_upload'
-
-  get 'utilities/db_reset'
-
-  namespace :admin do
+    namespace :admin do
     resources :users do
       collection do
         post :upload
@@ -31,6 +20,7 @@ Rails.application.routes.draw do
       post :accept
     end
   end
+
   resource :round, only: %i(show)
   resources :pages, only: :show
   get 'login', to: 'sessions#new'
