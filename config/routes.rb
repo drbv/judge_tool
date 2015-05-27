@@ -1,4 +1,18 @@
 Rails.application.routes.draw do
+  get 'utilities/rating_download'
+
+  get 'utilities/db_upload'
+
+  get 'utilities/db_reset'
+
+  get 'utilities/index'
+
+  get 'utilities/rating_download'
+
+  get 'utilities/db_upload'
+
+  get 'utilities/db_reset'
+
   namespace :admin do
     resources :users do
       collection do
