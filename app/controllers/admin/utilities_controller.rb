@@ -22,13 +22,10 @@ class Admin::UtilitiesController < Admin::BaseController
     File.write(Rails.root.join('tmp','rating_list.csv'),'')
     DanceRating.all.each do |rating|
       line = "#{URI.encode_www_form WR_ID: rating.user.id, rt_ID: rating.dance_round.round.position}\n"
-      #File.write(Rails.root.join('tmp','rating_list.csv'),line)
       File.open(Rails.root.join('tmp','rating_list.csv'), 'a') do |f|
         f<<(line)
       end
     end
-    binding.pry
-
     send_file Rails.root.join('tmp','rating_list.csv')
   end
 end
