@@ -54,7 +54,7 @@ module Calculator
     end
 
     def choose_only_mistakes_for(mistake_type)
-      @mistakes_set.map { |e| e[mistake_type] || [] }
+      @mistakes_set.map { |e| e[mistake_type].sort_by {|e| e[1..2].to_i}.reverse || [] }
     end
 
   end
