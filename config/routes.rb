@@ -2,6 +2,7 @@ Rails.application.routes.draw do
 
   get 'admin/utilities/index'
   get 'admin/utilities/db_upload'
+  post 'admin/utilities/download_rating_list'
 
     namespace :admin do
     resources :users do
