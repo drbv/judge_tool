@@ -13,6 +13,7 @@ class DanceRating < ActiveRecord::Base
   validate :team_belongs_to_dance_round
   after_save :add_history_entry
 
+
   def full_mistakes
     mistakes.blank? ? 'Keine Fehler' : mistakes
   end

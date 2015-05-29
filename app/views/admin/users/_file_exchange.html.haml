@@ -1,5 +1,0 @@
-.bg-info
-  %h1 Datenbank Upload
-  = form_tag upload_admin_users_path, html: {class: "bg-info"},multipart: true do
-    = file_field_tag :database_file
-    = submit_tag "Import"
