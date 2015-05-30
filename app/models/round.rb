@@ -18,7 +18,9 @@ class Round < ActiveRecord::Base
         :dance_judge
     end
   end
-
+  def has_acrobatics?
+    !self.round_type.name.include? 'Fuß'
+  end
   def active?
     started? && !closed?
   end
