@@ -72,7 +72,8 @@ module MS
                             round_type_id: (round_types[round[:Runde].to_sym].id),
                             start_time: round[:Startzeit].gsub('1899', Time.now.year.to_s).to_time,
                             position: round[:Rundenreihenfolge].to_i,
-                            rt_id: round[:RT_ID]
+                            rt_id: round[:RT_ID],
+                            tournament_number: @access_database[:Turnier].first[:Turnier_Nummer]
       @access_database[:Startklasse_Wertungsrichter].select { |mapping| mapping[:Startklasse] == round[:Startklasse] }.each do |judge_role|
         next if judge_role[:WR_function] == 'X'
         next if judge_role[:WR_function] == 'Ak' and !@round.has_acrobatics?

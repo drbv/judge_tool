@@ -10,6 +10,7 @@ class CreateRounds < ActiveRecord::Migration
       t.integer :position, index: true
       t.timestamps null: false
       t.integer :rt_id
+      t.integer :tournament_number
     end
     add_index :rounds, %i(started closed)
   end
