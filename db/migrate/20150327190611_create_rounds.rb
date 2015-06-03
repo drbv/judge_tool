@@ -9,6 +9,7 @@ class CreateRounds < ActiveRecord::Migration
       t.datetime :start_time, index: true
       t.integer :position, index: true
       t.timestamps null: false
+      t.integer :rt_id
     end
     add_index :rounds, %i(started closed)
   end
