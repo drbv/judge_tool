@@ -28,7 +28,11 @@ class AcrobaticRating < ActiveRecord::Base
   end
 
   def diff_to_big?
-    (acrobatic.ratings_average - rating).abs >= 20
+    !observer_rating? && (acrobatic.ratings_average - rating).abs >= 20
+  end
+
+  def observer_rating?
+    user.has_role?(:observer, acrobatic.dance_round.round)
   end
 
   private

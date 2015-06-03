@@ -23,7 +23,7 @@ class DanceRating < ActiveRecord::Base
   end
 
   def points
-    @points ||= [(10 * (1 - (female_base_rating + female_turn_rating).to_d / 200) + 10 * (1 - (male_base_rating + male_turn_rating).to_d / 200) + 20 * (1 - (choreo_rating + dance_figure_rating + team_presentation_rating).to_d / 300)) - punishment, 0].max
+    @points ||= [(female + male + dance - punishment), 0].max
   end
 
   def final!
@@ -34,12 +34,40 @@ class DanceRating < ActiveRecord::Base
     final
   end
 
+  def female_max
+    10
+  end
+
+  def male_max
+    10
+  end
+
+  def dance_max
+    20
+  end
+
+  def female
+    10 * (1 - (female_base_rating + female_turn_rating).to_d / 200)
+  end
+
+  def male
+    10 * (1 - (male_base_rating + male_turn_rating).to_d / 200)
+  end
+
+  def dance
+    20 * (1 - (choreo_rating * 0.3 + dance_figure_rating * 0.3 + team_presentation_rating * 0.4).to_d / 100)
+  end
+
   def diff_to_big?(attr)
-    (dance_round.dance_ratings_average(attr, dance_team) - send(attr)).abs >= 20
+    !observer_rating? && (dance_round.dance_ratings_average(attr, dance_team) - send(attr)).abs >= send("#{attr}_max") * 0.2
   end
 
   def diff(attr)
     dance_round.dance_ratings_average(attr, dance_team) - send(attr)
+  end
+
+  def observer_rating?
+    user.has_role?(:observer, dance_round.round)
   end
   
   private
@@ -62,6 +90,6 @@ class DanceRating < ActiveRecord::Base
   end
   
   def discussable_attributes
-    %i(female_base_rating female_turn_rating male_base_rating male_turn_rating choreo_rating dance_figure_rating team_presentation_rating)
+    %i(female male dance)
   end
 end

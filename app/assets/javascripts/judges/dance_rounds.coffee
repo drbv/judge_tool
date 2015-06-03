@@ -59,22 +59,23 @@ ready = ->
     $(this).parent().parent().find('input[type=hidden]').val($(this).text())
     calculateOverallRating()
     false
-  $(document).on 'click', 'td.markable', ->
+  $(document).on 'click', 'tr.markable', ->
     if $(this).hasClass('info')
       $(this).removeClass('info')
+      $(this).addClass('danger')
       $(this).find('input').val('0')
     else
       $(this).removeClass('danger')
       $(this).addClass('info')
       $(this).find('input').val('1')
-    if ('td.markable.info').size > 0
-      submit = $('#mark_ratings input[type="submit"]')
-      if submit.text() != 'Zur Diskussion freigeben!'
-        submit.attr('oldText', submit.text())
-        submit.text('Zur Diskussion freigeben!')
+    submit = $('#mark_ratings input[type="submit"]')
+    if $('tr.markable.info').size() > 0
+      if submit.val() != 'Zur Diskussion freigeben!'
+        submit.attr('oldText', submit.val())
+        submit.val('Zur Diskussion freigeben!')
     else
-      if submit.text() == 'Zur Diskussion freigeben!'
-        submit.text(submit.attr('oldText'))
+      if submit.val() == 'Zur Diskussion freigeben!'
+        submit.val(submit.attr('oldText'))
 
 $(document).ready ready
 $(document).on('page:load', ready)
