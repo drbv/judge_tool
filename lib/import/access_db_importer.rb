@@ -74,6 +74,7 @@ module MS
                             position: round[:Rundenreihenfolge].to_i
       @access_database[:Startklasse_Wertungsrichter].select { |mapping| mapping[:Startklasse] == round[:Startklasse] }.each do |judge_role|
         next if judge_role[:WR_function] == 'X'
+        next if judge_role[:WR_function] == 'Ak' and round[:Runde].include? 'Fuß'
         judge = User.find_by licence: @access_database[:Wert_Richter].select { |wr| wr[:WR_ID] == judge_role[:WR_ID] }.first[:WR_Lizenznr]
         judge.add_role translate_role(judge_role[:WR_function]), @round
       end

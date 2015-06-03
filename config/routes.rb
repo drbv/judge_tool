@@ -1,8 +1,12 @@
 Rails.application.routes.draw do
-  namespace :admin do
+
+  get 'admin/utilities/index'
+  post 'admin/utilities/db_upload'
+  post 'admin/utilities/download_rating_list'
+
+    namespace :admin do
     resources :users do
       collection do
-        post :upload
       end
     end
     resources :rounds do
@@ -17,6 +21,7 @@ Rails.application.routes.draw do
       post :accept
     end
   end
+
   resource :round, only: %i(show)
   resources :pages, only: :show
   get 'login', to: 'sessions#new'
