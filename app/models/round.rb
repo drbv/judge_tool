@@ -41,6 +41,7 @@ class Round < ActiveRecord::Base
 
   def close!
     update_attribute :closed, true
+    generate_rating_export_file
   end
 
   def judges
@@ -61,6 +62,23 @@ class Round < ActiveRecord::Base
 
   def observers
     User.with_role :observer, self
+  end
+
+  def generate_rating_export_file
+    File.write(Rails.root.join('tmp',"T#{self.tournament_number}_RT#{self.rt_id}.txt"),'')
+
+    dance_rounds.each do |dance_round|
+      dance_round.dance_ratings.group_by(&:user).each do |user, dance_ratings|
+
+      end
+
+    end
+
+    #  line = "#{URI.encode_www_form WR_ID: rating.user.id, rt_ID: rating.dance_round.round.position}\n"
+    #  File.open(Rails.root.join('tmp','rating_list.csv'), 'a') do |f|
+    #    f<<(line)
+    #  end
+    #end
   end
 
   # def set_random_judges
