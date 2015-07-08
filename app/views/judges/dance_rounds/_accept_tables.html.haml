@@ -13,8 +13,8 @@
                 %tr
                   %td
                   - current_dance_round.dance_judges.each do |judge|
-                    %td= judge.full_name
-                  %td= current_user.full_name
+                    %td= judge.last_name
+                  %td= current_user.last_name
                   - if current_dance_round.ready?(current_user)
                     %td Mehrheitsbildung
                 - %i(female male dance full_mistakes).each do |attr|
@@ -34,7 +34,7 @@
                           - else
                             = current_dance_round.dance_ratings.first.full_mistakes
 
-  - unless current_dance_round.acrobatics_judges.empty?
+  - unless current_dance_round.acrobatics_judges.empty? or !current_dance_round.round.has_acrobatics?
     %div
       = render partial: 'acrobatic_judge_statusses'
       .container
