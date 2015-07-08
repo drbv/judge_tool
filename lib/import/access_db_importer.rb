@@ -141,7 +141,7 @@ module MS
 
     def create_judges
       @access_database[:Wert_Richter].each do |judge_data|
-        judge = User.new(first_name: judge_data[:WR_Vorname], last_name: judge_data[:WR_Nachname], licence: judge_data[:WR_Lizenznr])
+        judge = User.new(first_name: judge_data[:WR_Vorname], last_name: judge_data[:WR_Nachname], licence: judge_data[:WR_Lizenznr], wr_id: judge_data[:WR_ID] )
         if club = Club.find_by(number: judge_data[:Vereinsnr])
           judge.club = club
         end
