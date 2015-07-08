@@ -3,6 +3,7 @@ class Round < ActiveRecord::Base
   belongs_to :round_type
   belongs_to :dance_class
   has_many :dance_rounds
+  require 'uri'
 
   def self.active
     where(started: true, closed: false).first
@@ -65,11 +66,17 @@ class Round < ActiveRecord::Base
   end
 
   def generate_rating_export_file
-    File.write(Rails.root.join('tmp',"T#{self.tournament_number}_RT#{self.rt_id}.txt"),'')
+    file_name="T#{self.tournament_number}_RT#{self.rt_id}.txt"
+    File.write(Rails.root.join('tmp',file_name),'')
 
     dance_rounds.each do |dance_round|
       dance_round.dance_ratings.group_by(&:user).each do |user, dance_ratings|
-
+        line = "#{URI.encode_www_form WR_ID: user.wr_id,
+                      rt_ID: dance_round.round.rt_id
+        }"
+        File.open(Rails.root.join('tmp',file_name), 'a') do |f|
+          f<<(line)
+        end
       end
 
     end
