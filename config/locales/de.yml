@@ -1,4 +1,9 @@
 de:
+  dance_ratings:
+    attributes:
+      female: Dame
+      male: Herr
+      dance: Tanz
 
   date:
     formats:

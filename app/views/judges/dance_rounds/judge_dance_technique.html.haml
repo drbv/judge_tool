@@ -23,15 +23,17 @@
             .enabled
               = render partial: 'rating_bar', locals: {set_to: 0}
               = r.hidden_field :male_turn_rating, autocomplete: 'off'
-          .points{max: 20}
+          .points{max: 6}
             %h4 Tanz - Choreographie
             .enabled
               = render partial: 'rating_bar', locals: {set_to: 0}
               = r.hidden_field :choreo_rating, autocomplete: 'off'
+          .points{max: 6}
             %h4 Tanz - Tanzfiguren
             .enabled
               = render partial: 'rating_bar', locals: {set_to: 0}
               = r.hidden_field :dance_figure_rating, autocomplete: 'off'
+          .points{max: 8}
             %h4 Tanz - Tänzerische Darstellung
             .enabled
               = render partial: 'rating_bar', locals: {set_to: 0}
