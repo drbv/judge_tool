@@ -15,7 +15,7 @@ class DanceRating < ActiveRecord::Base
 
 
   def full_mistakes
-    mistakes.blank? ? 'Keine Fehler' : mistakes
+    mistakes.blank? ? '-' : mistakes
   end
 
   def punishment
