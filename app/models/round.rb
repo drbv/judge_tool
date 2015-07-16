@@ -19,9 +19,11 @@ class Round < ActiveRecord::Base
         :dance_judge
     end
   end
+
   def has_acrobatics?
     !self.round_type.name.include? 'Fuß'
   end
+
   def active?
     started? && !closed?
   end
@@ -67,25 +69,77 @@ class Round < ActiveRecord::Base
 
   def generate_rating_export_file
     file_name="T#{self.tournament_number}_RT#{self.rt_id}.txt"
-    File.write(Rails.root.join('tmp',file_name),'')
+    File.write(Rails.root.join('tmp', file_name), '')
 
     dance_rounds.each do |dance_round|
       dance_round.dance_ratings.group_by(&:user).each do |user, dance_ratings|
-        line = "#{URI.encode_www_form WR_ID: user.wr_id,
-                      rt_ID: dance_round.round.rt_id
-        }"
-        File.open(Rails.root.join('tmp',file_name), 'a') do |f|
-          f<<(line)
+        dance_ratings = dance_ratings.sort_by { |dance_rating| -dance_rating.dance_team.startnumber }
+        @rating_line_dance_part2 = rating_line_dance_part2 dance_ratings
+
+        dance_ratings.each do |dance_rating|
+          File.open(Rails.root.join('tmp', file_name), 'a') do |f|
+            f << "#{dance_rating.dance_team.access_db_id};#{dance_rating.user.wr_id};#{@rating_line_dance_part2}"
+          end
         end
       end
-
     end
+  end
 
-    #  line = "#{URI.encode_www_form WR_ID: rating.user.id, rt_ID: rating.dance_round.round.position}\n"
-    #  File.open(Rails.root.join('tmp','rating_list.csv'), 'a') do |f|
-    #    f<<(line)
-    #  end
-    #end
+  def rating_line_dance_part2(dance_ratings)
+    "#{rating_line_long_ids dance_ratings}&#{rating_line_dance dance_ratings}#{rating_line_acrobatic_placeholder dance_ratings}&#{rating_line_dance_mistakes dance_ratings}"
+  end
+
+  def rating_line_long_ids (dance_ratings)
+
+    line = URI.encode_www_form PR_ID1: dance_ratings.first.dance_team.access_db_id,
+                               nPage: 'judge_tool',
+                               rh1: '1',
+                               WR_ID: dance_ratings.first.user.wr_id,
+                               rt_ID: self.rt_id
+
+    if dance_ratings.count == 2
+      line << "&#{URI.encode_www_form PR_ID2: dance_ratings.last.dance_team.access_db_id,
+                                      rh2: '1'}"
+    elsif dance_ratings.count > 2
+      fail()
+    end
+  end
+
+  def rating_line_dance (dance_ratings)
+    dance_ratings.map.with_index do |dance_rating, index|
+      URI.encode_www_form "wsh_#{index + 1}" => dance_rating.male_base_rating,
+                          "wth_#{index + 1}" => dance_rating.male_turn_rating,
+                          "wsd_#{index + 1}" => dance_rating.female_base_rating,
+                          "wtd_#{index + 1}" => dance_rating.female_turn_rating,
+                          "wch_#{index + 1}" => dance_rating.choreo_rating,
+                          "wtf_#{index + 1}" => dance_rating.dance_figure_rating,
+                          "wda_#{index + 1}" => dance_rating.team_presentation_rating
+    end.join('&')
+  end
+
+  def rating_line_acrobatic_placeholder (dance_ratings)
+    if dance_ratings.dance_round.acrobatic_ratings.empty?
+      return ''
+    else
+      "&#{rating_line_acrobatic_for_dance dance_ratings}"
+    end
+  end
+
+  def rating_line_acrobatic_for_dance (dance_ratings)
+    dance_ratings.map.with_index do |dance_rating, index_dance_team|
+      dance_rating.dance_round.acrobatics.where(dance_team_id: dance_rating.dance_team_id).map.with_index do |acrobatic, index_acrobatic|
+        URI.encode_www_form "wfl#{index_dance_team + 1}_ak#{index_dance_team + 1}#{index_acrobatic + 1}" => '',
+                            "tfl#{index_dance_team + 1}_ak#{index_dance_team + 1}#{index_acrobatic + 1}" => '',
+                            "wak#{index_dance_team + 1}#{index_dance_team + 1}" => ''
+      end.join('&')
+    end.join('&')
+  end
+
+  def rating_line_dance_mistakes (dance_ratings)
+    dance_ratings.map.with_index do |dance_rating, index|
+      URI.encode_www_form "tfl#{index}" => (dance_rating.mistakes || ''),
+                          "wfl#{index}" => dance_rating.punishment
+    end.join('&')
   end
 
   # def set_random_judges
