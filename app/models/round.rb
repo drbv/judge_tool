@@ -72,13 +72,13 @@ class Round < ActiveRecord::Base
     File.write(Rails.root.join('tmp', file_name), '')
 
     dance_rounds.each do |dance_round|
-      dance_round.dance_ratings.group_by(&:user).each do |user, dance_ratings|
-        dance_ratings = dance_ratings.sort_by { |dance_rating| -dance_rating.dance_team.startnumber }
+      dance_round.dance_ratings.select { |dance_rating| dance_rating.user.is_judge? dance_rating.dance_round.round }.group_by(&:user).each do |user, dance_ratings|
+        dance_ratings = dance_ratings.sort_by { |dance_rating| dance_rating.dance_team.startnumber }
         @rating_line_dance_part2 = rating_line_dance_part2 dance_ratings
 
         dance_ratings.each do |dance_rating|
           File.open(Rails.root.join('tmp', file_name), 'a') do |f|
-            f << "#{dance_rating.dance_team.access_db_id};#{dance_rating.user.wr_id};#{@rating_line_dance_part2}"
+            f << "#{dance_rating.dance_team.access_db_id};#{dance_rating.user.wr_id};#{@rating_line_dance_part2}\n"
           end
         end
       end
@@ -86,7 +86,7 @@ class Round < ActiveRecord::Base
   end
 
   def rating_line_dance_part2(dance_ratings)
-    "#{rating_line_long_ids dance_ratings}&#{rating_line_dance dance_ratings}#{rating_line_acrobatic_placeholder dance_ratings}&#{rating_line_dance_mistakes dance_ratings}"
+    "#{rating_line_long_ids dance_ratings}&#{rating_line_dance dance_ratings}#{rating_line_acrobatic_placeholder dance_ratings}&#{rating_line_dance_mistakes dance_ratings}&#{rating_line_time}"
   end
 
   def rating_line_long_ids (dance_ratings)
@@ -107,18 +107,18 @@ class Round < ActiveRecord::Base
 
   def rating_line_dance (dance_ratings)
     dance_ratings.map.with_index do |dance_rating, index|
-      URI.encode_www_form "wsh_#{index + 1}" => dance_rating.male_base_rating,
-                          "wth_#{index + 1}" => dance_rating.male_turn_rating,
-                          "wsd_#{index + 1}" => dance_rating.female_base_rating,
-                          "wtd_#{index + 1}" => dance_rating.female_turn_rating,
-                          "wch_#{index + 1}" => dance_rating.choreo_rating,
-                          "wtf_#{index + 1}" => dance_rating.dance_figure_rating,
-                          "wda_#{index + 1}" => dance_rating.team_presentation_rating
+      URI.encode_www_form "wsh_#{index + 1}" => dance_rating.male_base_rating_points,
+                          "wth_#{index + 1}" => dance_rating.male_turn_rating_points,
+                          "wsd_#{index + 1}" => dance_rating.female_base_rating_points,
+                          "wtd_#{index + 1}" => dance_rating.female_turn_rating_points,
+                          "wch_#{index + 1}" => dance_rating.choreo_rating_points,
+                          "wtf_#{index + 1}" => dance_rating.dance_figure_rating_points,
+                          "wda_#{index + 1}" => dance_rating.team_presentation_rating_points
     end.join('&')
   end
 
   def rating_line_acrobatic_placeholder (dance_ratings)
-    if dance_ratings.dance_round.acrobatic_ratings.empty?
+    if dance_ratings.first.dance_round.acrobatic_ratings.empty?
       return ''
     else
       "&#{rating_line_acrobatic_for_dance dance_ratings}"
@@ -137,9 +137,13 @@ class Round < ActiveRecord::Base
 
   def rating_line_dance_mistakes (dance_ratings)
     dance_ratings.map.with_index do |dance_rating, index|
-      URI.encode_www_form "tfl#{index}" => (dance_rating.mistakes || ''),
-                          "wfl#{index}" => dance_rating.punishment
+      URI.encode_www_form "tfl#{index+1}" => (dance_rating.mistakes || ''),
+                          "wfl#{index+1}" => dance_rating.punishment
     end.join('&')
+  end
+
+  def rating_line_time
+    "wtim=#{Time.now.strftime('%H_%M_%S;%H:%M:%S')}"
   end
 
   # def set_random_judges

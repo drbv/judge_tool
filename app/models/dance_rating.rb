@@ -1,6 +1,6 @@
 class DanceRating < ActiveRecord::Base
   include ReopenedAttributes
-  
+
   belongs_to :dance_team
   belongs_to :dance_round
   belongs_to :user
@@ -19,7 +19,7 @@ class DanceRating < ActiveRecord::Base
   end
 
   def punishment
-    @punishment ||= mistakes.split(',').map {|malus| malus[1..-1].to_i}.sum
+    @punishment ||= mistakes.split(',').map { |malus| malus[1..-1].to_i }.sum
   end
 
   def points
@@ -69,7 +69,38 @@ class DanceRating < ActiveRecord::Base
   def observer_rating?
     user.has_role?(:observer, dance_round.round)
   end
-  
+  def discussable_attributes
+    %i(female male dance)
+  end
+
+  def male_turn_rating_points
+    5 * male_turn_rating.to_d/100
+  end
+
+  def male_base_rating_points
+    5 * male_base_rating.to_d/100
+  end
+
+  def female_turn_rating_points
+    5 * female_turn_rating.to_d/100
+  end
+
+  def female_base_rating_points
+    5 * female_base_rating.to_d/100
+  end
+
+  def choreo_rating_points
+    20 / 3 * choreo_rating.to_d/100
+  end
+
+  def dance_figure_rating_points
+    20 / 3 * dance_figure_rating.to_d/100
+  end
+
+  def team_presentation_rating_points
+    20 / 3 * team_presentation_rating.to_d/100
+  end
+
   private
 
   def add_history_entry
@@ -88,8 +119,7 @@ class DanceRating < ActiveRecord::Base
   def team_belongs_to_dance_round
     errors.add :dance_team unless dance_round.dance_teams.include?(dance_team)
   end
-  
-  def discussable_attributes
-    %i(female male dance)
-  end
+
+
+
 end
