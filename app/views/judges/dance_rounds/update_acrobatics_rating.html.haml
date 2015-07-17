@@ -1,16 +1,17 @@
-= form_for current_dance_round, url: judges_dance_round_path do |f|
+= form_for current_dance_round, url: judges_dance_round_path, html: {id: 'dance_round'}  do |f|
   #dance_teams.row
     - current_dance_round.dance_teams.each do |dance_team|
-      .dance_team.col-md-6
+      .dance_team.col-md-6{id: "dance_team_#{dance_team.id}"}
         %h3= dance_team.name_with_startnumber
         - current_dance_round.acrobatics.where(dance_team_id: dance_team.id).each_with_index do |acrobatic, index|
           %h4= "Akrobatik: #{acrobatic.acrobatic_type.short_name}"
           - rating = current_dance_round.acrobatic_ratings.find_by(acrobatic_id: acrobatic.id, user_id: current_user.id, dance_team_id: dance_team.id)
           = f.fields_for 'acrobatic_ratings[]', rating do |r|
+            = r.hidden_field :id
             .points{max: acrobatic.acrobatic_type.max_points, mistake_type: 'rel'}
-              %div{class: "#{'enabled' if rating.reopened?(:rating)}"}
+              %div{class: "#{'enabled' if rating.attr_reopened?(:rating)}"}
                 = render partial: 'rating_bar', locals: {set_to: rating.rating}
-                = r.hidden_field :rating, autocomplete: 'off', id: "dance_round_acrobatic_ratings_#{index}_rating" if rating.reopened?(:rating)
+                = r.hidden_field :rating, autocomplete: 'off', id: "dance_round_acrobatic_ratings_#{index}_rating"
               %div
                 = render partial: 'mistakes_list', locals: {mistakes: rating.mistakes}
         .total= current_dance_round.points_from_judge(current_user, dance_team)

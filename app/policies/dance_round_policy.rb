@@ -8,7 +8,7 @@ class DanceRoundPolicy < ApplicationPolicy
   end
 
   def update?
-    user && record && user_is_judge_for_this_round? && user_has_not_rated_already?
+    user && record && user_is_judge_for_this_round? && (user_has_not_rated_already? || record.reopened_for?(user))
   end
 
   def accept?

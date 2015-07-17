@@ -4,7 +4,7 @@ module ReopenedAttributes
   end
 
   def attr_reopened?(attribute)
-    reopened_attributes.include?(attribute.to_sym)
+    reopened_attributes.include?(attributes_group(attribute))
   end
 
   def reopened_attributes
@@ -12,13 +12,21 @@ module ReopenedAttributes
   end
 
   def reopen!(attributes)
-    update_attribute :reopen, (attributes.inject(0) {|memo, attr| memo += reopen_value(attr)})
+    update_attribute :reopened, (attributes.inject(0) {|memo, attr| memo += reopen_value(attr)})
+  end
+
+  def close!
+    update_attribute :reopened, 0
   end
 
   private
 
+  def attributes_group(attribute)
+    attribute.to_sym
+  end
+
   def bin_reopen
-    @bin_reopen ||= reopen.to_s(2).chars
+    @bin_reopen ||= reopened.to_s(2).chars.reverse
   end
 
   def reopen_mapping
