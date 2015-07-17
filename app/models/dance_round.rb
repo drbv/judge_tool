@@ -42,6 +42,16 @@ class DanceRound < ActiveRecord::Base
     finished
   end
 
+  def reopened_for?(user)
+    if user.has_role?(:dance_judge, round)
+      dance_ratings.where(user_id: user.id).any? { |dance_rating| dance_rating.reopened? }
+    elsif user.has_role?(:acrobatics_judge, round)
+      acrobatic_ratings.where(user_id: user.id).any? { |acrobatic_rating| acrobatic_rating.reopened? }
+    else
+      false
+    end
+  end
+
   def close!
     update_attributes finished: true, finished_at: Time.now
   end
@@ -91,7 +101,7 @@ class DanceRound < ActiveRecord::Base
   def dance_ratings_average(attr, team)
     @averages ||= {}
     dance_ratings.where(dance_team_id: team.id, user_id: dance_judges.map(&:id)).map(&attr).tap do |rating_values|
-      @averages[attr] ||= rating_values.inject{ |sum, el| sum + el }.to_f / rating_values.size
+      @averages[attr] ||= rating_values.inject { |sum, el| sum + el }.to_f / rating_values.size
     end
     @averages[attr]
   end
@@ -121,6 +131,14 @@ class DanceRound < ActiveRecord::Base
     @decider_rating ||= {}
     return @decider_rating unless @decider_rating[observer.id].nil?
     @decider_rating[observer.id] = dance_ratings.where(user_id: observer.id).count == 1
+  end
+
+  def reopened?
+    if dance_ratings.blank? && acrobatic_ratings.blank?
+      false
+    else
+      dance_ratings.any?(&:reopened?) || (acrobatic_ratings && acrobatic_ratings.any?(&:reopened?))
+    end
   end
 
   private

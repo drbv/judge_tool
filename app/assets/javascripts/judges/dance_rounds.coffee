@@ -70,11 +70,11 @@ ready = ->
       $(this).find('input').val('1')
     submit = $('#mark_ratings input[type="submit"]')
     if $('tr.markable.info').size() > 0
-      if submit.val() != 'Zur Diskussion freigeben!'
+      if submit.val() != 'Fehler korrigieren und markierte Zeilen zur Diskussion freigeben!'
         submit.attr('oldText', submit.val())
-        submit.val('Zur Diskussion freigeben!')
+        submit.val('Fehler korrigieren und markierte Zeilen zur Diskussion freigeben!')
     else
-      if submit.val() == 'Zur Diskussion freigeben!'
+      if submit.val() == 'Fehler korrigieren und markierte Zeilen zur Diskussion freigeben!'
         submit.val(submit.attr('oldText'))
 
 $(document).ready ready

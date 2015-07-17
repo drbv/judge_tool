@@ -25,10 +25,34 @@
   }
 }
 
+.mistakes-list.disabled {
+  div {
+    background-color: #333
+  }
+}
+
 .rating {
   margin-bottom: 1em;
   height: 2em;
   padding: 0 0.9em;
+  div {
+    margin: 0;
+    display: block;
+    float: left;
+    padding: 0.25em 0;
+    border: 1px solid #555;
+    font-size: 90%;
+    width: 2em;
+    text-align: center;
+    background-color: #777;
+  }
+  .active {
+    background-color: #333;
+  }
+
+}
+
+.enabled .rating {
   div {
     margin: 0;
     display: block;

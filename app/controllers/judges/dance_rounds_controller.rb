@@ -24,10 +24,14 @@ class Judges::DanceRoundsController < Judges::BaseController
 
   def update
     authorize current_dance_round
-    set_dance_ratings
-    acrobatics = set_acrobatics_ratings
-    current_dance_round.save!
-    acrobatics.each(&:save!)
+    if current_dance_round.reopened?
+      update_ratings
+    else
+      set_dance_ratings
+      acrobatics = set_acrobatics_ratings
+      current_dance_round.save!
+      acrobatics.each(&:save!)
+    end
     judge_dance_teams
   end
 
@@ -44,6 +48,26 @@ class Judges::DanceRoundsController < Judges::BaseController
   end
 
   private
+
+  def update_ratings
+    @attributes = params.require(:dance_round)
+    if @attributes[:dance_ratings]
+      @attributes[:dance_ratings].each do |dance_rating_id, attributes|
+        rating = DanceRating.find(dance_rating_id)
+        next unless rating.reopened?
+        rating.update_attributes attributes.permit(policy(@dance_round).permitted_dance_attributes)
+        rating.close!
+      end
+    end
+    if @attributes[:acrobatic_ratings]
+      @attributes[:acrobatic_ratings].each do |acro_rating_id, attributes|
+        rating = AcrobaticRating.find(acro_rating_id)
+        next unless rating.reopened?
+        rating.update_attributes attributes.permit(policy(@dance_round).permitted_acrobatic_attributes)
+        rating.close!
+      end
+    end
+  end
 
   def reopen?
     reopen_flags.any? { |value| value == '1' }
@@ -142,10 +166,10 @@ class Judges::DanceRoundsController < Judges::BaseController
 
   def dance_round_params
     @attributes = params.require(:dance_round)
-    if @attributes.has_key?(:dance_ratings)
+    if @attributes[:dance_ratings].is_a?(Array)
       @attributes[:dance_ratings].map! { |attr| attr.permit(policy(@dance_round).permitted_dance_attributes) }
     end
-    if @attributes.has_key?(:acrobatic_ratings)
+    if @attributes[:acrobatic_ratings].is_a?(Array)
       @attributes[:acrobatic_ratings].map! { |attr| attr.permit(policy(@dance_round).permitted_acrobatic_attributes) }
     end
     @attributes
@@ -211,7 +235,7 @@ class Judges::DanceRoundsController < Judges::BaseController
     if current_dance_round
       if current_user.rated?(current_dance_round)
         if current_user.open_discussion?(current_dance_round)
-          render :"update_#{judgme}_rating"
+          render :"update_#{judgment_type}_rating"
         else
           if request.xhr?
             render :json, still_waiting: true, body: render_to_string(partial: 'waiting_table')

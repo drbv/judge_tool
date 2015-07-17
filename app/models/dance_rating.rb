@@ -119,7 +119,21 @@ class DanceRating < ActiveRecord::Base
   def team_belongs_to_dance_round
     errors.add :dance_team unless dance_round.dance_teams.include?(dance_team)
   end
+  
+  def discussable_attributes
+    %i(female male dance)
+  end
 
+  def attributes_groups
+    {
+      female: %i[female_base_rating female_turn_rating],
+      male: %i[male_base_rating male_turn_rating],
+      dance: %i[choreo_rating dance_figure_rating team_presentation_rating]
+    }
+  end
 
+  def attributes_group(attribute)
+    attributes_groups.keys.select {|key| attributes_groups[key].include? attribute.to_sym }.first
+  end
 
 end
