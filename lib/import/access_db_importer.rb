@@ -76,7 +76,7 @@ module MS
                             tournament_number: @access_database[:Turnier].first[:Turnier_Nummer]
       @access_database[:Startklasse_Wertungsrichter].select { |mapping| mapping[:Startklasse] == round[:Startklasse] }.each do |judge_role|
         next if judge_role[:WR_function] == 'X'
-        next if judge_role[:WR_function] == 'Ak' and !@round.has_acrobatics?
+        next if judge_role[:WR_function] == 'Ak' and @round.has_no_acrobatics?
         judge = User.find_by licence: @access_database[:Wert_Richter].select { |wr| wr[:WR_ID] == judge_role[:WR_ID] }.first[:WR_Lizenznr]
         judge.add_role translate_role(judge_role[:WR_function]), @round
       end

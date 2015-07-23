@@ -20,8 +20,8 @@ class Round < ActiveRecord::Base
     end
   end
 
-  def has_acrobatics?
-    !self.round_type.name.include? 'Fuß'
+  def has_no_acrobatics?
+    (self.round_type.name.include? 'Fuß') || (self.dance_class.name.include? 'Schüler')
   end
 
   def active?
