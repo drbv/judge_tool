@@ -34,7 +34,7 @@
                           - else
                             = current_dance_round.dance_ratings.first.full_mistakes
 
-  - unless current_dance_round.acrobatics_judges.empty? or !current_dance_round.round.has_acrobatics?
+  - unless current_dance_round.acrobatics_judges.empty? or current_dance_round.round.has_no_acrobatics?
     %div
       = render partial: 'acrobatic_judge_statusses'
       .container

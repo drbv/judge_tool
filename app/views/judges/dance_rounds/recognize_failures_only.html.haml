@@ -9,7 +9,7 @@
           .enabled
             = render partial: 'mistakes_bar'
             = r.hidden_field :mistakes, autocomplete: 'off'
-        - if current_dance_round.round.has_acrobatics?
+        - if !current_dance_round.round.has_no_acrobatics?
           - current_dance_round.acrobatics.where(dance_team_id: dance_team.id).each_with_index do |acrobatic, index|
             = f.fields_for 'acrobatic_ratings[]', current_dance_round.acrobatic_ratings.build do |r|
               %h4
