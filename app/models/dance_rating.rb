@@ -74,31 +74,31 @@ class DanceRating < ActiveRecord::Base
   end
 
   def male_turn_rating_points
-    5 * male_turn_rating.to_d/100
+    (1 - 1 * male_turn_rating.to_d/100) * 5
   end
 
   def male_base_rating_points
-    5 * male_base_rating.to_d/100
+    (1 - 1 * male_base_rating.to_d/100) *5
   end
 
   def female_turn_rating_points
-    5 * female_turn_rating.to_d/100
+    (1 - 1 * female_turn_rating.to_d/100) * 5
   end
 
   def female_base_rating_points
-    5 * female_base_rating.to_d/100
+    (1 - 1 * female_base_rating.to_d/100) * 5
   end
 
   def choreo_rating_points
-    20 / 3 * choreo_rating.to_d/100
+    (1 - 1 * choreo_rating.to_d/100 ) * 20/3
   end
 
   def dance_figure_rating_points
-    20 / 3 * dance_figure_rating.to_d/100
+    (1 - 1 * dance_figure_rating.to_d/100) * 20/3
   end
 
   def team_presentation_rating_points
-    20 / 3 * team_presentation_rating.to_d/100
+    (1 - 1 * team_presentation_rating.to_d/100) * 20/3
   end
 
   private
