@@ -93,16 +93,16 @@ class Round < ActiveRecord::Base
 
     line = URI.encode_www_form PR_ID1: dance_ratings.first.dance_team.access_db_id,
                                nPage: 'judge_tool',
-                               rh1: '1',
+                               rh1: dance_ratings.first.dance_round.position,
                                WR_ID: dance_ratings.first.user.wr_id,
                                rt_ID: self.rt_id
-
     if dance_ratings.count == 2
       line << "&#{URI.encode_www_form PR_ID2: dance_ratings.last.dance_team.access_db_id,
-                                      rh2: '1'}"
+                                      rh2: dance_ratings.first.dance_round.position}"
     elsif dance_ratings.count > 2
       fail()
     end
+    return line
   end
 
   def rating_line_dance (dance_ratings)
@@ -136,9 +136,9 @@ class Round < ActiveRecord::Base
   end
 
   def rating_line_dance_mistakes (dance_ratings)
+    line = ""
     dance_ratings.map.with_index do |dance_rating, index|
-      URI.encode_www_form "tfl#{index+1}" => (dance_rating.mistakes || ''),
-                          "wfl#{index+1}" => dance_rating.punishment
+      line << "tfl#{index+1}=#{dance_rating.mistakes.to_s.tr(',',' ') || ''}&wfl#{index+1}=#{dance_rating.punishment}"
     end.join('&')
   end
 
