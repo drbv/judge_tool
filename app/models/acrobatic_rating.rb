@@ -12,7 +12,7 @@ class AcrobaticRating < ActiveRecord::Base
   after_save :add_history_entry
 
   def full_mistakes
-    mistakes.blank? ? 'Keine Fehler' : mistakes
+    mistakes.blank? ? '-' : mistakes
   end
 
   def punishment
