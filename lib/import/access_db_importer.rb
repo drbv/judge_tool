@@ -71,10 +71,12 @@ module MS
       @round = Round.create dance_class_id: (round[:Startklasse] && dance_classes[round[:Startklasse].to_sym].id),
                             round_type_id: (round_types[round[:Runde].to_sym].id),
                             start_time: round[:Startzeit].gsub('1899', Time.now.year.to_s).to_time,
-                            position: round[:Rundenreihenfolge].to_i
+                            position: round[:Rundenreihenfolge].to_i,
+                            rt_id: round[:RT_ID],
+                            tournament_number: @access_database[:Turnier].first[:Turnier_Nummer]
       @access_database[:Startklasse_Wertungsrichter].select { |mapping| mapping[:Startklasse] == round[:Startklasse] }.each do |judge_role|
         next if judge_role[:WR_function] == 'X'
-        next if judge_role[:WR_function] == 'Ak' and !@round.has_acrobatics?
+        next if judge_role[:WR_function] == 'Ak' and @round.has_no_acrobatics?
         judge = User.find_by licence: @access_database[:Wert_Richter].select { |wr| wr[:WR_ID] == judge_role[:WR_ID] }.first[:WR_Lizenznr]
         judge.add_role translate_role(judge_role[:WR_function]), @round
       end
@@ -139,7 +141,7 @@ module MS
 
     def create_judges
       @access_database[:Wert_Richter].each do |judge_data|
-        judge = User.new(first_name: judge_data[:WR_Vorname], last_name: judge_data[:WR_Nachname], licence: judge_data[:WR_Lizenznr])
+        judge = User.new(first_name: judge_data[:WR_Vorname], last_name: judge_data[:WR_Nachname], licence: judge_data[:WR_Lizenznr], wr_id: judge_data[:WR_ID] )
         if club = Club.find_by(number: judge_data[:Vereinsnr])
           judge.club = club
         end

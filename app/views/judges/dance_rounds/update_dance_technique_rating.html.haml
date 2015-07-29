@@ -1,58 +1,59 @@
-= form_for @dance_round, url: judges_dance_round_path do |f|
+= form_for @dance_round, url: judges_dance_round_path, html: {id: 'dance_round'} do |f|
   #dance_teams.row
     - @dance_round.dance_teams.each do |dance_team|
       .dance_team{class: "col-md-#{12/[@dance_round.dance_teams.size, 2].max}"}
         %h3= dance_team.name_with_startnumber
         - rating = @dance_round.dance_ratings.where(dance_team_id: dance_team.id, user_id: current_user.id).first
         = f.fields_for 'dance_ratings[]', rating do |r|
+          = r.hidden_field :id
           .points{max: 10}
             %h4
               Technik Dame - Grundtechnik
-              = "(Weicht #{rating.diff :female_base_rating} vom Durchschnitt ab)" if rating.reopened?(:female_base_rating)
-            %div{class: "#{'enabled' if rating.reopened?(:female_base_rating)}"}
+              = "(Weicht #{rating.diff :female_base_rating} vom Durchschnitt ab)" if rating.attr_reopened?(:female_base_rating)
+            %div{class: "#{'enabled' if rating.attr_reopened?(:female_base_rating)}"}
               = render partial: 'rating_bar', locals: {set_to: rating.female_base_rating}
-              = r.hidden_field :female_base_rating, autocomplete: 'off' if rating.reopened?(:female_base_rating)
+              = r.hidden_field :female_base_rating, autocomplete: 'off'
             %h4
               Technik Dame - Haltung- und Drehtechnik
-              = "(Weicht #{rating.diff :female_turn_rating} vom Durchschnitt ab)" if rating.reopened?(:female_turn_rating)
-            %div{class: "#{'enabled' if rating.reopened?(:female_turn_rating)}"}
+              = "(Weicht #{rating.diff :female_turn_rating} vom Durchschnitt ab)" if rating.attr_reopened?(:female_turn_rating)
+            %div{class: "#{'enabled' if rating.attr_reopened?(:female_turn_rating)}"}
               = render partial: 'rating_bar', locals: {set_to: rating.female_turn_rating}
-              = r.hidden_field :female_turn_rating, autocomplete: 'off' if rating.reopened?(:female_turn_rating)
+              = r.hidden_field :female_turn_rating, autocomplete: 'off'
           .points{max: 10}
             %h4
               Technik Herr - Grundtechnik
-              = "(Weicht #{rating.diff :male_base_rating} vom Durchschnitt ab)" if rating.reopened?(:male_base_rating)
-            %div{class: "#{'enabled' if rating.reopened?(:male_base_rating)}"}
+              = "(Weicht #{rating.diff :male_base_rating} vom Durchschnitt ab)" if rating.attr_reopened?(:male_base_rating)
+            %div{class: "#{'enabled' if rating.attr_reopened?(:male_base_rating)}"}
               = render partial: 'rating_bar', locals: {set_to: rating.male_base_rating}
-              = r.hidden_field :male_base_rating, autocomplete: 'off' if rating.reopened?(:male_base_rating)
+              = r.hidden_field :male_base_rating, autocomplete: 'off'
             %h4
               Technik Herr - Haltung- und Drehtechnik
-              = "(Weicht #{rating.diff :male_turn_rating} vom Durchschnitt ab)" if rating.reopened?(:male_turn_rating)
-            %div{class: "#{'enabled' if rating.reopened?(:male_turn_rating)}"}
+              = "(Weicht #{rating.diff :male_turn_rating} vom Durchschnitt ab)" if rating.attr_reopened?(:male_turn_rating)
+            %div{class: "#{'enabled' if rating.attr_reopened?(:male_turn_rating)}"}
               = render partial: 'rating_bar', locals: {set_to: rating.male_turn_rating}
-              = r.hidden_field :male_turn_rating, autocomplete: 'off' if rating.reopened?(:male_turn_rating)
+              = r.hidden_field :male_turn_rating, autocomplete: 'off'
           .points{max: 20}
             %h4
               Tanz - Choreographie
-              = "(Weicht #{rating.diff :choreo_rating} vom Durchschnitt ab)" if rating.reopened?(:choreo_rating)
-            %div{class: "#{'enabled' if rating.reopened?(:choreo_rating)}"}
+              = "(Weicht #{rating.diff :choreo_rating} vom Durchschnitt ab)" if rating.attr_reopened?(:choreo_rating)
+            %div{class: "#{'enabled' if rating.attr_reopened?(:choreo_rating)}"}
               = render partial: 'rating_bar', locals: {set_to: rating.choreo_rating}
-              = r.hidden_field :choreo_rating, autocomplete: 'off' if rating.reopened?(:choreo_rating)
+              = r.hidden_field :choreo_rating, autocomplete: 'off'
             %h4
               Tanz - Tanzfiguren
-              = "(Weicht #{rating.diff :dance_figure_rating} vom Durchschnitt ab)" if rating.reopened?(:dance_figure_rating)
-            %div{class: "#{'enabled' if rating.reopened?(:dance_figure_rating)}"}
+              = "(Weicht #{rating.diff :dance_figure_rating} vom Durchschnitt ab)" if rating.attr_reopened?(:dance_figure_rating)
+            %div{class: "#{'enabled' if rating.attr_reopened?(:dance_figure_rating)}"}
               = render partial: 'rating_bar', locals: {set_to: rating.dance_figure_rating}
-              = r.hidden_field :dance_figure_rating, autocomplete: 'off' if rating.reopened?(:dance_figure_rating)
+              = r.hidden_field :dance_figure_rating, autocomplete: 'off'
             %h4
               Tanz - Tänzerische Darstellung
-              = "(Weicht #{rating.diff :team_presentation_rating} vom Durchschnitt ab)" if rating.reopened?(:team_presentation_rating)
-            %div{class: "#{'enabled' if rating.reopened?(:team_presentation_rating)}"}
+              = "(Weicht #{rating.diff :team_presentation_rating} vom Durchschnitt ab)" if rating.attr_reopened?(:team_presentation_rating)
+            %div{class: "#{'enabled' if rating.attr_reopened?(:team_presentation_rating)}"}
               = render partial: 'rating_bar', locals: {set_to: rating.team_presentation_rating}
-              = r.hidden_field :team_presentation_rating, autocomplete: 'off' if rating.reopened?(:team_presentation_rating)
+              = r.hidden_field :team_presentation_rating, autocomplete: 'off'
           .points{mistake_type: 'abs'}
             %h4 Fehler
             %div
               = render partial: 'mistakes_list', locals: {mistakes: rating.mistakes}
-        .total 40
+        .total= rating.points
   = f.submit 'Wertung absenden', class: 'btn btn-primary', data: { confirm: 'Sicher alles gewertet?' }

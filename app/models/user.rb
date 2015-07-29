@@ -19,6 +19,11 @@ class User < ActiveRecord::Base
     "#{first_name} #{last_name}"
   end
 
+  def is_judge?(round)
+    self.has_role?(:dance_judge, round) || self.has_role?(:acrobatics_judge, round)
+  end
+
+
   def rated?(dance_round)
     dance_round.dance_ratings.where(user_id: id).exists? || dance_round.acrobatic_ratings.where(user_id: id).exists?
   end

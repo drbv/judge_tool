@@ -2,6 +2,8 @@ class AcrobaticRating < ActiveRecord::Base
   include ReopenedAttributes
   belongs_to :acrobatic
   belongs_to :dance_team
+  has_one :dance_round, through: :acrobatic
+
   belongs_to :user
   has_many :acrobatic_rating_history_entries
 
@@ -12,7 +14,7 @@ class AcrobaticRating < ActiveRecord::Base
   after_save :add_history_entry
 
   def full_mistakes
-    mistakes.blank? ? 'Keine Fehler' : mistakes
+    mistakes.blank? ? '-' : mistakes
   end
 
   def punishment
@@ -23,12 +25,20 @@ class AcrobaticRating < ActiveRecord::Base
     @points ||= [acrobatic.acrobatic_type.max_points * (1 - rating.to_d / 100) - punishment, 0].max
   end
 
+  def points_without_punishment
+    acrobatic.acrobatic_type.max_points * (1 - rating.to_d / 100)
+  end
+
   def danced?
     danced
   end
 
   def diff_to_big?
-    (acrobatic.ratings_average - rating).abs >= 20
+    !observer_rating? && (acrobatic.ratings_average - rating).abs >= 20
+  end
+
+  def observer_rating?
+    user.has_role?(:observer, acrobatic.dance_round.round)
   end
 
   private

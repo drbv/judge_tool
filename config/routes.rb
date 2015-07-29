@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   post 'admin/utilities/db_upload'
   post 'admin/utilities/download_rating_list'
 
+
     namespace :admin do
     resources :users do
       collection do
@@ -13,6 +14,7 @@ Rails.application.routes.draw do
       member do
         post :start
         delete :close
+        get :download_ratings
       end
     end
   end
