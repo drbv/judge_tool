@@ -22,6 +22,6 @@
             = link_to 'Wertungsrichter', edit_admin_round_path(round), class: 'btn btn-primary'
           - else
             = link_to 'Wertungsrichter', admin_round_path(round), class: 'btn btn-primary' if policy(round).show?
-          -if !round.round_type.no_dance #and round.closed?
+          -if !round.round_type.no_dance and (round.started? || round.closed?)
             = link_to 'ratings', download_ratings_admin_round_path(round), class: 'btn btn-warning'
           = link_to 'Löschen', admin_round_path(round), method: :delete, class: 'btn btn-danger', data: {confirm: 'Sicher für Neuimport Löschen?'} if index + 1 == @rounds.size && policy(round).destroy?
