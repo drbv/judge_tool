@@ -1,6 +1,6 @@
 class DanceRating < ActiveRecord::Base
   include ReopenedAttributes
-  
+
   belongs_to :dance_team
   belongs_to :dance_round
   belongs_to :user
@@ -15,15 +15,15 @@ class DanceRating < ActiveRecord::Base
 
 
   def full_mistakes
-    mistakes.blank? ? 'Keine Fehler' : mistakes
+    mistakes.blank? ? '-' : mistakes
   end
 
   def punishment
-    @punishment ||= mistakes.split(',').map {|malus| malus[1..-1].to_i}.sum
+    @punishment ||= mistakes.split(',').map { |malus| malus[1..-1].to_i }.sum
   end
 
   def points
-    @points ||= [(10 * (1 - (female_base_rating + female_turn_rating).to_d / 200) + 10 * (1 - (male_base_rating + male_turn_rating).to_d / 200) + 20 * (1 - (choreo_rating + dance_figure_rating + team_presentation_rating).to_d / 300)) - punishment, 0].max
+    @points ||= [(female + male + dance - punishment), 0].max
   end
 
   def final!
@@ -34,14 +34,73 @@ class DanceRating < ActiveRecord::Base
     final
   end
 
+  def female_max
+    10
+  end
+
+  def male_max
+    10
+  end
+
+  def dance_max
+    20
+  end
+
+  def female
+    10 * (1 - (female_base_rating + female_turn_rating).to_d / 200)
+  end
+
+  def male
+    10 * (1 - (male_base_rating + male_turn_rating).to_d / 200)
+  end
+
+  def dance
+    20 * (1 - (choreo_rating * 0.3 + dance_figure_rating * 0.3 + team_presentation_rating * 0.4).to_d / 100)
+  end
+
   def diff_to_big?(attr)
-    (dance_round.dance_ratings_average(attr, dance_team) - send(attr)).abs >= 20
+    !observer_rating? && (dance_round.dance_ratings_average(attr, dance_team) - send(attr)).abs >= send("#{attr}_max") * 0.2
   end
 
   def diff(attr)
     dance_round.dance_ratings_average(attr, dance_team) - send(attr)
   end
-  
+
+  def observer_rating?
+    user.has_role?(:observer, dance_round.round)
+  end
+  def discussable_attributes
+    %i(female male dance)
+  end
+
+  def male_turn_rating_points
+    (1 - male_turn_rating.to_d/100) * 10
+  end
+
+  def male_base_rating_points
+    (1 - male_base_rating.to_d/100) * 10
+  end
+
+  def female_turn_rating_points
+    (1 - female_turn_rating.to_d/100) * 10
+  end
+
+  def female_base_rating_points
+    (1 - female_base_rating.to_d/100) * 10
+  end
+
+  def choreo_rating_points
+    (1 - choreo_rating.to_d/100 ) * 10
+  end
+
+  def dance_figure_rating_points
+    (1 - dance_figure_rating.to_d/100) * 10
+  end
+
+  def team_presentation_rating_points
+    (1 - team_presentation_rating.to_d/100) * 10
+  end
+
   private
 
   def add_history_entry
@@ -62,6 +121,19 @@ class DanceRating < ActiveRecord::Base
   end
   
   def discussable_attributes
-    %i(female_base_rating female_turn_rating male_base_rating male_turn_rating choreo_rating dance_figure_rating team_presentation_rating)
+    %i(female male dance)
   end
+
+  def attributes_groups
+    {
+      female: %i[female_base_rating female_turn_rating],
+      male: %i[male_base_rating male_turn_rating],
+      dance: %i[choreo_rating dance_figure_rating team_presentation_rating]
+    }
+  end
+
+  def attributes_group(attribute)
+    attributes_groups.keys.select {|key| attributes_groups[key].include? attribute.to_sym }.first
+  end
+
 end

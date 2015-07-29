@@ -3,6 +3,7 @@ class CreateUsers < ActiveRecord::Migration
     create_table :users do |t|
       t.string :login, index: true
       t.integer :licence
+      t.integer :wr_id
       t.string :first_name
       t.string :last_name
       t.string :email

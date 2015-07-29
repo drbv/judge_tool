@@ -52,4 +52,10 @@ class Admin::RoundsController < Admin::BaseController
     redirect_to admin_rounds_path
   end
 
+  def download_ratings
+    ## try catch if file does not exist is missing
+    @round = Round.find params[:id]
+    send_file Rails.root.join(Rails.root.join('tmp',"T#{@round.tournament_number}_RT#{@round.rt_id}.txt"))
+  end
+
 end

@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   get 'admin/utilities/index'
   post 'admin/utilities/db_upload'
 
+
     namespace :admin do
     resources :users do
       collection do
@@ -12,6 +13,7 @@ Rails.application.routes.draw do
       member do
         post :start
         delete :close
+        get :download_ratings
       end
     end
   end
