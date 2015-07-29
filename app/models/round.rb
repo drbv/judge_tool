@@ -107,7 +107,7 @@ class Round < ActiveRecord::Base
 
     line = rating_line_long_ids_acrobatic acrobatic_ratings , dance_teams
     line << "&#{rating_line_dance_placeholder dance_teams}"
-    line << "#{rating_line_acrobatic acrobatic_ratings}"
+    line << "&#{rating_line_acrobatic acrobatic_ratings}"
     line << "#{acrobatic_mistakes_summary acrobatic_ratings}"
     line << "&#{rating_line_time}"
 
