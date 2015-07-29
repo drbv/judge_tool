@@ -17,4 +17,11 @@ class Admin::UtilitiesController < Admin::BaseController
     end
     redirect_to admin_utilities_index_path
   end
+
+  def judge_tool_reset
+    system "RAILS_ENV=#{Rails.env} rake db:reset"
+    system 'rm tmp/*.txt'
+    system 'rm tmp/*.mdb'
+    redirect_to root_path
+  end
 end

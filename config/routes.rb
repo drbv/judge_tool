@@ -2,6 +2,7 @@ Rails.application.routes.draw do
 
   get 'admin/utilities/index'
   post 'admin/utilities/db_upload'
+  get 'admin/utilities/judge_tool_reset'
 
 
     namespace :admin do
