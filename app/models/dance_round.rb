@@ -53,6 +53,7 @@ class DanceRound < ActiveRecord::Base
   end
 
   def close!
+    self.round.generate_rating_export_file
     update_attributes finished: true, finished_at: Time.now
   end
 
