@@ -154,7 +154,7 @@ class Round < ActiveRecord::Base
       binding.pry()
       acrobatic_ratings.select { |rating| rating.dance_team_id == dance_team.id }.map.with_index do |acrobatic_rating, index_acrobatic|
         URI.encode_www_form "wfl#{index_dance_team + 1}_ak#{index_dance_team + 1}#{index_acrobatic + 1}" => acrobatic_rating.punishment,
-                            "tfl#{index_dance_team + 1}_ak#{index_dance_team + 1}#{index_acrobatic + 1}" => acrobatic_rating.mistakes.tr(',', ' ') || '',
+                            "tfl#{index_dance_team + 1}_ak#{index_dance_team + 1}#{index_acrobatic + 1}" => acrobatic_rating.mistakes.to_s.tr(',', ' ') || '',
                             "wak#{index_dance_team + 1}#{index_acrobatic + 1}" => acrobatic_rating.points_without_punishment
       end.join('&')
     end.join('&')
@@ -217,7 +217,7 @@ class Round < ActiveRecord::Base
   def rating_line_acrobatic_for_dance (dance_ratings)
     dance_ratings.map.with_index do |dance_rating, index_dance_team|
       dance_rating.dance_round.acrobatics.where(dance_team_id: dance_rating.dance_team_id).map.with_index do |acrobatic, index_acrobatic|
-        URI.encode_www_form "wfl#{index_dance_team + 1}_ak#{index_dance_team + 1}#{index_acrobatic + 1}" => '',
+        URI.encode_www_form "wfl#{index_dance_team + 1}_ak#{index_dance_team + 1}#{index_acrobatic + 1}" => '0',
                             "tfl#{index_dance_team + 1}_ak#{index_dance_team + 1}#{index_acrobatic + 1}" => '',
                             "wak#{index_dance_team + 1}#{index_acrobatic + 1}" => ''
       end.join('&')
