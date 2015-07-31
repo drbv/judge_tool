@@ -19,7 +19,8 @@ class Admin::UtilitiesController < Admin::BaseController
   end
 
   def judge_tool_reset
-    system "RAILS_ENV=#{Rails.env} rake db:reset"
+    system "RAILS_ENV=#{Rails.env} rake db:drop"
+    system "RAILS_ENV=#{Rails.env} rake db:migrate"
     system 'rm tmp/*.txt'
     system 'rm tmp/*.mdb'
     redirect_to root_path
