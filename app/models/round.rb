@@ -117,17 +117,14 @@ class Round < ActiveRecord::Base
   def acrobatic_mistakes_summary (acrobatic_ratings, dance_teams)
     line=''
     dance_teams.each.with_index do |dance_team, index_dance_team|
-      line<<"&wfl#{index_dance_team+1}="
+      line<< "&tfl#{index_dance_team+1}="
       mistakes_summary=0
       acrobatic_ratings.select { |rating| rating.dance_team_id == dance_team.id }.each do |acrobatic_rating|
         mistakes_summary+= acrobatic_rating.punishment
         line << "#{acrobatic_rating.mistakes.tr(',', ' ') || ''} "
-        binding.pry()
       end
-      line<<"&tfl#{index_dance_team+1}=#{mistakes_summary}"
-      binding.pry()
+      line<<"&wfl#{index_dance_team+1}=#{mistakes_summary}"
     end
-    binding.pry()
     return line
   end
 
@@ -151,7 +148,6 @@ class Round < ActiveRecord::Base
     line = ''
     acrobatic_ratings.map(&:dance_team).uniq.sort_by { |dance_team| dance_team.startnumber }.map.with_index do |dance_team, index_dance_team|
       # iterate over each acrobatic_rating for the given Dance_team
-      binding.pry()
       acrobatic_ratings.select { |rating| rating.dance_team_id == dance_team.id }.map.with_index do |acrobatic_rating, index_acrobatic|
         URI.encode_www_form "wfl#{index_dance_team + 1}_ak#{index_dance_team + 1}#{index_acrobatic + 1}" => acrobatic_rating.punishment,
                             "tfl#{index_dance_team + 1}_ak#{index_dance_team + 1}#{index_acrobatic + 1}" => acrobatic_rating.mistakes.to_s.tr(',', ' ') || '',
