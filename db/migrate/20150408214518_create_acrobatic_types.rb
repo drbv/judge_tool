@@ -3,7 +3,7 @@ class CreateAcrobaticTypes < ActiveRecord::Migration
     create_table :acrobatic_types do |t|
       t.string :name
       t.string :short_name
-      t.decimal :max_points, precision: 2, scale: 2
+      t.decimal :max_points, precision: 6, scale: 4
       t.integer :saftey_level
       t.timestamps null: false
     end
