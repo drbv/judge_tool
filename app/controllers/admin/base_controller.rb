@@ -1,7 +1,6 @@
 require "#{Rails.root}/lib/import/access_db_importer"
 
 class Admin::BaseController < ApplicationController
-  force_ssl unless Rails.env.development?
 
   @@access_database = nil
 
