@@ -19,10 +19,17 @@ class Admin::UtilitiesController < Admin::BaseController
   end
 
   def judge_tool_reset
-    system "RAILS_ENV=#{Rails.env} rake db:drop"
-    system "RAILS_ENV=#{Rails.env} rake db:migrate"
-    system 'rm tmp/*.txt'
-    system 'rm tmp/*.mdb'
-    redirect_to root_path
+    delete_ratings=system('rm tmp/*.txt')
+    delete_mdb=value=system('rm tmp/*.mdb')
+    drop_table=system("RAILS_ENV=#{Rails.env} rake db:drop")
+    migrate_table=system("RAILS_ENV=#{Rails.env} rake db:migrate")
+    flash[:success]=" Export Files gelöscht: #{delete_ratings}
+</br> Access Datenbank gelöscht: #{delete_mdb}
+</br> JudgeTool Datenbank gelöscht: #{drop_table}
+</br> JudgeTool Datenbank erstellt: #{migrate_table}
+</br> <h1>Prozess oder Server neustarten</h1>"
+
+    redirect_to admin_utilities_index_path
+
   end
 end
