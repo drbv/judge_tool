@@ -1,7 +1,7 @@
 = form_for @dance_round, url: judges_dance_round_path, html: {id: 'dance_round'} do |f|
   #dance_teams.row
     - @dance_round.dance_teams.each do |dance_team|
-      .dance_team{class: "col-md-#{12/[@dance_round.dance_teams.size, 2].max}"}
+      .dance_team{class: "col-sm-#{12/[@dance_round.dance_teams.size, 2].max}"}
         %h3= dance_team.name_with_startnumber
         - rating = @dance_round.dance_ratings.where(dance_team_id: dance_team.id, user_id: current_user.id).first
         = f.fields_for 'dance_ratings[]', rating do |r|

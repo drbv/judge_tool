@@ -2,7 +2,7 @@
 = link_to 'Offizielle und Tänzer importieren', admin_users_path, method: :post, class: 'btn btn-primary' if policy(User).create?
 
 .row
-  .col-md-6
+  .col-sm-6
     %h2 Offizielle
     %table.table.table-striped
       %thead
@@ -18,7 +18,7 @@
             %td= user.licence
             %td= user.login
             %td= user.pin
-  .col-md-6
+  .col-sm-6
     %h2 Tanzpaare
     %table.table.table-striped
       %thead

@@ -1,6 +1,8 @@
 @import "compass";
-@import 'bootstrap-sprockets';
-@import 'bootstrap';
-@import 'jquery-ui';
-@import 'jquery-ui-1.9.2.custom';
-@import 'judges/dance_rounds';
+@import "variables";
+@import "bootstrap-sprockets";
+@import "variables";
+@import "bootstrap";
+@import "jquery-ui";
+@import "jquery-ui-1.9.2.custom";
+@import "judges/dance_rounds";

@@ -1,7 +1,7 @@
 = form_for current_dance_round, url: judges_dance_round_path do |f|
   .row
     - current_user.dance_teams(current_dance_round).each do |dance_team|
-      .col-md-6
+      .col-sm-6
         %h3= " #{dance_team.startnumber} #{dance_team.full_name}"
         %h4 Tanz:
         = f.fields_for 'dance_ratings[]', current_dance_round.dance_ratings.build do |r|

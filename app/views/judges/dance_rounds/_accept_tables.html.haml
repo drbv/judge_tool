@@ -6,7 +6,7 @@
     .container
       .row
         - current_user.dance_teams(current_dance_round).each do |dance_team|
-          %div{class: "md-col-#{12 / current_dance_round.dance_teams.count}"}
+          %div{class: "col-sm-#{12 / current_dance_round.dance_teams.count}"}
             %h3=dance_team.name_with_startnumber
             %table.table.table-striped
               %tbody
@@ -40,7 +40,7 @@
       .container
         .row
           - current_user.dance_teams(current_dance_round).each do |dance_team|
-            %div{class: "md-col-#{12 / current_dance_round.dance_teams.count}"}
+            %div{class: "col-sm-#{12 / current_dance_round.dance_teams.count}"}
               %h3=dance_team.name_with_startnumber
               %table.table.table-striped
                 %tbody
