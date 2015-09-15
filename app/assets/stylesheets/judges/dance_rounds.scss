@@ -2,7 +2,7 @@
   margin: auto;
   div {
     display: inline-block;
-    margin-left: 0.5em;
+    margin-right: 0.5em;
     a {
       padding: 0.2em;
       @include border-radius(5px);
@@ -32,14 +32,14 @@
 }
 
 .rating {
-  margin-bottom: 1em;
+  margin-bottom: 0.2em;
   height: 2em;
-  padding: 0 0.9em;
+  padding: 0;
   div {
     margin: 0;
     display: block;
     float: left;
-    padding: 0.25em 0;
+    padding: 0.1em 0;
     border: 1px solid #555;
     font-size: 90%;
     width: 2em;
@@ -52,24 +52,37 @@
 
 }
 
-.enabled .rating {
-  div {
+#dance_teams {
+  h3 {
+    margin: 0 0 0.3em;
+  }
+  h4 {
     margin: 0;
-    display: block;
-    float: left;
-    padding: 0.25em 0;
-    border: 1px solid #555;
-    font-size: 90%;
-    width: 2em;
-    text-align: center;
-    background-color: #5cb85c;
   }
-  div:hover {
-    background-color: #f0ad4e;
+
+  .enabled .rating {
+    div {
+      margin: 0;
+      display: block;
+      float: left;
+      border: 1px solid #555;
+      font-size: 90%;
+      width: 1.72em;
+      text-align: center;
+      background-color: #5cb85c;
+    }
+    div:hover {
+      background-color: #f0ad4e;
+    }
+    .active {
+      background-color: #d9534f;
+    }
   }
-  .active {
-    background-color: #d9534f;
-  }
+}
+
+.edit_dance_round input[type="submit"] {
+  float: right;
+  margin-top: -2.5em;
 }
 
 .total {
