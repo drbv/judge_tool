@@ -30,7 +30,7 @@
                       %td
                         - if attr == :full_mistakes
                           - if current_dance_round.adjusting_dance_mistakes?(dance_team)
-                            = text_field_tag "adjusted[#{dance_team.id}]", current_dance_round.majority_mistakes(dance_team, current_user)
+                            = text_field_tag "adjusted[#{dance_team.id}]", current_dance_round.majority_mistakes(dance_team, current_user), class:"mistakes_inputs"
                           - else
                             = current_dance_round.dance_ratings.first.full_mistakes
 
@@ -70,10 +70,10 @@
                       - if current_dance_round.ready?(current_user)
                         %td
                           - if acrobatic.mistakes_adjusting?(dance_team)
-                            = text_field_tag "adjusted_acrobatic[#{acrobatic.id}]", acrobatic.majority_mistakes(dance_team, current_user)
+                            = text_field_tag "adjusted_acrobatic[#{acrobatic.id}]", acrobatic.majority_mistakes(dance_team, current_user),class:"mistakes_inputs"
                           - else
                             = acrobatic.acrobatic_ratings.first.full_mistakes
 
   %div
     - if current_dance_round.ready?(current_user)
-      = submit_tag (any_mistakes_adjusting? ? 'Fehler angleichen und akzeptieren' : 'Akzeptieren'), data: {confirm: (any_mistakes_adjusting? ? 'Wirklich nur Fehler angleichen?' : 'Wirklich keine Änderungen notwendig?')}, class: 'btn btn-primary'
+      = submit_tag (any_mistakes_adjusting? ? 'Fehler angleichen und akzeptieren' : 'Akzeptieren'), data: {confirm: (any_mistakes_adjusting? ? 'Wirklich nur Fehler angleichen?' : 'Wirklich keine Änderungen notwendig?')}, class: 'btn btn-primary',id: "observer_button"

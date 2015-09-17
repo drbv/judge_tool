@@ -59,6 +59,19 @@ ready = ->
     $(this).parent().parent().find('input[type=hidden]').val($(this).text())
     calculateOverallRating()
     false
+
+  $("input.mistakes_inputs").on 'change' ,->
+    found_broken_mistake_input=false
+    $("input.mistakes_inputs").each ->
+      if !(/^((T2|T10|T20|S2|S10|S20|U2|U10|U20|V5)(,(T2|T10|T20|S2|S10|S20|U2|U10|U20|V5))*)?$/).test(this.value)
+        alert "Fehlereingabe prüfen"
+        found_broken_mistake_input=true
+    if(found_broken_mistake_input)
+       $("input#observer_button").prop('disabled', true);
+    else
+       $("input#observer_button").prop('disabled', false);
+
+
   $(document).on 'click touchend', 'tr.markable', ->
     if $(this).hasClass('info')
       $(this).removeClass('info')

@@ -51,13 +51,17 @@
   }
 
 }
+h3 {
+  overflow: hidden;
+  white-space: nowrap;
+  
+}
 
 #dance_teams {
   h3 {
-    
+
     margin: 0 0 0.3em;
-    overflow: hidden;
-    white-space: nowrap;
+
   }
   h4 {
     margin: 0 0 0.2em;
