@@ -54,7 +54,10 @@
 
 #dance_teams {
   h3 {
+    
     margin: 0 0 0.3em;
+    overflow: hidden;
+    white-space: nowrap;
   }
   h4 {
     margin: 0 0 0.2em;
@@ -83,6 +86,14 @@
 .edit_dance_round input[type="submit"] {
   float: right;
   z-index: 99;
+}
+
+.blue {
+  background-color: lightblue;
+}
+
+.rose {
+  background-color: #FFCCE5;
 }
 
 .total {
