@@ -14,7 +14,6 @@
             = f.fields_for 'acrobatic_ratings[]', current_dance_round.acrobatic_ratings.build do |r|
               %h4
                 = "Akrobatik: #{acrobatic.acrobatic_type.short_name}"
-                = r.check_box :danced
               = r.hidden_field :dance_team_id, value: dance_team.id, id: "dance_round_acrobatic_ratings_#{index}_dance_team_id"
               = r.hidden_field :acrobatic_id, value: acrobatic.id, id: "dance_round_acrobatic_ratings_#{index}_acrobatic_id"
               .enabled
