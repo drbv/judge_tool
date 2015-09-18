@@ -20,6 +20,12 @@ class Admin::RoundsController < Admin::BaseController
     authorize @round
   end
 
+  def repeat
+    binding.pry
+    DanceTeam.find params[:id]
+    redirect_to admin_rounds_path
+  end
+
   def update
     @round = Round.find params[:id]
     authorize @round

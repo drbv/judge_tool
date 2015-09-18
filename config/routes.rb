@@ -15,6 +15,7 @@ Rails.application.routes.draw do
         post :start
         delete :close
         get :download_ratings
+        get :repeat
       end
     end
   end

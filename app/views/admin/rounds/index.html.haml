@@ -28,12 +28,17 @@
             = link_to 'Wertungsrichter', admin_round_path(round), class: 'btn btn-primary' if policy(round).show?
         - round.dance_rounds.order(:position).each do |dance_round|
           %tr{class: "#{'success' if dance_round.active?} #{index} collapse"}
-            %td{:rowspan => 2}= dance_round.position
+            -if dance_round.dance_teams.size > 1
+              %td{:rowspan => 2}= dance_round.position
+            -else
+              %td= dance_round.position
             %td{:colspan => 2}= raw dance_round.dance_teams.first.full_name
             %td{"align" => "right"}
-              = link_to 'Tanz wiederholen',  edit_admin_round_path(round), class: 'btn btn-danger'
-          %tr{class: "#{'success' if dance_round.active?} #{index} collapse"}
-            %td{:colspan => 2}=  dance_round.dance_teams.second.full_name
-            %td{"align" => "right"}
-              = link_to 'Tanz wiederholen',  edit_admin_round_path(round), class: 'btn btn-danger'
+              = link_to 'Tanz wiederholen',  repeat_admin_round_path(dance_round.dance_teams.first), class: 'btn btn-warning'
+
+          -if dance_round.dance_teams.size > 1
+            %tr{class: "#{'success' if dance_round.active?} #{index} collapse"}
+              %td{:colspan => 2}=  dance_round.dance_teams.second.full_name
+              %td{"align" => "right"}
+                = link_to 'Tanz wiederholen',  repeat_admin_round_path(dance_round.dance_teams.second), class: 'btn btn-warning'
 
