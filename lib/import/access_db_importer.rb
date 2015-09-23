@@ -33,7 +33,7 @@ module MS
         dance_teams.map { |dance_round_data| DanceTeam.find_by access_db_id: dance_round_data[:TP_ID] }.
             sort_by(&:startnumber).each_with_index do |team, index|
           team_data = @access_database[:Paare].select {|team_data| team_data[:TP_ID].to_i == team.access_db_id}.first
-          dance_round.dance_round_mappings.build dance_team_id: team.id, user_id: observers[(index % observers.size)].id
+          dance_round.dance_round_mappings.build dance_team_id: team.id
           8.times do |k|
             next if team_data[:"Akro#{k+1}_#{round.round_type.acrobatics_from}"].blank?
             dance_round.acrobatics.build dance_team: team,
@@ -73,7 +73,8 @@ module MS
                             start_time: round[:Startzeit].gsub('1899', Time.now.year.to_s).to_time,
                             position: round[:Rundenreihenfolge].to_i,
                             rt_id: round[:RT_ID],
-                            tournament_number: @access_database[:Turnier].first[:Turnier_Nummer]
+                            tournament_number: @access_database[:Turnier].first[:Turnier_Nummer],
+                            max_teams: round[:Anz_Paare].to_i
       @access_database[:Startklasse_Wertungsrichter].select { |mapping| mapping[:Startklasse] == round[:Startklasse] }.each do |judge_role|
         next if judge_role[:WR_function] == 'X'
         next if judge_role[:WR_function] == 'Ak' and @round.has_no_acrobatics?
@@ -136,6 +137,8 @@ module MS
           admin.club = club
         end
         admin.update_attributes first_name: admin_data[:TL_Vorname], last_name: admin_data[:TL_Nachname], licence: admin_data[:Lizenznr]
+        admin.generate_credentials
+        admin.save
       end
     end
 

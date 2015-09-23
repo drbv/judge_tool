@@ -3,7 +3,9 @@ class User < ActiveRecord::Base
   belongs_to :club
   has_many :dance_ratings
   has_many :acrobatic_ratings
-  before_validation :generate_credentials
+  before_validation(on: :create) do
+    generate_credentials
+  end
   validates :login, :pin, presence: true
   validates :login, uniqueness: true
 
@@ -36,11 +38,10 @@ class User < ActiveRecord::Base
     dance_round.dance_ratings.where('user_id = ? AND reopened > 0', id).exists? || dance_round.acrobatic_ratings.where('user_id = ? AND reopened > 0', id).exists?
   end
 
-  private
-
   def generate_credentials
+    binding.pry()
     50.times do |k|
-      generated_login = "#{first_name[0].downcase}.#{last_name.downcase}#{k if k>0}"
+      generated_login = "#{first_name[0].downcase}#{last_name.downcase}#{k if k>0}"
       break if User.find_by(login: generated_login).blank? && self.login = generated_login
     end unless login
     self.pin = SecureRandom.random_number(10000).to_s.rjust(4, '0')
