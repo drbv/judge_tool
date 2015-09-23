@@ -27,6 +27,7 @@ class Admin::UtilitiesController < Admin::BaseController
 </br> Access Datenbank gelöscht: #{delete_mdb}
 </br> JudgeTool Datenbank gelöscht: #{drop_table}
 </br> JudgeTool Datenbank erstellt: #{migrate_table}
+</br> Passwort zurückgesetzt! user:admin pin:1234
 </br> <h1>Prozess oder Server neustarten</h1>"
 
     redirect_to admin_utilities_index_path

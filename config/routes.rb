@@ -15,7 +15,6 @@ Rails.application.routes.draw do
         post :start
         delete :close
         get :download_ratings
-        get :repeat
       end
     end
   end
@@ -24,6 +23,8 @@ Rails.application.routes.draw do
       post :accept
     end
   end
+
+  get '/admin/rounds/:dance_round_id/:dance_team_id', to: 'admin/rounds#repeat', as: :admin_repeat_dance_round
 
   resource :round, only: %i(show)
   resources :pages, only: :show

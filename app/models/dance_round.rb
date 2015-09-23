@@ -59,6 +59,12 @@ class DanceRound < ActiveRecord::Base
 
   def start!
     update_attributes started: true, started_at: Time.now
+    observers=round.observers.sort_by{|observer| observer.licence}
+    if observers.count == 1
+      dance_round_mappings.each {|mapping| mapping.update_attribute :user_id, observers.first.id}
+    else
+      dance_round_mappings.sort_by{|mapping| mapping.dance_team.startnumber}.each{|mapping| mapping.update_attribute :user_id, observers.pop.id}
+    end
   end
 
   def mistakes_adjusting?(dance_team)
@@ -142,6 +148,33 @@ class DanceRound < ActiveRecord::Base
     end
   end
 
+  def export_dance_ratings
+    dance_round_mappings.where('NOT repeating').map do |mapping|
+      if mapping.repeated && mapping.repeated_mapping.dance_round.closed?
+        mapping.repeated_mapping
+      else
+        mapping
+      end
+    end.flat_map(&:dance_ratings).select { |rating| rating.user.is_judge?(dance_round.round) }
+  end
+
+  def export_acrobatic_ratings
+    acrobatics.where('NOT repeating').map do |acrobatic|
+      if acrobatic.repeated && acrobatic.repeated_acrobatic.dance_round.closed?
+        acrobatic.repeated_acrobatic
+      else
+        acrobatic
+      end
+    end.flat_map(&:acrobatic_ratings).select { |rating| rating.user.is_judge? dance_round.round }
+  end
+
+  def repeated?(team)
+    dance_round_mappings.where(dance_team_id: team.id).first.repeated
+  end
+
+  def repeating?(team)
+    dance_round_mappings.where(dance_team_id: team.id).first.repeating
+  end
   private
 
   def observer_ratings(observer, dance_team)

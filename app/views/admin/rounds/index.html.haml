@@ -32,13 +32,25 @@
               %td{:rowspan => 2}= dance_round.position
             -else
               %td= dance_round.position
-            %td{:colspan => 2}= raw dance_round.dance_teams.first.full_name
+            %td{:colspan => 2}=  dance_round.dance_teams.first.full_name
             %td{"align" => "right"}
-              = link_to 'Tanz wiederholen',  repeat_admin_round_path(dance_round.dance_teams.first), class: 'btn btn-warning'
+              -if !dance_round.round.closed?
+                -if dance_round.repeating? dance_round.dance_teams.first
+                  .btn.btn-default.disabled wiederholung
+                -elsif !dance_round.repeated? dance_round.dance_teams.first
+                  = link_to 'Tanz wiederholen',  admin_repeat_dance_round_path(dance_round.id, dance_round.dance_teams.first.id), class: 'btn btn-warning'
+                -else
+                  .btn.btn-default.disabled ...wird wiederholt
 
           -if dance_round.dance_teams.size > 1
             %tr{class: "#{'success' if dance_round.active?} #{index} collapse"}
               %td{:colspan => 2}=  dance_round.dance_teams.second.full_name
               %td{"align" => "right"}
-                = link_to 'Tanz wiederholen',  repeat_admin_round_path(dance_round.dance_teams.second), class: 'btn btn-warning'
+                -if !dance_round.round.closed?
+                  -if dance_round.repeating? dance_round.dance_teams.second
+                    .btn.btn-default.disabled wiederholung
+                  -elsif !dance_round.repeated? dance_round.dance_teams.second
+                    = link_to 'Tanz wiederholen',  admin_repeat_dance_round_path(dance_round.id, dance_round.dance_teams.second.id), class: 'btn btn-warning'
+                  -else
+                    .btn.btn-default.disabled ...wird wiederholt
 
