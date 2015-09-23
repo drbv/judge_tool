@@ -73,7 +73,7 @@ class Round < ActiveRecord::Base
 
     dance_rounds.each do |dance_round|
       # getting all dance ratings of one dance_round grouped by user. Normally each Judge has max 2 Dance_Teams
-      dance_round.dance_ratings.select { |rating| rating.user.is_judge? dance_round.round }.group_by(&:user).each do |user, dance_ratings|
+      dance_round.export_dance_ratings.group_by(&:user).each do |user, dance_ratings|
         dance_ratings = dance_ratings.sort_by { |dance_rating| dance_rating.dance_team.startnumber }
         @rating_line_dance_part2 = rating_line_dance_part2 dance_ratings
 
@@ -86,7 +86,7 @@ class Round < ActiveRecord::Base
       if (!self.has_no_acrobatics?)
 
         #get all acrobatic ratings for this dance_round. This will be one per acrobatic
-        dance_round.acrobatic_ratings.select { |rating| rating.user.is_judge? dance_round.round }.group_by(&:user).each do |user, acrobatic_ratings|
+        dance_round.export_acrobatic_ratings.group_by(&:user).each do |user, acrobatic_ratings|
           #sort acrobatic ratings by dance_team and  on position
           acrobatic_ratings = acrobatic_ratings.sort_by { |acro_rating| [acro_rating.dance_team.startnumber, acro_rating.acrobatic.position] }
           @rating_line_acrobatic_part2 = rating_line_acrobatic_part2 acrobatic_ratings

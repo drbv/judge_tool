@@ -29,6 +29,7 @@ class ApplicationController < ActionController::Base
     admin = User.new login: 'admin'
     admin.add_role :admin
     admin.save
+    admin.update_attribute(:pin, '1234')
     @current_user = admin
     session[:user_id] = admin.id
   end

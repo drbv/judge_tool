@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150510200508) do
+ActiveRecord::Schema.define(version: 20150922210914) do
 
   create_table "acrobatic_rating_history_entries", force: :cascade do |t|
     t.integer  "rating",              default: 0
@@ -46,7 +46,7 @@ ActiveRecord::Schema.define(version: 20150510200508) do
   create_table "acrobatic_types", force: :cascade do |t|
     t.string   "name"
     t.string   "short_name"
-    t.decimal  "max_points",   precision: 2, scale: 2
+    t.decimal  "max_points",   precision: 6, scale: 4
     t.integer  "saftey_level"
     t.datetime "created_at",                           null: false
     t.datetime "updated_at",                           null: false
@@ -57,13 +57,17 @@ ActiveRecord::Schema.define(version: 20150510200508) do
     t.integer  "dance_round_id"
     t.integer  "acrobatic_type_id"
     t.integer  "position"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
+    t.boolean  "repeated",              default: false
+    t.boolean  "repeating",             default: false
+    t.integer  "repeated_acrobatic_id"
   end
 
   add_index "acrobatics", ["acrobatic_type_id"], name: "index_acrobatics_on_acrobatic_type_id"
   add_index "acrobatics", ["dance_round_id"], name: "index_acrobatics_on_dance_round_id"
   add_index "acrobatics", ["dance_team_id"], name: "index_acrobatics_on_dance_team_id"
+  add_index "acrobatics", ["repeated_acrobatic_id"], name: "index_acrobatics_on_repeated_acrobatic_id"
 
   create_table "clubs", force: :cascade do |t|
     t.string   "name"
@@ -127,10 +131,14 @@ ActiveRecord::Schema.define(version: 20150510200508) do
     t.integer "dance_round_id"
     t.integer "dance_team_id"
     t.integer "user_id"
+    t.boolean "repeated",            default: false
+    t.boolean "repeating",           default: false
+    t.integer "repeated_mapping_id"
   end
 
   add_index "dance_round_mappings", ["dance_round_id", "dance_team_id", "user_id"], name: "observer_dance_team_mapping"
   add_index "dance_round_mappings", ["dance_round_id", "dance_team_id"], name: "dance_round_dance_team_mapping"
+  add_index "dance_round_mappings", ["repeated_mapping_id"], name: "index_dance_round_mappings_on_repeated_mapping_id"
 
   create_table "dance_rounds", force: :cascade do |t|
     t.integer  "round_id"
@@ -198,13 +206,15 @@ ActiveRecord::Schema.define(version: 20150510200508) do
   create_table "rounds", force: :cascade do |t|
     t.integer  "round_type_id"
     t.integer  "dance_class_id"
-    t.boolean  "closed",         default: false
-    t.boolean  "started",        default: false
-    t.integer  "max_teams"
+    t.boolean  "closed",            default: false
+    t.boolean  "started",           default: false
+    t.integer  "max_teams",         default: 2
     t.datetime "start_time"
     t.integer  "position"
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
+    t.integer  "rt_id"
+    t.integer  "tournament_number"
   end
 
   add_index "rounds", ["dance_class_id"], name: "index_rounds_on_dance_class_id"
@@ -216,6 +226,7 @@ ActiveRecord::Schema.define(version: 20150510200508) do
   create_table "users", force: :cascade do |t|
     t.string   "login"
     t.integer  "licence"
+    t.integer  "wr_id"
     t.string   "first_name"
     t.string   "last_name"
     t.string   "email"

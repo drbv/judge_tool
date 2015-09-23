@@ -24,6 +24,8 @@ Rails.application.routes.draw do
     end
   end
 
+  get '/admin/rounds/:dance_round_id/:dance_team_id', to: 'admin/rounds#repeat', as: :admin_repeat_dance_round
+
   resource :round, only: %i(show)
   resources :pages, only: :show
   get 'login', to: 'sessions#new'

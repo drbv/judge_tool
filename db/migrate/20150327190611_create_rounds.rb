@@ -5,7 +5,7 @@ class CreateRounds < ActiveRecord::Migration
       t.references :dance_class, index: true, foreign_key: true
       t.boolean :closed, default: false
       t.boolean :started, default: false
-      t.integer :max_teams
+      t.integer :max_teams, default: 2
       t.datetime :start_time, index: true
       t.integer :position, index: true
       t.timestamps null: false

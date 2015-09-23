@@ -20,6 +20,21 @@ class Admin::RoundsController < Admin::BaseController
     authorize @round
   end
 
+  def repeat
+    @dance_team = DanceTeam.find params[:dance_team_id]
+    @dance_round = DanceRound.find params[:dance_round_id]
+    unless @dance_round.round.closed?
+      @dance_round_mapping = DanceRoundMapping.find_by(dance_team_id: @dance_team.id, dance_round_id: @dance_round.id)
+      @dance_round_mapping.repeat!
+      @new_dance_round = DanceRoundMapping.find_by(id: @dance_round_mapping.repeated_mapping_id).dance_round
+
+      unless @dance_round.round.has_no_acrobatics?
+        Acrobatic.where(dance_team_id: @dance_team.id, dance_round_id: @dance_round.id).each{|acrobatics| acrobatics.repeat!(@new_dance_round)}
+      end
+    end
+    redirect_to admin_rounds_path
+  end
+
   def update
     @round = Round.find params[:id]
     authorize @round
