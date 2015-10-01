@@ -148,7 +148,7 @@ class DanceRound < ActiveRecord::Base
     end
   end
 
-  def export_dance_ratings
+  def export_dance_ratings(dance_round)
     dance_round_mappings.where('NOT repeating').map do |mapping|
       if mapping.repeated && mapping.repeated_mapping.dance_round.closed?
         mapping.repeated_mapping
@@ -158,7 +158,7 @@ class DanceRound < ActiveRecord::Base
     end.flat_map(&:dance_ratings).select { |rating| rating.user.is_judge?(dance_round.round) }
   end
 
-  def export_acrobatic_ratings
+  def export_acrobatic_ratings(dance_round)
     acrobatics.where('NOT repeating').map do |acrobatic|
       if acrobatic.repeated && acrobatic.repeated_acrobatic.dance_round.closed?
         acrobatic.repeated_acrobatic
