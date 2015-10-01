@@ -39,7 +39,6 @@ class User < ActiveRecord::Base
   end
 
   def generate_credentials
-    binding.pry()
     50.times do |k|
       generated_login = "#{first_name[0].downcase}#{last_name.downcase}#{k if k>0}"
       break if User.find_by(login: generated_login).blank? && self.login = generated_login
