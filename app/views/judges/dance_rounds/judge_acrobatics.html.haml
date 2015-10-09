@@ -1,10 +1,11 @@
+= link_to '', '', id: 'top'
 = form_for @dance_round, url: judges_dance_round_path do |f|
   #dance_teams.row
     - @dance_round.dance_teams.each do |dance_team|
       .dance_team.col-sm-6
         %h3= dance_team.name_with_startnumber
         - @dance_round.acrobatics.where(dance_team_id: dance_team.id).each_with_index do |acrobatic, index|
-          %h4= "Akrobatik: #{acrobatic.acrobatic_type.short_name}"
+          %h4= "#{acrobatic.acrobatic_type.short_name}"
           = f.fields_for 'acrobatic_ratings[]', @dance_round.acrobatic_ratings.build do |r|
             = r.hidden_field :dance_team_id, value: dance_team.id, id: "dance_round_acrobatic_ratings_#{index}_dance_team_id"
             = r.hidden_field :acrobatic_id, value: acrobatic.id, id: "dance_round_acrobatic_ratings_#{index}_acrobatic_id"
@@ -15,5 +16,4 @@
               .enabled
                 = render partial: 'mistakes_bar', locals: {hide: 'T'}
                 = r.hidden_field :mistakes, autocomplete: 'off', id: "dance_round_acrobatic_ratings_#{index}_mistakes"
-        .total= @dance_round.acrobatics.where(dance_team_id: dance_team.id).map {|acro| acro.acrobatic_type.max_points}.sum
   = f.submit 'Wertung absenden', data: { confirm: 'Sicher alles gewertet?' }, class: 'btn btn-primary'
