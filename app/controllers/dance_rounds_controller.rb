@@ -1,0 +1,2 @@
+class DanceRoundsController < ApplicationController
+end
