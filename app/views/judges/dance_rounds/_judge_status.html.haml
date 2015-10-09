@@ -1,2 +1,2 @@
-.alert{class: judge_status_class(judge)}
+.alert{class: judge_status_class(judge), update_uri: status_judges_dance_round_path(user_id: judge.id, id: current_dance_round.id) }
   = judge.full_name

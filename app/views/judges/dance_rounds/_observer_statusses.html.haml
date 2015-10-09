@@ -1,3 +1,2 @@
-%h2 Observer
 - current_dance_round.observers.each do |observer|
-  = render partial: 'judge_status', locals: {judge: observer}
+  = render partial: '/judges/dance_rounds/judge_status', locals: {judge: observer}

@@ -1,7 +1,5 @@
 class Judges::DanceRoundsController < Judges::BaseController
 
-  helper_method :current_round, :current_dance_round
-
   def show
     authorize DanceRound
     if current_round
@@ -45,6 +43,10 @@ class Judges::DanceRoundsController < Judges::BaseController
       close!
     end
     redirect_to judges_dance_round_path
+  end
+
+  def status
+    render plain: judge_status_class(User.find(params[:user_id]), DanceRound.find(params[:id]))
   end
 
   private
@@ -251,11 +253,4 @@ class Judges::DanceRoundsController < Judges::BaseController
     end
   end
 
-  def current_round
-    @round ||= Round.active
-  end
-
-  def current_dance_round
-    @dance_round ||= DanceRound.active
-  end
 end
