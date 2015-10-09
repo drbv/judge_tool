@@ -4,6 +4,7 @@ de:
       female: Dame
       male: Herr
       dance: Tanz
+      full_mistakes: Fehler
 
   date:
     formats:

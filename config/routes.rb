@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   get 'admin/utilities/judge_tool_reset'
 
 
-    namespace :admin do
+  namespace :admin do
     resources :users do
       collection do
       end
@@ -21,6 +21,13 @@ Rails.application.routes.draw do
   namespace :judges do
     resource :dance_round do
       post :accept
+    end
+    scope ':user_id' do
+      resources :dance_rounds, only: %w() do
+        member do
+          get :status
+        end
+      end
     end
   end
 

@@ -1,16 +1,4 @@
 module Judges::DanceRoundsHelper
-  def judge_status_class(judge)
-    if judge.rated?(current_dance_round)
-      if judge.open_discussion?(current_dance_round)
-        'alert-info'
-      else
-        'alert-success'
-      end
-    else
-      'alert-danger'
-    end
-  end
-
   def dance_rating_class(attr, dance_round, team)
     html_classes = []
     if attr == :full_mistakes

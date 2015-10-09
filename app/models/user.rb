@@ -21,10 +21,17 @@ class User < ActiveRecord::Base
     "#{first_name} #{last_name}"
   end
 
-  def is_judge?(round)
+  def short_name
+    "#{first_name.first}&nbsp;#{last_name[0..2]}"
+  end
+
+  def judge?(round)
     self.has_role?(:dance_judge, round) || self.has_role?(:acrobatics_judge, round)
   end
 
+  def observer?(round)
+    self.has_role?(:observer, round)
+  end
 
   def rated?(dance_round)
     dance_round.dance_ratings.where(user_id: id).exists? || dance_round.acrobatic_ratings.where(user_id: id).exists?
@@ -35,7 +42,7 @@ class User < ActiveRecord::Base
   end
 
   def open_discussion?(dance_round)
-    dance_round.dance_ratings.where('user_id = ? AND reopened > 0', id).exists? || dance_round.acrobatic_ratings.where('user_id = ? AND reopened > 0', id).exists?
+    dance_round.dance_ratings.where('user_id = ? AND reopened > 0', id).exists? || dance_round.acrobatic_ratings.where('user_id = ? AND reopened > 0', id).exists? || (observer?(dance_round.round) && has_to_rate?(dance_round) && rated?(dance_round) && !dance_round.closed?)
   end
 
   def generate_credentials
