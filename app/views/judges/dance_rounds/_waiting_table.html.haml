@@ -1,7 +1,8 @@
-#judge_statusses
-  %div
-    = render partial: '/judges/dance_rounds/observer_statusses'
-  %div
-    = render partial: '/judges/dance_rounds/dance_judge_statusses'
-  %div
-    = render partial: '/judges/dance_rounds/acrobatic_judge_statusses'
+- if current_dance_round
+  #judge_statusses
+    %div
+      = render partial: '/judges/dance_rounds/observer_statusses'
+    %div
+      = render partial: '/judges/dance_rounds/dance_judge_statusses'
+    %div
+      = render partial: '/judges/dance_rounds/acrobatic_judge_statusses'
