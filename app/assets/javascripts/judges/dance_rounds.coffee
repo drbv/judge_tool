@@ -1,4 +1,34 @@
 ready = ->
+  if document.getElementById('reload')
+    setTimeout(
+      () ->
+        #This will reload the site without the previos post request
+        window.location.href = window.location.href
+    , Math.floor(Math.random() * 2000 + 1000)
+    )
+
+  checkJudgeStatus = (judgeStatus) ->
+    $.get judgeStatus.attr('update_uri'), (data) ->
+      unless judgeStatus.hasClass(data)
+        judgeStatus.removeClass('alert-info').removeClass('alert-danger')
+        judgeStatus.addClass(data)
+      if data == 'alert-info' || data == 'alert-danger'
+        setTimeout(
+          () ->
+            checkJudgeStatus(judgeStatus)
+        , 1000
+        )
+      else
+        if $('#mark_ratings').length > 0 || judgeStatus.parent().parent().children('alert-info, alert-danger').length <= 0
+          #This will reload the site without the previos post request
+          window.location.href = window.location.href
+  $('#judge_statusses .alert.alert-danger, #judge_statusses .alert.alert-info').each (loading) ->
+    judgeStatus = $(this)
+    setTimeout(
+      () ->
+        checkJudgeStatus(judgeStatus)
+      , 1000
+    )
   calculateOverallRating = ->
     $('#dance_teams > div.dance_team').each ->
       $danceTeam = $(this)
@@ -48,7 +78,7 @@ ready = ->
       newVal += ',' if newVal != ""
       newVal += $(this).text()
       $(this).removeClass 'count'
-    mistakeList.parent().find('input[type="hidden"]').val(newVal)
+    mistakeList.parent().parent().find('input[type="hidden"]').val(newVal)
     $(this).remove()
     calculateOverallRating()
     false
@@ -60,16 +90,16 @@ ready = ->
     calculateOverallRating()
     false
 
-  $("input.mistakes_inputs").on 'change' ,->
-    found_broken_mistake_input=false
+  $("input.mistakes_inputs").on 'change', ->
+    found_broken_mistake_input = false
     $("input.mistakes_inputs").each ->
       if !(/^((T2|T10|T20|S2|S10|S20|U2|U10|U20|V5)(,(T2|T10|T20|S2|S10|S20|U2|U10|U20|V5))*)?$/).test(this.value)
         alert "Fehlereingabe prüfen"
-        found_broken_mistake_input=true
+        found_broken_mistake_input = true
     if(found_broken_mistake_input)
-       $("input#observer_button").prop('disabled', true);
+      $("input#observer_button").prop('disabled', true);
     else
-       $("input#observer_button").prop('disabled', false);
+      $("input#observer_button").prop('disabled', false);
 
 
   $(document).on 'click touchend', 'tr.markable', ->

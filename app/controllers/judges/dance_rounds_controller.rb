@@ -1,7 +1,5 @@
 class Judges::DanceRoundsController < Judges::BaseController
 
-  helper_method :current_round, :current_dance_round
-
   def show
     authorize DanceRound
     if current_round
@@ -17,8 +15,10 @@ class Judges::DanceRoundsController < Judges::BaseController
 
   def create
     @dance_round = DanceRound.next
-    authorize @dance_round
-    @dance_round.start!
+    unless @dance_round.nil?
+      authorize @dance_round
+      @dance_round.start!
+    end
     redirect_to judges_dance_round_path
   end
 
@@ -45,6 +45,10 @@ class Judges::DanceRoundsController < Judges::BaseController
       close!
     end
     redirect_to judges_dance_round_path
+  end
+
+  def status
+    render plain: judge_status_class(User.find(params[:user_id]), DanceRound.find(params[:id]))
   end
 
   private
@@ -78,7 +82,7 @@ class Judges::DanceRoundsController < Judges::BaseController
   end
 
   def reopen_acrobatic_flags
-    if params[:reopen_acrobatics]
+    if params[:reopen_acrobatic]
       params[:reopen_acrobatic].values.flatten.map(&:values).flatten if params[:reopen_acrobatic]
     else
       []
@@ -87,14 +91,14 @@ class Judges::DanceRoundsController < Judges::BaseController
 
   def reopen!
     reopen_dance_ratings!
-    reopen_acrobatic_ratings!
+    reopen_acrobatic_ratings! unless current_dance_round.round.has_no_acrobatics?
   end
 
   def reopen_acrobatic_ratings!
     params[:reopen_acrobatic].each do |judge_id, acrobatics|
       acrobatics.each do |acrobatic_id, reopen|
-        acrobatic_rating = current_dance_round.acrobatic_ratings.where(user_id: judge_id, acrobatic_id: acrobatic_id)
-        acrobatic_rating.reopen! :rating if reopen == '1'
+        acrobatic_rating = current_dance_round.acrobatic_ratings.where(user_id: judge_id, acrobatic_id: acrobatic_id).first
+        acrobatic_rating.reopen! ['rating'] if reopen == '1'
       end
     end
   end
@@ -196,7 +200,7 @@ class Judges::DanceRoundsController < Judges::BaseController
           render :recognize_failures_only
         end
       else
-        render :waiting_observer
+        render :pause
       end
     else
       @dance_round = current_round.dance_rounds.where(started: false).order(:position).first
@@ -206,7 +210,7 @@ class Judges::DanceRoundsController < Judges::BaseController
 
   def evaluate_ratings
     if current_dance_round.accepted_by?(current_user)
-      render :waiting_observer
+      render :wait_for_ending
     else
       ratings_overview
       if request.xhr?
@@ -251,11 +255,4 @@ class Judges::DanceRoundsController < Judges::BaseController
     end
   end
 
-  def current_round
-    @round ||= Round.active
-  end
-
-  def current_dance_round
-    @dance_round ||= DanceRound.active
-  end
 end

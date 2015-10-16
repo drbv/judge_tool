@@ -1,3 +1,4 @@
+= link_to '', '', id: 'top'
 = form_for @dance_round, url: judges_dance_round_path do |f|
   #dance_teams.row
     - @dance_round.dance_teams.each do |dance_team|
@@ -41,9 +42,7 @@
               = render partial: 'rating_bar', locals: {set_to: 0}
               = r.hidden_field :team_presentation_rating, autocomplete: 'off'
           .points{mistake_type: 'abs'}
-            %h4 Fehler
             .enabled
               = render partial: 'mistakes_bar'
               = r.hidden_field :mistakes, autocomplete: 'off'
-        .total 40
   = f.submit 'Wertung absenden', class: 'btn btn-primary', data: { confirm: 'Sicher alles gewertet?' }

@@ -56,6 +56,7 @@ class Admin::RoundsController < Admin::BaseController
   def close
     @round = Round.find params[:id]
     authorize @round
+    @round.dance_rounds.map(&:close!)
     @round.close!
     redirect_to admin_rounds_path
   end

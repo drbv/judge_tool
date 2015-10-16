@@ -14,5 +14,4 @@
                 = r.hidden_field :rating, autocomplete: 'off', id: "dance_round_acrobatic_ratings_#{index}_rating"
               %div
                 = render partial: 'mistakes_list', locals: {mistakes: rating.mistakes}
-        .total= current_dance_round.points_from_judge(current_user, dance_team)
   = f.submit 'Wertung absenden', data: { confirm: 'Sicher alles gewertet?' }, class: 'btn btn-primary'

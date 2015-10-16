@@ -81,7 +81,7 @@ class DanceRound < ActiveRecord::Base
   end
 
   def judges
-    round.judges
+    observers + dance_judges + acrobatics_judges
   end
 
   def observer
@@ -89,7 +89,8 @@ class DanceRound < ActiveRecord::Base
   end
 
   def observers
-    round.observers
+    dance_round = self
+    round.observers.select {|observer| observer.has_to_rate?(dance_round)}
   end
 
   def dance_judges
@@ -155,7 +156,7 @@ class DanceRound < ActiveRecord::Base
       else
         mapping
       end
-    end.flat_map(&:dance_ratings).select { |rating| rating.user.is_judge?(dance_round.round) }
+    end.flat_map(&:dance_ratings).select { |rating| rating.user.judge?(dance_round.round) }
   end
 
   def export_acrobatic_ratings(dance_round)
@@ -165,7 +166,7 @@ class DanceRound < ActiveRecord::Base
       else
         acrobatic
       end
-    end.flat_map(&:acrobatic_ratings).select { |rating| rating.user.is_judge? dance_round.round }
+    end.flat_map(&:acrobatic_ratings).select { |rating| rating.user.judge? dance_round.round }
   end
 
   def repeated?(team)

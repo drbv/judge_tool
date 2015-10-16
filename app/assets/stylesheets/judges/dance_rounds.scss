@@ -1,8 +1,9 @@
 .mistakes {
-  margin: auto;
+  margin: 0.5em 0 0.5em 0;
   div {
     display: inline-block;
     margin-right: 0.5em;
+    vertical-align: middle;
     a {
       padding: 0.2em;
       @include border-radius(5px);
@@ -11,12 +12,11 @@
 }
 
 .mistakes-list {
-  margin-top: 1em;
-  margin-bottom: 1em;
   padding: 0.3em;
   border: 1px solid #000;
   @include border-radius(5px);
   height: 3em;
+  min-width: 5em;
   div {
     display: inline-block;
     padding: 0.4em;
@@ -51,10 +51,11 @@
   }
 
 }
+
 h3 {
   overflow: hidden;
   white-space: nowrap;
-  
+
 }
 
 #dance_teams {
@@ -90,6 +91,7 @@ h3 {
 .edit_dance_round input[type="submit"] {
   float: right;
   z-index: 99;
+  margin-top: 2em
 }
 
 .blue {
@@ -112,9 +114,20 @@ h3 {
   margin-right: 2em;
 }
 
-#wait_for_ending {
-  div div {
+#judge_statusses {
+  div {
     display: inline-block;
+    .alert-danger, .alert-info {
+      padding-left: 4em;
+      background-repeat: no-repeat;
+      background-position: left 9px center;
+    }
+    .alert.alert-danger {
+      background-image: url(image_path("icon-loader-danger.gif"));
+    }
+    .alert.alert-info {
+      background-image: url(image_path("icon-loader-info.gif"));
+    }
   }
 }
 
@@ -159,7 +172,4 @@ h3 {
     }
   }
 
-  .mistakes-list {
-    margin-bottom: 2em;
-  }
 }

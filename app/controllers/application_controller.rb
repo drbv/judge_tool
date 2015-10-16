@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
   rescue_from StandardError, with: :page_not_found unless Rails.env.development?
-  helper_method :current_user
+  helper_method :current_user, :current_round, :current_dance_round, :judge_status_class
   include Pundit
   rescue_from Pundit::NotAuthorizedError, with: :redirect_to_login
   http_basic_authenticate_with name: Rails.application.secrets.basic_auth['name'], password: Rails.application.secrets.basic_auth['password'] if Rails.application.secrets.basic_auth
@@ -34,5 +34,24 @@ class ApplicationController < ActionController::Base
     session[:user_id] = admin.id
   end
 
+  def judge_status_class(judge, dance_round = current_dance_round)
+    if judge.rated?(dance_round)
+      if judge.open_discussion?(dance_round)
+        'alert-info'
+      else
+        'alert-success'
+      end
+    else
+      'alert-danger'
+    end
+  end
+
+  def current_round
+    @round ||= Round.active
+  end
+
+  def current_dance_round
+    @dance_round ||= DanceRound.active
+  end
 
 end
