@@ -200,7 +200,7 @@ class Judges::DanceRoundsController < Judges::BaseController
           render :recognize_failures_only
         end
       else
-        render :waiting_observer
+        render :pause
       end
     else
       @dance_round = current_round.dance_rounds.where(started: false).order(:position).first
@@ -210,7 +210,7 @@ class Judges::DanceRoundsController < Judges::BaseController
 
   def evaluate_ratings
     if current_dance_round.accepted_by?(current_user)
-      render :waiting_observer
+      render :wait_for_ending
     else
       ratings_overview
       if request.xhr?

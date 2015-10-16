@@ -81,7 +81,7 @@ class DanceRound < ActiveRecord::Base
   end
 
   def judges
-    round.judges
+    observers + dance_judges + acrobatics_judges
   end
 
   def observer
@@ -89,7 +89,8 @@ class DanceRound < ActiveRecord::Base
   end
 
   def observers
-    round.observers
+    dance_round = self
+    round.observers.select {|observer| observer.has_to_rate?(dance_round)}
   end
 
   def dance_judges
