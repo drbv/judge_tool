@@ -1,4 +1,12 @@
 ready = ->
+  if document.getElementById('reload')
+    setTimeout(
+      () ->
+        #This will reload the site without the previos post request
+        window.location.href = window.location.href
+    , Math.floor(Math.random() * 2000 + 1000)
+    )
+
   checkJudgeStatus = (judgeStatus) ->
     $.get judgeStatus.attr('update_uri'), (data) ->
       unless judgeStatus.hasClass(data)
@@ -12,7 +20,8 @@ ready = ->
         )
       else
         if $('#mark_ratings').length > 0 || judgeStatus.parent().parent().children('alert-info, alert-danger').length <= 0
-          location.reload()
+          #This will reload the site without the previos post request
+          window.location.href = window.location.href
   $('#judge_statusses .alert.alert-danger, #judge_statusses .alert.alert-info').each (loading) ->
     judgeStatus = $(this)
     setTimeout(
@@ -69,7 +78,7 @@ ready = ->
       newVal += ',' if newVal != ""
       newVal += $(this).text()
       $(this).removeClass 'count'
-    mistakeList.parent().find('input[type="hidden"]').val(newVal)
+    mistakeList.parent().parent().find('input[type="hidden"]').val(newVal)
     $(this).remove()
     calculateOverallRating()
     false
