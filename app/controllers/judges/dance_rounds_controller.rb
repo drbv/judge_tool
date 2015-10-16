@@ -15,8 +15,10 @@ class Judges::DanceRoundsController < Judges::BaseController
 
   def create
     @dance_round = DanceRound.next
-    authorize @dance_round
-    @dance_round.start!
+    unless @dance_round.nil?
+      authorize @dance_round
+      @dance_round.start!
+    end
     redirect_to judges_dance_round_path
   end
 
@@ -80,7 +82,7 @@ class Judges::DanceRoundsController < Judges::BaseController
   end
 
   def reopen_acrobatic_flags
-    if params[:reopen_acrobatics]
+    if params[:reopen_acrobatic]
       params[:reopen_acrobatic].values.flatten.map(&:values).flatten if params[:reopen_acrobatic]
     else
       []
@@ -89,14 +91,14 @@ class Judges::DanceRoundsController < Judges::BaseController
 
   def reopen!
     reopen_dance_ratings!
-    reopen_acrobatic_ratings!
+    reopen_acrobatic_ratings! unless current_dance_round.round.has_no_acrobatics?
   end
 
   def reopen_acrobatic_ratings!
     params[:reopen_acrobatic].each do |judge_id, acrobatics|
       acrobatics.each do |acrobatic_id, reopen|
-        acrobatic_rating = current_dance_round.acrobatic_ratings.where(user_id: judge_id, acrobatic_id: acrobatic_id)
-        acrobatic_rating.reopen! :rating if reopen == '1'
+        acrobatic_rating = current_dance_round.acrobatic_ratings.where(user_id: judge_id, acrobatic_id: acrobatic_id).first
+        acrobatic_rating.reopen! ['rating'] if reopen == '1'
       end
     end
   end
