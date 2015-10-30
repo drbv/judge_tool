@@ -45,7 +45,7 @@ module MS
     end
 
     def acrobatic_type(short_name, value)
-      if @acrobatic_type = AcrobaticType.find_by(short_name: short_name)
+      if @acrobatic_type = AcrobaticType.find_by(short_name: short_name , max_points: value.to_f.to_d.round(2))
         @acrobatic_type
       else
         AcrobaticType.create short_name: short_name, max_points: value.to_f.to_d.round(2)
