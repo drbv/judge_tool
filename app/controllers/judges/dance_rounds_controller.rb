@@ -120,6 +120,10 @@ class Judges::DanceRoundsController < Judges::BaseController
     current_user.dance_ratings.where(dance_round_id: current_dance_round.id).each do |rating|
       rating.final!
     end
+    close_dance_round!
+  end
+
+  def close_dance_round!
     if current_dance_round.dance_ratings.where(user_id: current_round.observers.map(&:id)).all?(&:final?)
       current_dance_round.close!
       current_dance_round.round.close! unless DanceRound.next
@@ -210,6 +214,7 @@ class Judges::DanceRoundsController < Judges::BaseController
 
   def evaluate_ratings
     if current_dance_round.accepted_by?(current_user)
+      close_dance_round!
       render :wait_for_ending
     else
       ratings_overview
