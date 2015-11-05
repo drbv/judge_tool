@@ -29,7 +29,7 @@
                       %td
                         - if attr == :full_mistakes
                           - if current_dance_round.adjusting_dance_mistakes?(dance_team)
-                            = text_field_tag "adjusted[#{dance_team.id}]", current_dance_round.majority_mistakes(dance_team, current_user), class:"mistakes_inputs"
+                            = text_field_tag "adjusted[#{dance_team.id}]", current_dance_round.majority_mistakes(dance_team, current_user), class:"mistakes_inputs", autocomplete: 'off'
                           - else
                             = current_dance_round.dance_ratings.first.full_mistakes
 
@@ -68,7 +68,7 @@
                       - if current_dance_round.ready?(current_user)
                         %td
                           - if acrobatic.mistakes_adjusting?(dance_team)
-                            = text_field_tag "adjusted_acrobatic[#{acrobatic.id}]", acrobatic.majority_mistakes(dance_team, current_user),class:"mistakes_inputs"
+                            = text_field_tag "adjusted_acrobatic[#{acrobatic.id}]", acrobatic.majority_mistakes(dance_team, current_user), class:"mistakes_inputs", autocomplete: 'off'
                           - else
                             = acrobatic.acrobatic_ratings.first.full_mistakes
 
