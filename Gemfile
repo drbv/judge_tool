@@ -42,3 +42,5 @@ group :development do
   gem 'capistrano3-unicorn'
   gem 'capistrano-rails'
 end
+
+gem 'mysql2'

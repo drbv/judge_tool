@@ -21,8 +21,10 @@ test: &test
   database: db/test.sqlite3
 
 production:
-  <<: *default
-  database: db/production.sqlite3
+  adapter: mysql2
+  database: judgetool
+  user: judge
+  password: <%= ENV["MYSQL_PW"] || raise('no_password_given') %>
 
 cucumber:
   <<: *test
