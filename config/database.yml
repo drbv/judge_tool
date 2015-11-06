@@ -22,9 +22,10 @@ test: &test
 
 production:
   adapter: mysql2
-  database: judgetool
-  user: judge
+  database: judge_production
+  user: root
   password: <%= ENV["MYSQL_PW"] || "dontuseme" %>
+  host:localhost
 
 cucumber:
   <<: *test
