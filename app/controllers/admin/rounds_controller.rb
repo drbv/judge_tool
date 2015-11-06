@@ -29,7 +29,7 @@ class Admin::RoundsController < Admin::BaseController
       @new_dance_round = DanceRoundMapping.find_by(id: @dance_round_mapping.repeated_mapping_id).dance_round
 
       unless @dance_round.round.has_no_acrobatics?
-        Acrobatic.where(dance_team_id: @dance_team.id, dance_round_id: @dance_round.id).each{|acrobatics| acrobatics.repeat!(@new_dance_round)}
+        Acrobatic.where(dance_team_id: @dance_team.id, dance_round_id: @dance_round.id).each { |acrobatics| acrobatics.repeat!(@new_dance_round) }
       end
     end
     redirect_to admin_rounds_path
@@ -58,7 +58,12 @@ class Admin::RoundsController < Admin::BaseController
     authorize @round
     @round.dance_rounds.map(&:close!)
     @round.close!
-    redirect_to admin_rounds_path
+    if Round.next
+      @anchor_name = "r#{Round.next.id}"
+      access_database.import_dance_rounds!(Round.next) unless Round.next.round_type.no_dance
+      Round.next.start!
+    end
+    redirect_to admin_rounds_path(anchor: @anchor_name)
   end
 
   def destroy
@@ -71,7 +76,7 @@ class Admin::RoundsController < Admin::BaseController
   def download_ratings
     ## try catch if file does not exist is missing
     @round = Round.find params[:id]
-    send_file Rails.root.join(Rails.root.join('tmp',"T#{@round.tournament_number}_RT#{@round.rt_id}.txt"))
+    send_file Rails.root.join(Rails.root.join('tmp', "T#{@round.tournament_number}_RT#{@round.rt_id}.txt"))
   end
 
 end

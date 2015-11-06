@@ -1,0 +1,11 @@
+%h1= dance_round_header
+= render partial: '/judges/dance_rounds/waiting_table'
+.row.dance_team
+  - @dance_round.dance_teams.each do |dance_team|
+    .col-sm6
+      %h1= dance_team.startnumber
+      - dance_team.dancers.each do |dancer|
+        %p= dancer.full_name
+      - @dance_round.points_per_judge(dance_team).each do |rating_type, points|
+        %p="#{rating_type}: #{points.map{|point| number_with_precision(point)}.join(' ')}"
+#reload

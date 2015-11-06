@@ -1,11 +1,13 @@
 ready = ->
+  startReload = ->
+    $.get window.location.pathname, (data) ->
+      # TODO: Figure out, why comparision fails always
+      if $('#main').html() != data
+        $('#main').html(data)
+        unless document.getElementById('reload')
+          clearInterval intervalHandler
   if document.getElementById('reload')
-    setTimeout(
-      () ->
-        #This will reload the site without the previos post request
-        window.location.href = window.location.href
-    , Math.floor(Math.random() * 2000 + 1000)
-    )
+    intervalHandler = setInterval startReload, 1000
 
   checkJudgeStatus = (judgeStatus) ->
     $.get judgeStatus.attr('update_uri'), (data) ->
@@ -14,18 +16,24 @@ ready = ->
         judgeStatus.addClass(data)
       if data == 'alert-info' || data == 'alert-danger'
         setTimeout(
-          () ->
+          ->
             checkJudgeStatus(judgeStatus)
         , 1000
         )
       else
         if $('#mark_ratings').length > 0 || judgeStatus.parent().parent().children('alert-info, alert-danger').length <= 0
           #This will reload the site without the previos post request
-          window.location.href = window.location.href
+          $.get window.location.pathname, (data) ->
+            # TODO: Figure out, why comparision fails always
+            if $('#main').html() != data
+              $('#main').html(data)
+              if document.getElementById('reload')
+                setInterval startReload, 1000
+
   $('#judge_statusses .alert.alert-danger, #judge_statusses .alert.alert-info').each (loading) ->
     judgeStatus = $(this)
     setTimeout(
-      () ->
+      ->
         checkJudgeStatus(judgeStatus)
       , 1000
     )

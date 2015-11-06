@@ -24,7 +24,8 @@
           benötigen. Sie können also aktuell nicht den vollen Funktionsumfang von Domain Transfer Agent benutzen. Bitte
           aktivieren Sie Javascript in Ihren Browsereinstellungen.
     .container
-      = yield
+      #main
+        = yield
       #footer
         %hr
         = link_to t('footer.terms_of_service'), page_path(:terms_of_service)

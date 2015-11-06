@@ -54,4 +54,12 @@ class ApplicationController < ActionController::Base
     @dance_round ||= DanceRound.active
   end
 
+  def render_xhr(template)
+    if request.xhr?
+      render template, layout: false
+    else
+      render template
+    end
+  end
+
 end

@@ -24,7 +24,7 @@ production:
   adapter: mysql2
   database: judgetool
   user: judge
-  password: <%= ENV["MYSQL_PW"] || raise('no_password_given') %>
+  password: <%= ENV["MYSQL_PW"] || "dontuseme" %>
 
 cucumber:
   <<: *test

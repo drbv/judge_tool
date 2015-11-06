@@ -9,6 +9,10 @@ class Round < ActiveRecord::Base
     where(started: true, closed: false).first
   end
 
+  def self.next
+    where(started: false, closed: false).order(:position).first
+  end
+
   def self.judge_role_for(index)
     case index
       when 0

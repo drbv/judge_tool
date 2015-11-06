@@ -4,12 +4,12 @@ class Judges::DanceRoundsController < Judges::BaseController
     authorize DanceRound
     if current_round
       if current_round.round_type.no_dance
-        render :no_dance_round
+        render_xhr :no_dance_round
       else
         judge_dance_teams
       end
     else
-      render :no_active_round
+      render_xhr :no_active_round
     end
   end
 
@@ -126,7 +126,6 @@ class Judges::DanceRoundsController < Judges::BaseController
   def close_dance_round!
     if current_dance_round.dance_ratings.where(user_id: current_round.observers.map(&:id)).all?(&:final?)
       current_dance_round.close!
-      current_dance_round.round.close! unless DanceRound.next
     end
   end
 
@@ -165,7 +164,7 @@ class Judges::DanceRoundsController < Judges::BaseController
   end
 
   def redirect_to_login
-    if params[:action] == 'show'
+    if params[:action] == 'current_dance_round'
       super
     else
       redirect_to judges_dance_round_path
@@ -191,7 +190,7 @@ class Judges::DanceRoundsController < Judges::BaseController
     elsif current_user.has_role?(:acrobatics_judge, current_round)
       judge :acrobatics
     else
-      render :pause
+      render_xhr :pause
     end
   end
 
@@ -201,21 +200,25 @@ class Judges::DanceRoundsController < Judges::BaseController
         if current_user.rated?(current_dance_round)
           evaluate_ratings
         else
-          render :recognize_failures_only
+          render_xhr :recognize_failures_only
         end
       else
-        render :pause
+        render_xhr :pause
       end
     else
       @dance_round = current_round.dance_rounds.where(started: false).order(:position).first
-      render :start_dance_round
+      if @dance_round
+        render_xhr :start_dance_round
+      else
+        render_xhr :no_active_round
+      end
     end
   end
 
   def evaluate_ratings
     if current_dance_round.accepted_by?(current_user)
       close_dance_round!
-      render :wait_for_ending
+      render_xhr :wait_for_ending
     else
       ratings_overview
       if request.xhr?
@@ -244,7 +247,7 @@ class Judges::DanceRoundsController < Judges::BaseController
     if current_dance_round
       if current_user.rated?(current_dance_round)
         if current_user.open_discussion?(current_dance_round)
-          render :"update_#{judgment_type}_rating"
+          render_xhr :"update_#{judgment_type}_rating"
         else
           if request.xhr?
             render :json, still_waiting: true, body: render_to_string(partial: 'waiting_table')
@@ -253,10 +256,15 @@ class Judges::DanceRoundsController < Judges::BaseController
           end
         end
       else
-        render :"judge_#{judgment_type}"
+        render_xhr :"judge_#{judgment_type}"
       end
     else
-      render :no_dance_round
+      @dance_round = current_round.dance_rounds.where(started: false).order(:position).first
+      if @dance_round
+        render_xhr :no_dance_round
+      else
+        render_xhr :no_active_round
+      end
     end
   end
 

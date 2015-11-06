@@ -25,7 +25,7 @@ class RoundPolicy < ApplicationPolicy
   end
 
   def close?
-    user && user.has_role?(:admin) && record.active? && (record.round_type.no_dance || record.judges.count <=0 )
+    user && user.has_role?(:admin) && record.active? && (record.round_type.no_dance || record.judges.count <=0 || DanceRound.next.nil? )
   end
 
   class Scope < Scope

@@ -11,7 +11,7 @@
       %th
   %tbody
     - @rounds.each_with_index do |round, index|
-      %tr{class: "#{'success' if round.active?} clickable ", id: "#{index}"}
+      %tr{class: "#{'success' if round.active?} clickable ", id: "r#{round.id}"}
         %td= round.round_type.name
         %td= round.dance_class && round.dance_class.name
         %td= l round.start_time, format: :time
@@ -27,7 +27,7 @@
           - else
             = link_to 'Wertungsrichter', admin_round_path(round), class: 'btn btn-primary' if policy(round).show?
         - round.dance_rounds.order(:position).each do |dance_round|
-          %tr{class: "#{'success' if dance_round.active?} #{index} collapse"}
+          %tr{class: "#{'success' if dance_round.active?} r#{round.id} collapse"}
             -if dance_round.dance_teams.size > 1
               %td{:rowspan => 2}= dance_round.position
             -else
@@ -43,7 +43,7 @@
                   .btn.btn-default.disabled ...wird wiederholt
 
           -if dance_round.dance_teams.size > 1
-            %tr{class: "#{'success' if dance_round.active?} #{index} collapse"}
+            %tr{class: "#{'success' if dance_round.active?} r#{round.id} collapse"}
               %td{:colspan => 2}=  dance_round.dance_teams.second.full_name
               %td{"align" => "right"}
                 -if !dance_round.round.closed?

@@ -1,3 +1,22 @@
-// Place all the styles related to the DanceRounds controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
+.big_center {
+  h1 {
+    width: 100%;
+    text-align: center;
+    font-size: 10em;
+    margin: 2em 0;
+  }
+}
+
+.row.dance_team {
+  .col-sm6 {
+    position: relative;
+    h1 {
+      font-size: 3em;
+      width: 100%;
+      text-align: center;
+    }
+    p {
+      font-size: 2em;
+    }
+  }
+}

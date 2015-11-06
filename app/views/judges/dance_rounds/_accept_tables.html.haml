@@ -75,3 +75,5 @@
   %div
     - if current_dance_round.ready?(current_user)
       = submit_tag (any_mistakes_adjusting? ? 'Fehler angleichen und akzeptieren' : 'Akzeptieren'), data: {confirm: (any_mistakes_adjusting? ? 'Wirklich nur Fehler angleichen?' : 'Wirklich keine Änderungen notwendig?')}, class: 'btn btn-primary',id: "observer_button"
+    - else
+      #reload

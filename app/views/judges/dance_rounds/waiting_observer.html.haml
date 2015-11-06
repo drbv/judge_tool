@@ -1,9 +1,0 @@
-%div
-  %h2 Observer Status:
-  - current_dance_round.observers.each do |observer|
-    -if observer.has_to_rate?(current_dance_round)
-      .alert{class: (current_dance_round.dance_ratings.where(user_id: observer.id).all?(&:final?) ? 'alert-success' : 'alert-danger')}
-        = observer.full_name
-    -else
-      .alert{class: 'alert-success'}
-        = observer.full_name

@@ -1,0 +1,9 @@
+%h1= dance_round_header
+= render partial: '/judges/dance_rounds/waiting_table'
+.row
+  - current_dance_round.dance_teams.each do |dance_team|
+    .col-sm6
+      %h3= "Startnummer #{dance_team.startnumber}"
+      - dance_team.dancers.each do |dancer|
+        %p= dancer.full_name
+#reload
