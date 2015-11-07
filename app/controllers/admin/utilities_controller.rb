@@ -23,12 +23,12 @@ class Admin::UtilitiesController < Admin::BaseController
     #delete_mdb=value=system('rm tmp/files/*.mdb')
     #drop_table=system("RAILS_ENV=#{Rails.env} rake db:drop")
     #migrate_table=system("RAILS_ENV=#{Rails.env} rake db:migrate")
-    #flash[:success]=" Export Files gelöscht: #{delete_ratings}
+    flash[:success]=" Export Files gelöscht: #{delete_ratings}
 </br> Access Datenbank gelöscht: #{delete_mdb}
 </br> JudgeTool Datenbank gelöscht: #{drop_table}
 </br> JudgeTool Datenbank erstellt: #{migrate_table}
 </br> Passwort zurückgesetzt! user:admin pin:1234
-</br> <h1>Prozess oder Server neustarten</h1>
+</br> <h1>Prozess oder Server neustarten</h1>"
 
     redirect_to admin_utilities_index_path
 
