@@ -73,7 +73,7 @@ class Round < ActiveRecord::Base
 
   def generate_rating_export_file
     file_name="T#{self.tournament_number}_RT#{self.rt_id}.txt"
-    File.write(Rails.root.join('tmp', file_name), '')
+    File.write(Rails.root.join('tmp/files', file_name), '')
 
     dance_rounds.each do |dance_round|
       # getting all dance ratings of one dance_round grouped by user. Normally each Judge has max 2 Dance_Teams
