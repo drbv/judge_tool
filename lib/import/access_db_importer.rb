@@ -184,7 +184,7 @@ module MS
     end
 
     def guess_database
-      mdb_files_in_tmp = Dir.glob(File.join(Rails.root, 'tmp/files/*.mdb'))
+      mdb_files_in_tmp = Dir.glob(File.join(Rails.root, 'tmp/*.mdb'))
       @path = if mdb_files_in_tmp.size==1
                 puts "Load mdb from: #{mdb_files_in_tmp.first}"
                 mdb_files_in_tmp.first

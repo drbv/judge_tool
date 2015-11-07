@@ -6,7 +6,7 @@ class Admin::UtilitiesController < Admin::BaseController
   def db_upload
     uploaded_file = params[:database_file]
     if uploaded_file
-      old_file=Dir.glob(Rails.root.join('tmp/files', '*.mdb')).first
+      old_file=Dir.glob(Rails.root.join('tmp', '*.mdb')).first
       if old_file.blank? || old_file.split('/').last == uploaded_file.original_filename
         File.open(Rails.root.join('tmp', uploaded_file.original_filename), 'wb') do |file|
           file.write(uploaded_file.read)
@@ -19,11 +19,11 @@ class Admin::UtilitiesController < Admin::BaseController
   end
 
   def judge_tool_reset
-    delete_ratings=system('rm tmp/files/*.txt')
-    delete_mdb=value=system('rm tmp/files/*.mdb')
-    drop_table=system("RAILS_ENV=#{Rails.env} rake db:drop")
-    migrate_table=system("RAILS_ENV=#{Rails.env} rake db:migrate")
-    flash[:success]=" Export Files gelöscht: #{delete_ratings}
+    #delete_ratings=system('rm tmp/files/*.txt')
+    #delete_mdb=value=system('rm tmp/files/*.mdb')
+    #drop_table=system("RAILS_ENV=#{Rails.env} rake db:drop")
+    #migrate_table=system("RAILS_ENV=#{Rails.env} rake db:migrate")
+    #flash[:success]=" Export Files gelöscht: #{delete_ratings}
 </br> Access Datenbank gelöscht: #{delete_mdb}
 </br> JudgeTool Datenbank gelöscht: #{drop_table}
 </br> JudgeTool Datenbank erstellt: #{migrate_table}

@@ -73,7 +73,7 @@ class Round < ActiveRecord::Base
 
   def generate_rating_export_file
     file_name="T#{self.tournament_number}_RT#{self.rt_id}.txt"
-    File.write(Rails.root.join('tmp/files', file_name), '')
+    File.write(Rails.root.join('tmp', 'files', file_name), '')
 
     dance_rounds.each do |dance_round|
       # getting all dance ratings of one dance_round grouped by user. Normally each Judge has max 2 Dance_Teams
@@ -82,7 +82,7 @@ class Round < ActiveRecord::Base
         @rating_line_dance_part2 = rating_line_dance_part2 dance_ratings
 
         dance_ratings.each do |dance_rating|
-          File.open(Rails.root.join('tmp', file_name), 'a') do |f|
+          File.open(Rails.root.join('tmp','files', file_name), 'a') do |f|
             f << "#{dance_rating.dance_team.access_db_id};#{user.wr_id};#{@rating_line_dance_part2}\n"
           end
         end
@@ -97,7 +97,7 @@ class Round < ActiveRecord::Base
           dance_teams=acrobatic_ratings.map(&:dance_team).uniq.sort_by { |dance_team| dance_team.startbook_number }
 
           dance_teams.each do |dance_team|
-            File.open(Rails.root.join('tmp', file_name), 'a') do |f|
+            File.open(Rails.root.join('tmp','files', file_name), 'a') do |f|
               f << "#{dance_team.access_db_id};#{user.wr_id};#{@rating_line_acrobatic_part2}\n"
             end
           end
