@@ -7,7 +7,7 @@ ready = ->
         unless document.getElementById('reload')
           clearInterval intervalHandler
   if document.getElementById('reload')
-    intervalHandler = setInterval startReload, 1000
+      intervalHandler = setInterval startReload, Math.floor(Math.random() * 5000 + 1000)
 
   checkJudgeStatus = (judgeStatus) ->
     $.get judgeStatus.attr('update_uri'), (data) ->
@@ -23,12 +23,9 @@ ready = ->
       else
         if $('#mark_ratings').length > 0 || judgeStatus.parent().parent().children('alert-info, alert-danger').length <= 0
           #This will reload the site without the previos post request
-          $.get window.location.pathname, (data) ->
-            # TODO: Figure out, why comparision fails always
-            if $('#main').html() != data
-              $('#main').html(data)
-              if document.getElementById('reload')
-                setInterval startReload, 1000
+          # And will also kill the INtervalHandler to relaod contant, not nice but functianal
+          window.location.href = window.location.href
+
 
   $('#judge_statusses .alert.alert-danger, #judge_statusses .alert.alert-info').each (loading) ->
     judgeStatus = $(this)
