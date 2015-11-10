@@ -26,31 +26,32 @@
             = link_to 'Wertungsrichter', edit_admin_round_path(round), class: 'btn btn-primary'
           - else
             = link_to 'Wertungsrichter', admin_round_path(round), class: 'btn btn-primary' if policy(round).show?
-        - round.dance_rounds.order(:position).each do |dance_round|
-          %tr{class: "#{'success' if dance_round.active?} r#{round.id} collapse"}
-            -if dance_round.dance_teams.size > 1
-              %td{:rowspan => 2}= dance_round.position
-            -else
-              %td= dance_round.position
-            %td{:colspan => 2}=  dance_round.dance_teams.first.full_name
-            %td{"align" => "right"}
-              -if !dance_round.round.closed?
-                -if dance_round.repeating? dance_round.dance_teams.first
-                  .btn.btn-default.disabled wiederholung
-                -elsif !dance_round.repeated? dance_round.dance_teams.first
-                  = link_to 'Tanz wiederholen',  admin_repeat_dance_round_path(dance_round.id, dance_round.dance_teams.first.id), class: 'btn btn-warning'
-                -else
-                  .btn.btn-default.disabled ...wird wiederholt
-
-          -if dance_round.dance_teams.size > 1
+        -if round.active?
+          - round.dance_rounds.order(:position).each do |dance_round|
             %tr{class: "#{'success' if dance_round.active?} r#{round.id} collapse"}
-              %td{:colspan => 2}=  dance_round.dance_teams.second.full_name
+              -if dance_round.dance_teams.size > 1
+                %td{:rowspan => 2}= "#{dance_round.position } #{"\u2713" if dance_round.closed?}"
+              -else
+                %td= "#{dance_round.position } #{"\u2713" if dance_round.closed?}"
+              %td{:colspan => 2}=  dance_round.dance_teams.first.full_name
               %td{"align" => "right"}
                 -if !dance_round.round.closed?
-                  -if dance_round.repeating? dance_round.dance_teams.second
+                  -if dance_round.repeating? dance_round.dance_teams.first
                     .btn.btn-default.disabled wiederholung
-                  -elsif !dance_round.repeated? dance_round.dance_teams.second
-                    = link_to 'Tanz wiederholen',  admin_repeat_dance_round_path(dance_round.id, dance_round.dance_teams.second.id), class: 'btn btn-warning'
+                  -elsif !dance_round.repeated? dance_round.dance_teams.first
+                    = link_to 'Tanz wiederholen',  admin_repeat_dance_round_path(dance_round.id, dance_round.dance_teams.first.id), class: 'btn btn-warning'
                   -else
                     .btn.btn-default.disabled ...wird wiederholt
+
+            -if dance_round.dance_teams.size > 1
+              %tr{class: "#{'success' if dance_round.active?} r#{round.id} collapse"}
+                %td{:colspan => 2}=  dance_round.dance_teams.second.full_name
+                %td{"align" => "right"}
+                  -if !dance_round.round.closed?
+                    -if dance_round.repeating? dance_round.dance_teams.second
+                      .btn.btn-default.disabled wiederholung
+                    -elsif !dance_round.repeated? dance_round.dance_teams.second
+                      = link_to 'Tanz wiederholen',  admin_repeat_dance_round_path(dance_round.id, dance_round.dance_teams.second.id), class: 'btn btn-warning'
+                    -else
+                      .btn.btn-default.disabled ...wird wiederholt
 
