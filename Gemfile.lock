@@ -308,7 +308,7 @@ DEPENDENCIES
   jquery-rails
   jquery-ui-rails
   mdb
-  mysql2 (~> 0.3.13)
+  mysql2
   pry
   pry-doc
   pundit
