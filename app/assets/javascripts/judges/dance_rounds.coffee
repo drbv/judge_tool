@@ -2,10 +2,11 @@ ready = ->
   startReload = ->
     $.get window.location.pathname, (data) ->
       # TODO: Figure out, why comparision fails always
+      unless document.getElementById('reload')
+        clearInterval intervalHandler
       if $('#main').html() != data
         $('#main').html(data)
-        unless document.getElementById('reload')
-          clearInterval intervalHandler
+
   if document.getElementById('reload')
       intervalHandler = setInterval startReload, Math.floor(Math.random() * 5000 + 1000)
 
