@@ -26,6 +26,14 @@ module MS
       nil
     end
 
+    def dance_rounds_available?(round)
+      if dance_rounds(round).count > 0
+        true
+      else
+        false
+      end
+    end
+
     def import_dance_rounds!(round)
       observers = round.observers.order(:licence).to_a
       dance_rounds(round).each do |dance_round_no, dance_teams|
