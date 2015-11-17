@@ -34,6 +34,19 @@ module MS
       end
     end
 
+    def round_dance_teams_elected?(round)
+      elected = true
+      # find all lines from this round
+
+      @access_database[:Paare_Rundenqualifikation].select{|quali| quali[:RT_ID].to_i == round.rt_id}.each do |dance_round_line|
+        #check if the Team is has no roundnumber but is available.
+        if (dance_round_line[:Rundennummer].to_i <= 0   && dance_round_line[:Anwesend_Status].to_i == 1)
+          elected = false
+        end
+      end
+      elected
+    end
+
     def import_dance_rounds!(round)
       observers = round.observers.order(:licence).to_a
       dance_rounds(round).each do |dance_round_no, dance_teams|
@@ -62,7 +75,7 @@ module MS
 
     def dance_rounds(round)
       @access_database[:Paare_Rundenqualifikation].select do |dance_round|
-        dance_round[:RT_ID] == rt_id(round)
+        dance_round[:RT_ID] == rt_id(round) && dance_round[:Anwesend_Status].to_i == 1
       end.sort_by { |dance_round| dance_round[:Rundennummer].to_i }.group_by { |dance_round| dance_round[:Rundennummer].to_i }
     end
 

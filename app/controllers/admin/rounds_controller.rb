@@ -74,27 +74,33 @@ class Admin::RoundsController < Admin::BaseController
   def import_dance_round_from_round(round)
     if !round.round_type.no_dance
       if round.judges.count > 0
-        if access_database.dance_rounds_available?(round)
-          begin
-            access_database.import_dance_rounds!(round) unless round.round_type.no_dance
-            return true
-          rescue => ex
-            logger.error ex.message
-            flash[:danger]="Fehler beim importieren <br>Error: #{ex.message}"
+        if access_database.round_dance_teams_elected?(round)
+          if access_database.dance_rounds_available?(round)
+            begin
+              access_database.import_dance_rounds!(round) unless round.round_type.no_dance
+              return true
+            rescue => ex
+              logger.error ex.message
+              flash[:danger]="Fehler beim importieren <br>Error: #{ex.message}"
+              return false
+            end
+          else
+            flash[:danger]="Die Runde enthält keine Paare, wenn das beabsichtigt ist muss die Runde aus dem Zeitplan gelöscht werden"
             return false
           end
         else
-          flash[:danger]="Die Runde enthält keine Paare, wenn das beabsichtigt ist muss die Runde aus dem Zeitplan gelöscht werden"
+          flash[:danger]="Als Anwesend markierte Teams/Paare tanzen in keiner Runde. Rundenauslosung prüfen!"
           return false
         end
+
       else
-        #Do not import dance_rounds, Round Type not Suported
+        #Do not import dance_rounds. Round Type not Suported
         flash[:warning]="Tanzrunden werden nicht importiert, Rundentyp nicht unterstützt"
         @anchor_name=''
         return true
       end
     else
-      #Do not import dance_rounds, this Round does not have some
+      #Do not import dance_rounds. This Round does not have some
       return true
     end
   end
