@@ -26,6 +26,7 @@ end
 
 platforms :mswin do # gems specific to windows
   # alternative to unicorn
+  gem 'tzinfo-data'
 end
 
 gem 'rubocop'
