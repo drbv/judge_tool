@@ -7,7 +7,7 @@
         = f.fields_for 'dance_ratings[]', current_dance_round.dance_ratings.build do |r|
           = r.hidden_field :dance_team_id, value: dance_team.id
           .enabled
-            = render partial: 'mistakes_bar'
+            = render partial: 'mistakes_bar', locals: {show: 'TUSV'}
             = r.hidden_field :mistakes, autocomplete: 'off'
         - if !current_dance_round.round.has_no_acrobatics?
           - current_dance_round.acrobatics.where(dance_team_id: dance_team.id).each_with_index do |acrobatic, index|
@@ -17,7 +17,7 @@
               = r.hidden_field :dance_team_id, value: dance_team.id, id: "dance_round_acrobatic_ratings_#{index}_dance_team_id"
               = r.hidden_field :acrobatic_id, value: acrobatic.id, id: "dance_round_acrobatic_ratings_#{index}_acrobatic_id"
               .enabled
-                = render partial: 'mistakes_bar', locals: {hide: 'T'}
+                = render partial: 'mistakes_bar', locals: {show: 'VUSP'}
                 = r.hidden_field :mistakes, autocomplete: 'off', id: "dance_round_acrobatic_ratings_#{index}_mistakes"
 
   = f.submit 'Wertung absenden', data: {confirm: 'Sicher alle Fehler angegeben und alle gesehenen Akrobatiken markiert?'}, class: 'btn btn-primary'
