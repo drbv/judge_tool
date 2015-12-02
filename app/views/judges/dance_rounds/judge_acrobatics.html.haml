@@ -14,6 +14,6 @@
                 = render partial: 'rating_bar', locals: {set_to: 0}
                 = r.hidden_field :rating, autocomplete: 'off', id: "dance_round_acrobatic_ratings_#{index}_rating"
               .enabled
-                = render partial: 'mistakes_bar', locals: {hide: 'T'}
+                = render partial: 'mistakes_bar', locals: {show: 'USVP'}
                 = r.hidden_field :mistakes, autocomplete: 'off', id: "dance_round_acrobatic_ratings_#{index}_mistakes"
   = f.submit 'Wertung absenden', data: { confirm: 'Sicher alles gewertet?' }, class: 'btn btn-primary'

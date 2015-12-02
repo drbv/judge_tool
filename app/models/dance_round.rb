@@ -120,7 +120,8 @@ class DanceRound < ActiveRecord::Base
       points['Beintechnik'] << dance_ratings.where(dance_team_id: team.id, user_id: judge.id).first.points.round(2)
     end
     round.acrobatics_judges.each do |judge|
-      points['Akrobatiken'] << acrobatic_ratings.where(dance_team_id: team.id, user_id: judge.id).map(&:points).sum
+      points['Akrobatiken'] << [acrobatic_ratings.where(dance_team_id: team.id, user_id: judge.id).map(&:points).sum,0].max
+      binding.pry
     end
     points.delete 'Akrobatiken' if points['Akrobatiken'].empty?
     points.delete 'Beintechnik' if points['Beintechnik'].empty?
