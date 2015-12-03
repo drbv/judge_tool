@@ -20,14 +20,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'bcrypt', '~> 3.1.7'
 gem 'pundit'
 gem 'rolify'
-platforms :ruby do # linux
-  gem 'unicorn'
-end
-
-platforms :mswin do # gems specific to windows
-  # alternative to unicorn
-  gem 'tzinfo-data'
-end
+gem 'unicorn'
 
 gem 'rubocop'
 
