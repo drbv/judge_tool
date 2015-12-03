@@ -1,16 +1,27 @@
 .mistakes
-  - unless defined?(hide) && hide == 'T'
+  - if defined?(show) && show.include?('T')
     %div
       - %w(T2 T10 T20).each do |mistake|
         = link_to mistake, '#', class: 'btn-warning'
-  %div
-    - %w(U2 U10 U20).each do |mistake|
-      = link_to mistake, '#', class: 'btn-warning'
-  %div
-    - %w(S2 S10 S20).each do |mistake|
-      = link_to mistake, '#', class: 'btn-warning'
-  %div
-    - %w(V5).each do |mistake|
-      = link_to mistake, '#', class: 'btn-warning'
+  - if defined?(show) && show.include?('U')
+    %div
+      - %w(U2 U10 U20).each do |mistake|
+        = link_to mistake, '#', class: 'btn-warning'
+  - if defined?(show) && show.include?('S')
+    %div
+      - %w(S2 S10 S20).each do |mistake|
+        = link_to mistake, '#', class: 'btn-warning'
+  - if defined?(show) && show.include?('V')
+    %div
+      - %w(V5).each do |mistake|
+        = link_to mistake, '#', class: 'btn-warning'
+  - if defined?(show) && show.include?('A')
+    %div
+      - %w(A20).each do |mistake|
+        = link_to mistake, '#', class: 'btn-info'
+  - if defined?(show) && show.include?('P')
+    %div
+      - %w(P0).each do |mistake|
+        = link_to mistake, '#', class: 'btn-info'
   .mistakes-list
 

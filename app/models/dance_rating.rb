@@ -8,7 +8,7 @@ class DanceRating < ActiveRecord::Base
 
   validates_presence_of :dance_team, :dance_round, :user
   validates_presence_of :female_base_rating, :female_turn_rating, :male_base_rating, :male_turn_rating, :choreo_rating, :dance_figure_rating, :team_presentation_rating, unless: -> { user.has_role?(:observer, dance_round.round) }
-  validates_format_of :mistakes, with: /\A(?:(?:T2|T10|T20|S2|S10|S20|U2|U10|U20|V5)(?:,(T2|T10|T20|S2|S10|S20|U2|U10|U20|V5))*)?\Z/
+  validates_format_of :mistakes, with: /\A(?:(?:T2|T10|T20|S2|S10|S20|U2|U10|U20|V5|A20)(?:,(T2|T10|T20|S2|S10|S20|U2|U10|U20|V5|A20))*)?\Z/
   validates_uniqueness_of :dance_round_id, scope: %i[user_id dance_team_id]
   validate :team_belongs_to_dance_round
   after_save :add_history_entry
