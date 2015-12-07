@@ -1,4 +1,5 @@
 ready = ->
+
   startReload = ->
     $.get window.location.pathname, (data) ->
       # TODO: Figure out, why comparision fails always
@@ -75,6 +76,11 @@ ready = ->
     hiddenField.val(newVal)
     calculateOverallRating()
     false
+  $(document).on 'click touchend', '.timer', ->
+    $(this).removeClass('timer')
+    $(this).hide()
+    d1=new window.DanceTimer($(this).attr('dance_team_id'))
+    d1.runTimer()
   $(document).on 'click touchend', '.enabled .mistakes-list div', ->
     mistakeList = $(this).parent()
     mistakeList.children().addClass('count')

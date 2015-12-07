@@ -55,7 +55,47 @@
 h3 {
   overflow: hidden;
   white-space: nowrap;
+  .dtimer {
+    margin-left: 2em;
+    @include inline-block;
+    vertical-align: top;
+    > div {
+      margin-right: 1em;
+    }
+    div {
+      @include inline-block;
+      vertical-align: top;
+    }
+    .btn {
+      margin-left: 0.5em;
+      margin-right: 0;
+    }
+  }
+}
 
+.rating-table {
+  position: relative;
+  .timer {
+    position: absolute;
+    background-color: #337ab7;
+    @include border-radius(5px);
+    width: 100%;
+    height: 100%;
+    color: darken(white, 6.5%);
+    &:hover {
+      background-color: darken(#337ab7, 6.5%);
+      color: white;
+    }
+    span {
+      padding: 0;
+      display: block;
+      width: 100%;
+      text-align: center;
+      margin-top: calc(50% - 1.9em);
+      width: 100%;
+      font-size: 3em;
+    }
+  }
 }
 
 #dance_teams {
