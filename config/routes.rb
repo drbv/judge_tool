@@ -1,11 +1,11 @@
 Rails.application.routes.draw do
 
-  get 'admin/utilities/index'
-  post 'admin/utilities/db_upload'
-  get 'admin/utilities/judge_tool_reset'
+  get 'tournament/utilities/index'
+  post 'tournament/utilities/db_upload'
+  get 'tournament/utilities/judge_tool_reset'
 
 
-  namespace :admin do
+  namespace :tournament do
     resources :users do
       collection do
       end
@@ -31,7 +31,7 @@ Rails.application.routes.draw do
     end
   end
 
-  get '/admin/rounds/:dance_round_id/:dance_team_id', to: 'admin/rounds#repeat', as: :admin_repeat_dance_round
+  get '/tournament/rounds/:dance_round_id/:dance_team_id', to: 'tournament/rounds#repeat', as: :tournament_repeat_dance_round
 
   resource :round, only: %i(show)
   resource :dance_round, only: %i(show)

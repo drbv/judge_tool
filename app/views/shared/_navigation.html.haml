@@ -8,10 +8,10 @@
 
 .collapse.navbar-collapse#navbar{'aria-expanded' => 'false'}
   %ul.nav.navbar-nav
-    %li{class: "#{'active' if controller_name == 'users'}" }= link_to 'Teilnehmer', admin_users_path if policy(User).index?
-    %li{class: "#{'active' if params[:controller] == 'admin/rounds'}" }= link_to 'Rundenverwaltung', admin_rounds_path if policy(Round).admin_index?
+    %li{class: "#{'active' if controller_name == 'users'}" }= link_to 'Teilnehmer', tournament_users_path if policy(User).index?
+    %li{class: "#{'active' if params[:controller] == 'tournament/rounds'}" }= link_to 'Rundenverwaltung', tournament_rounds_path if policy(Round).tournament_index?
     %li{class: "#{'active' if params[:controller] == 'judges/dance_rounds'}" }= link_to 'Werten', judges_dance_round_path if policy(DanceRound).show?
-    %li{class: "#{'active' if controller_name == 'utilities'}"}= link_to 'Tools', admin_utilities_index_path if policy(User).index?
+    %li{class: "#{'active' if controller_name == 'utilities'}"}= link_to 'Tools', tournament_utilities_index_path if policy(User).index?
     %li{class: "#{'active' if params[:controller] == 'dance_rounds'}"}= link_to 'Tanzrunde', dance_round_path
 
 

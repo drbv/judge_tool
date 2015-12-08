@@ -27,7 +27,7 @@ class ApplicationController < ActionController::Base
 
   def generate_admin
     admin = User.new login: 'admin'
-    admin.add_role :admin
+    admin.add_role :tournament
     admin.save
     admin.update_attribute(:pin, '1234')
     @current_user = admin
