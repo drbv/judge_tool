@@ -8,7 +8,7 @@ class AcrobaticRating < ActiveRecord::Base
   has_many :acrobatic_rating_history_entries
 
   validates_presence_of :dance_team, :acrobatic, :user, :rating
-  validates_format_of :mistakes, with: /\A((S2|S10|S20|U2|U10|U20|V5)(,(S2|S10|S20|U2|U10|U20|V5))*)?\Z/
+  validates_format_of :mistakes, with: /\A((S2|S10|S20|U2|U10|U20|V5|P0)(,(S2|S10|S20|U2|U10|U20|V5|P0))*)?\Z/
   validates_uniqueness_of :acrobatic_id, scope: %i[user_id dance_team_id]
   validate :team_belongs_to_dance_round
   after_save :add_history_entry
@@ -22,11 +22,19 @@ class AcrobaticRating < ActiveRecord::Base
   end
 
   def points
-    @points ||= [acrobatic.acrobatic_type.max_points * (1 - rating.to_d / 100) - punishment, 0].max
+    if full_mistakes.include?('P0')
+      @points = 0 - punishment
+    else
+      @points ||= acrobatic.acrobatic_type.max_points * (1 - rating.to_d / 100) - punishment
+    end
   end
 
   def points_without_punishment
-    acrobatic.acrobatic_type.max_points * (1 - rating.to_d / 100)
+    if full_mistakes.include?('P0')
+      0
+    else
+      acrobatic.acrobatic_type.max_points * (1 - rating.to_d / 100)
+    end
   end
 
   def danced?
