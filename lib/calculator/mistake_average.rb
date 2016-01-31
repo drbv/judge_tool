@@ -8,7 +8,7 @@ module Calculator
     end
 
     def calculate
-      %i(T S U V).map do |mistake_type|
+      %i(T S U V A P).map do |mistake_type|
         mean_values choose_only_mistakes_for(mistake_type), @decider_mistakes && (@decider_mistakes[mistake_type] || [])
       end.select {|e| e!=''}.join(',')
     end

@@ -1,4 +1,5 @@
 ready = ->
+
   startReload = ->
     $.get window.location.pathname, (data) ->
       # TODO: Figure out, why comparision fails always
@@ -75,6 +76,11 @@ ready = ->
     hiddenField.val(newVal)
     calculateOverallRating()
     false
+  $(document).on 'click touchend', '.timer', ->
+    $(this).removeClass('timer')
+    $(this).hide()
+    d1=new window.DanceTimer($(this).attr('dance_team_id'))
+    d1.runTimer()
   $(document).on 'click touchend', '.enabled .mistakes-list div', ->
     mistakeList = $(this).parent()
     mistakeList.children().addClass('count')
@@ -99,7 +105,7 @@ ready = ->
   $("input.mistakes_inputs").on 'change', ->
     found_broken_mistake_input = false
     $("input.mistakes_inputs").each ->
-      if !(/^((T2|T10|T20|S2|S10|S20|U2|U10|U20|V5)(,(T2|T10|T20|S2|S10|S20|U2|U10|U20|V5))*)?$/).test(this.value)
+      if !(/^((T2|T10|T20|S2|S10|S20|U2|U10|U20|V5|P0|A20)(,(T2|T10|T20|S2|S10|S20|U2|U10|U20|V5|P0|A20))*)?$/).test(this.value)
         alert "Fehlereingabe prüfen"
         found_broken_mistake_input = true
     if(found_broken_mistake_input)

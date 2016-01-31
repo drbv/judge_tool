@@ -6,4 +6,5 @@
       %h3= "Startnummer #{dance_team.startnumber}"
       - dance_team.dancers.each do |dancer|
         %p= dancer.full_name
+      %p= dance_team.club.name
 #reload
