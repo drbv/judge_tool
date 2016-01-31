@@ -42,6 +42,8 @@
                     = link_to 'Tanz wiederholen',  admin_repeat_dance_round_path(dance_round.id, dance_round.dance_teams.first.id), class: 'btn btn-warning'
                   -else
                     .btn.btn-default.disabled ...wird wiederholt
+                = link_to 'Details',  admin_show_dance_team_dance_round_path(dance_round.id, dance_round.dance_teams.first.id), class: 'btn btn-info'
+
 
             -if dance_round.dance_teams.size > 1
               %tr{class: "#{'success' if dance_round.active?} r#{round.id} collapse"}
@@ -54,4 +56,5 @@
                       = link_to 'Tanz wiederholen',  admin_repeat_dance_round_path(dance_round.id, dance_round.dance_teams.second.id), class: 'btn btn-warning'
                     -else
                       .btn.btn-default.disabled ...wird wiederholt
+                  = link_to 'Details',  admin_show_dance_team_dance_round_path(dance_round.id, dance_round.dance_teams.first.id), class: 'btn btn-info'
 

@@ -32,6 +32,7 @@ Rails.application.routes.draw do
   end
 
   get '/admin/rounds/:dance_round_id/:dance_team_id', to: 'admin/rounds#repeat', as: :admin_repeat_dance_round
+  get '/admin/dance_rounds/:dance_round_id/:dance_team_id', to: 'admin/dance_rounds#show_dance_team', as: :admin_show_dance_team_dance_round
 
   resource :round, only: %i(show)
   resource :dance_round, only: %i(show)

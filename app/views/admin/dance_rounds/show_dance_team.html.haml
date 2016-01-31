@@ -1,0 +1,8 @@
+%h1
+  =@round.round_type.name
+  =@round.dance_class && @round.dance_class.name#
+%h2= "Runde #{@dance_round.position}/#{@round.dance_rounds.count+1}"
+%h3= @dance_team.full_name
+
+
+
