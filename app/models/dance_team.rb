@@ -7,6 +7,7 @@ class DanceTeam < ActiveRecord::Base
   has_many :dance_round_mappings
   has_many :dance_rounds, through: :dance_round_mappings
   has_many :acrobatics
+  has_many :dance_round_ratings
   default_scope -> { order('startnumber') }
 
   def full_name

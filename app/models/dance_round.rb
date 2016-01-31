@@ -1,5 +1,6 @@
 class DanceRound < ActiveRecord::Base
   belongs_to :round
+  has_many :dance_round_ratings
   has_many :dance_round_mappings
   has_many :dance_teams, :through => :dance_round_mappings
   has_many :acrobatics
