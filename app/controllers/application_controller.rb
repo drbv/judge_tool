@@ -21,13 +21,17 @@ class ApplicationController < ActionController::Base
     @current_user ||= User.find_by id: session[:user_id]
   end
 
+  def authenticate_admin_user!
+    fail Pundit::NotAuthorizedError unless current_user.has_role?(:admin)
+  end
+
   def page_not_found
     render 'pages/page_not_found'
   end
 
   def generate_admin
     admin = User.new login: 'admin'
-    admin.add_role :tournament
+    admin.add_role :admin
     admin.save
     admin.update_attribute(:pin, '1234')
     @current_user = admin

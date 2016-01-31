@@ -1,13 +1,13 @@
-class Admin::RoundsController < Admin::BaseController
+class Tournament::RoundsController < Tournament::BaseController
   def index
-    authorize Round, :admin_index?
+    authorize Round, :tournament_index?
     @rounds = Round.order(:position).all
   end
 
   def create
     authorize Round
     access_database.import_round!
-    redirect_to admin_rounds_path
+    redirect_to tournament_rounds_path
   end
 
   def show
@@ -32,7 +32,7 @@ class Admin::RoundsController < Admin::BaseController
         Acrobatic.where(dance_team_id: @dance_team.id, dance_round_id: @dance_round.id).each { |acrobatics| acrobatics.repeat!(@new_dance_round) }
       end
     end
-    redirect_to admin_rounds_path
+    redirect_to tournament_rounds_path
   end
 
   def update
@@ -42,7 +42,7 @@ class Admin::RoundsController < Admin::BaseController
       @judge = User.find judge_id
       @judge.add_role Round.judge_role_for(index), @round
     end
-    redirect_to admin_rounds_path
+    redirect_to tournament_rounds_path
   end
 
   def start
@@ -51,7 +51,7 @@ class Admin::RoundsController < Admin::BaseController
     if import_dance_round_from_round(@round)
       @round.start!
     end
-    redirect_to admin_rounds_path
+    redirect_to tournament_rounds_path
   end
 
   def close
@@ -68,7 +68,7 @@ class Admin::RoundsController < Admin::BaseController
         @anchor_name = ''
       end
     end
-    redirect_to admin_rounds_path(anchor: @anchor_name)
+    redirect_to tournament_rounds_path(anchor: @anchor_name)
   end
 
   def import_dance_round_from_round(round)
@@ -109,7 +109,7 @@ class Admin::RoundsController < Admin::BaseController
     @round = Round.find params[:id]
     authorize @round
     @round.destroy
-    redirect_to admin_rounds_path
+    redirect_to tournament_rounds_path
   end
 
   def download_ratings

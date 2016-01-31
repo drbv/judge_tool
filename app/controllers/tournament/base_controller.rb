@@ -1,6 +1,6 @@
 require "#{Rails.root}/lib/import/access_db_importer"
 
-class Admin::BaseController < ApplicationController
+class Tournament::BaseController < ApplicationController
 
   @@access_database = nil
 
@@ -9,6 +9,6 @@ class Admin::BaseController < ApplicationController
   end
 
   def access_database
-    Admin::BaseController.access_database
+    Tournament::BaseController.access_database
   end
 end

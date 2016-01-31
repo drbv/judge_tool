@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  ActiveAdmin.routes(self)
   get 'tournament/utilities/index'
   post 'tournament/utilities/db_upload'
   get 'tournament/utilities/judge_tool_reset'

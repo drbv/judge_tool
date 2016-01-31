@@ -54,5 +54,4 @@ class AcrobaticRating < ActiveRecord::Base
   def discussable_attributes
     %i[rating]
   end
-
 end

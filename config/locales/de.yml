@@ -1,4 +1,9 @@
 de:
+  active_admin:
+    batch_actions:
+      labels:
+        update: "ändere"
+
   dance_ratings:
     attributes:
       female: Dame

@@ -1,15 +1,15 @@
 require 'rails_helper'
 
 # Specs in this file have access to a helper object that includes
-# the Admin::BaseHelper. For example:
+# the Admin::UsersHelper. For example:
 #
-# describe Admin::BaseHelper do
+# describe Admin::UsersHelper do
 #   describe "string concat" do
 #     it "concats two strings with spaces" do
 #       expect(helper.concat_strings("this","that")).to eq("this that")
 #     end
 #   end
 # end
-RSpec.describe Admin::BaseHelper, type: :helper do
+RSpec.describe Tournament::UsersHelper, type: :helper do
   pending "add some examples to (or delete) #{__FILE__}"
 end

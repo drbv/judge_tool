@@ -1,4 +1,4 @@
-class Admin::UtilitiesController < Admin::BaseController
+class Tournament::UtilitiesController < Tournament::BaseController
   require 'uri'
   def index
   end
@@ -15,7 +15,7 @@ class Admin::UtilitiesController < Admin::BaseController
         fail()
       end
     end
-    redirect_to admin_utilities_index_path
+    redirect_to tournament_utilities_index_path
   end
 
   def judge_tool_reset
@@ -29,7 +29,7 @@ class Admin::UtilitiesController < Admin::BaseController
 </br> Passwort zurückgesetzt! user:admin pin:1234
 </br> <h1>Prozess oder Server neustarten</h1>"
 
-    redirect_to admin_utilities_index_path
+    redirect_to tournament_utilities_index_path
 
   end
 end

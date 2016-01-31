@@ -1,15 +1,15 @@
 class UserPolicy < ApplicationPolicy
 
   def index?
-    user && user.has_role?(:tournament)
+    user && user.has_role?(:admin)
   end
 
   def show?
-    user && user.has_role?(:tournament)
+    user && user.has_role?(:admin)
   end
 
   def create?
-    user && user.has_role?(:tournament) && User.count <= 1
+    user && user.has_role?(:admin) && User.count <= 1
   end
 
   class Scope < Scope

@@ -1,6 +1,6 @@
 %h1 Rundenverwaltung
 
-= link_to 'Runden importieren', admin_rounds_path, method: :post, class: 'btn btn-primary'
+= link_to 'Runden importieren', tournament_rounds_path, method: :post, class: 'btn btn-primary'
 
 %table.table.table-striped.table-hover
   %thead
@@ -16,16 +16,16 @@
         %td= round.dance_class && round.dance_class.name
         %td= l round.start_time, format: :time
         %td{"align" => "right"}
-          = link_to 'Runde beginnen', start_admin_round_path(round), method: :post, class: 'btn btn-success', data: { confirm: 'Runde wird gestartet - Tanzpaare dieser Runde werden importiert und Runde kann danach nicht mehr gelöscht und neu importiert werden.' } if policy(round).start?
-          = link_to 'Runde beenden', close_admin_round_path(round), method: :delete, class: 'btn btn-danger', data: { confirm: 'Ansprache / Pause beendet?' } if policy(round).close?
+          = link_to 'Runde beginnen', start_tournament_round_path(round), method: :post, class: 'btn btn-success', data: { confirm: 'Runde wird gestartet - Tanzpaare dieser Runde werden importiert und Runde kann danach nicht mehr gelöscht und neu importiert werden.' } if policy(round).start?
+          = link_to 'Runde beenden', close_tournament_round_path(round), method: :delete, class: 'btn btn-danger', data: { confirm: 'Ansprache / Pause beendet?' } if policy(round).close?
 
           -if !round.round_type.no_dance and (round.started? || round.closed?)
-            = link_to 'ratings', download_ratings_admin_round_path(round), class: 'btn btn-info'
-          = link_to 'delete', admin_round_path(round), method: :delete, class: 'btn btn-danger', data: {confirm: 'Sicher für Neuimport Löschen?'} if index + 1 == @rounds.size && policy(round).destroy?
+            = link_to 'ratings', download_ratings_tournament_round_path(round), class: 'btn btn-info'
+          = link_to 'delete', tournament_round_path(round), method: :delete, class: 'btn btn-danger', data: {confirm: 'Sicher für Neuimport Löschen?'} if index + 1 == @rounds.size && policy(round).destroy?
           - if policy(round).update?
-            = link_to 'Wertungsrichter', edit_admin_round_path(round), class: 'btn btn-primary'
+            = link_to 'Wertungsrichter', edit_tournament_round_path(round), class: 'btn btn-primary'
           - else
-            = link_to 'Wertungsrichter', admin_round_path(round), class: 'btn btn-primary' if policy(round).show?
+            = link_to 'Wertungsrichter', tournament_round_path(round), class: 'btn btn-primary' if policy(round).show?
         -if round.active?
           - round.dance_rounds.order(:position).each do |dance_round|
             %tr{class: "#{'success' if dance_round.active?} r#{round.id} collapse"}
@@ -39,7 +39,7 @@
                   -if dance_round.repeating? dance_round.dance_teams.first
                     .btn.btn-default.disabled wiederholung
                   -elsif !dance_round.repeated? dance_round.dance_teams.first
-                    = link_to 'Tanz wiederholen',  admin_repeat_dance_round_path(dance_round.id, dance_round.dance_teams.first.id), class: 'btn btn-warning'
+                    = link_to 'Tanz wiederholen',  tournament_repeat_dance_round_path(dance_round.id, dance_round.dance_teams.first.id), class: 'btn btn-warning'
                   -else
                     .btn.btn-default.disabled ...wird wiederholt
 
@@ -51,7 +51,7 @@
                     -if dance_round.repeating? dance_round.dance_teams.second
                       .btn.btn-default.disabled wiederholung
                     -elsif !dance_round.repeated? dance_round.dance_teams.second
-                      = link_to 'Tanz wiederholen',  admin_repeat_dance_round_path(dance_round.id, dance_round.dance_teams.second.id), class: 'btn btn-warning'
+                      = link_to 'Tanz wiederholen',  tournament_repeat_dance_round_path(dance_round.id, dance_round.dance_teams.second.id), class: 'btn btn-warning'
                     -else
                       .btn.btn-default.disabled ...wird wiederholt
 

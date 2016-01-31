@@ -38,9 +38,9 @@ module MS
       elected = true
       # find all lines from this round
 
-      @access_database[:Paare_Rundenqualifikation].select{|quali| quali[:RT_ID].to_i == round.rt_id}.each do |dance_round_line|
+      @access_database[:Paare_Rundenqualifikation].select { |quali| quali[:RT_ID].to_i == round.rt_id }.each do |dance_round_line|
         #check if the Team is has no roundnumber but is available.
-        if (dance_round_line[:Rundennummer].to_i <= 0   && dance_round_line[:Anwesend_Status].to_i == 1)
+        if (dance_round_line[:Rundennummer].to_i <= 0 && dance_round_line[:Anwesend_Status].to_i == 1)
           elected = false
         end
       end
@@ -58,7 +58,8 @@ module MS
           8.times do |k|
             next if team_data[:"Akro#{k+1}_#{round.round_type.acrobatics_from}"].blank?
             dance_round.acrobatics.build dance_team: team,
-                                         acrobatic_type: acrobatic_type(team_data[:"Akro#{k+1}_#{round.round_type.acrobatics_from}"], team_data[:"Wert#{k+1}_#{round.round_type.acrobatics_from}"])
+                                         acrobatic_type: acrobatic_type(team_data[:"Akro#{k+1}_#{round.round_type.acrobatics_from}"], team_data[:"Wert#{k+1}_#{round.round_type.acrobatics_from}"]),
+                                         position: k+1
           end
         end
         dance_round.save
@@ -69,7 +70,8 @@ module MS
       if @acrobatic_type = AcrobaticType.find_by(short_name: short_name, max_points: value.to_f.to_d.round(2))
         @acrobatic_type
       else
-        AcrobaticType.create short_name: short_name, max_points: value.to_f.to_d.round(2)
+        #TODO replace name with the real name, but this is not defined atm
+        AcrobaticType.create short_name: short_name, max_points: value.to_f.to_d.round(2), name: short_name
       end
     end
 

@@ -1,4 +1,4 @@
-class Admin::UsersController < Admin::BaseController
+class Tournament::UsersController < Tournament::BaseController
   def index
     authorize User
     @users = User.all
@@ -8,7 +8,7 @@ class Admin::UsersController < Admin::BaseController
   def create
     authorize User
     access_database.import_persons!
-    redirect_to admin_users_path
+    redirect_to tournament_users_path
   end
 
   end

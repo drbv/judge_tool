@@ -24,6 +24,7 @@ gem 'rolify'
 gem 'unicorn'
 gem 'rubocop'
 
+gem 'activeadmin'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 

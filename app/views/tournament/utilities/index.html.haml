@@ -1,0 +1,8 @@
+%h1 Datenbank Upload
+= form_tag tournament_utilities_db_upload_path, html: {class: "bg-info"},multipart: true do
+  = file_field_tag :database_file
+  = submit_tag "Import"
+%h1 Reset Judge Tool
+=link_to 'Reset', tournament_utilities_judge_tool_reset_path, class: 'btn btn-danger'
+- @value
+

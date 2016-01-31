@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150922210914) do
+ActiveRecord::Schema.define(version: 20151208230230) do
 
   create_table "acrobatic_rating_history_entries", force: :cascade do |t|
     t.integer  "rating",              default: 0
@@ -68,6 +68,21 @@ ActiveRecord::Schema.define(version: 20150922210914) do
   add_index "acrobatics", ["dance_round_id"], name: "index_acrobatics_on_dance_round_id"
   add_index "acrobatics", ["dance_team_id"], name: "index_acrobatics_on_dance_team_id"
   add_index "acrobatics", ["repeated_acrobatic_id"], name: "index_acrobatics_on_repeated_acrobatic_id"
+
+  create_table "active_admin_comments", force: :cascade do |t|
+    t.string   "namespace"
+    t.text     "body"
+    t.string   "resource_id",   null: false
+    t.string   "resource_type", null: false
+    t.integer  "author_id"
+    t.string   "author_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "active_admin_comments", ["author_type", "author_id"], name: "index_active_admin_comments_on_author_type_and_author_id"
+  add_index "active_admin_comments", ["namespace"], name: "index_active_admin_comments_on_namespace"
+  add_index "active_admin_comments", ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id"
 
   create_table "clubs", force: :cascade do |t|
     t.string   "name"

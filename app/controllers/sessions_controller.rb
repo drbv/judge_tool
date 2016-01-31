@@ -7,7 +7,7 @@ class SessionsController < ApplicationController
     @user = User.find_by login: params[:user][:login]
     if @user && @user.pin == params[:user][:pin]
       session[:user_id] = @user.id
-      redirect_to (@user.has_role?(:tournament) ? tournament_users_path : judges_dance_round_path)
+      redirect_to (@user.has_role?(:admin) ? tournament_users_path : judges_dance_round_path)
     else
       @user = User.new login: params[:user][:login]
       render :new
