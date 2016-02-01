@@ -99,7 +99,7 @@ ready = ->
   $("input.mistakes_inputs").on 'change', ->
     found_broken_mistake_input = false
     $("input.mistakes_inputs").each ->
-      if !(/^((T2|T10|T20|S2|S10|S20|U2|U10|U20|V5|P0|A20)(,(T2|T10|T20|S2|S10|S20|U2|U10|U20|V5|P0|A20))*)?$/).test(this.value)
+      if !(/^((T2|T10|T20|S2|S10|S20|U2|U10|U20|V5|P0)(,(T2|T10|T20|S2|S10|S20|U2|U10|U20|V5|P0))*)?$/).test(this.value)
         alert "Fehlereingabe prüfen"
         found_broken_mistake_input = true
     if(found_broken_mistake_input)

@@ -43,6 +43,10 @@ class DanceRoundPolicy < ApplicationPolicy
     end
   end
 
+  def is_admin?
+    user && user.has_role?(:admin)
+  end
+
   class Scope < Scope
     def resolve
       scope
