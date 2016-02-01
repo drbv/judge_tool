@@ -17,7 +17,7 @@
               = r.hidden_field :dance_team_id, value: dance_team.id, id: "dance_round_acrobatic_ratings_#{index}_dance_team_id"
               = r.hidden_field :acrobatic_id, value: acrobatic.id, id: "dance_round_acrobatic_ratings_#{index}_acrobatic_id"
               .enabled
-                = render partial: 'mistakes_bar',locals: {show: 'VUSP'}
+                = render partial: 'mistakes_bar', locals: {show: 'VUSP'}
                 = r.hidden_field :mistakes, autocomplete: 'off', id: "dance_round_acrobatic_ratings_#{index}_mistakes"
 
   = f.submit 'Wertung absenden', data: {confirm: 'Sicher alle Fehler angegeben und alle gesehenen Akrobatiken markiert?'}, class: 'btn btn-primary'

@@ -31,6 +31,7 @@ class AcrobaticRating < ActiveRecord::Base
 
   def points_without_punishment
     if full_mistakes.include?('P0')
+      # P0 = showed wrong acrobatic
       0
     else
       acrobatic.acrobatic_type.max_points * (1 - rating.to_d / 100)
