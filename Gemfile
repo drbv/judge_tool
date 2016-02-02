@@ -33,7 +33,7 @@ group :development, :test do
   gem 'byebug'
   gem 'cucumber-rails', require: false
   gem 'rspec-rails'
-  gem 'web-console', '~> 2.0'
+  gem 'rspec-activemodel-mocks'
   gem 'spring'
 end
 
@@ -41,6 +41,7 @@ group :development do
   gem 'capistrano-rvm'
   gem 'capistrano3-unicorn'
   gem 'capistrano-rails'
+  gem 'web-console'
 end
 
 gem 'mysql2'
