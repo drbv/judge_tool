@@ -16,4 +16,4 @@
               .enabled
                 = render partial: 'mistakes_bar', locals: {show: 'USVP'}
                 = r.hidden_field :mistakes, autocomplete: 'off', id: "dance_round_acrobatic_ratings_#{index}_mistakes"
-  = f.submit 'Wertung absenden', data: { confirm: 'Sicher alles gewertet?' }, class: 'btn btn-primary'
+  = f.submit 'Wertung absenden', data: { confirm: 'Sicher alles gewertet?' }, class: 'btn btn-primary show_loading_screen'
