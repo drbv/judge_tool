@@ -19,14 +19,6 @@ class DanceRoundPolicy < ApplicationPolicy
     user && user.has_role?(:observer, record.round) && record.ready?(user)
   end
 
-  def user_is_judge_for_this_round?
-    (user.has_role?(:observer, record.round) || user.has_role?(:dance_judge, record.round) || user.has_role?(:acrobatics_judge, record.round))
-  end
-
-  def user_has_not_rated_already?
-    !user.rated?(record)
-  end
-
   def permitted_dance_attributes
     if user.has_role?(:observer, record.round)
       %i[dance_team_id mistakes]
@@ -45,6 +37,16 @@ class DanceRoundPolicy < ApplicationPolicy
     else
       []
     end
+  end
+
+  private
+
+  def user_is_judge_for_this_round?
+    (user.has_role?(:observer, record.round) || user.has_role?(:dance_judge, record.round) || user.has_role?(:acrobatics_judge, record.round))
+  end
+
+  def user_has_not_rated_already?
+    !user.rated?(record)
   end
 
   class Scope < Scope

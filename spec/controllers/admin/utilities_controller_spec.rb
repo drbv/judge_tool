@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe UtilitiesController, type: :controller do
+RSpec.describe Admin::UtilitiesController, type: :controller do
 
   describe "GET #index" do
     it "returns http success" do
