@@ -17,6 +17,10 @@ Rails.application.routes.draw do
         get :download_ratings
       end
     end
+    scope ':dance_team_id' do
+      resources :dance_rounds, only: :show
+    end
+    resources :ratings, only: :update
   end
   namespace :judges do
     resource :dance_round do
@@ -31,9 +35,7 @@ Rails.application.routes.draw do
     end
   end
 
-  get '/admin/rounds/:dance_round_id/:dance_team_id', to: 'admin/rounds#repeat', as: :admin_repeat_dance_round
-  get '/admin/dance_rounds/:dance_round_id/:dance_team_id', to: 'admin/dance_rounds#show_dance_team', as: :admin_show_dance_team_dance_round
-  patch '/admin/dance_rounds/update_dance_round_rating/:id', to: 'admin/dance_rounds#update_dance_round_rating', as: :update_dance_round_rating
+  post '/admin/rounds/:id/:dance_team_id', to: 'admin/rounds#repeat', as: :admin_repeat_dance_round
 
   resource :round, only: %i(show)
   resource :dance_round, only: %i(show)

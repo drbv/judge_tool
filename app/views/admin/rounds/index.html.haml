@@ -39,10 +39,10 @@
                   -if dance_round.repeating? dance_round.dance_teams.first
                     .btn.btn-default.disabled wiederholung
                   -elsif !dance_round.repeated? dance_round.dance_teams.first
-                    = link_to 'Tanz wiederholen',  admin_repeat_dance_round_path(dance_round.id, dance_round.dance_teams.first.id), class: 'btn btn-warning'
+                    = link_to 'Tanz wiederholen',  admin_repeat_dance_round_path(dance_round.id, dance_round.dance_teams.first.id), method: :post, class: 'btn btn-warning'
                   -else
                     .btn.btn-default.disabled ...wird wiederholt
-                = link_to 'Details',  admin_show_dance_team_dance_round_path(dance_round.id, dance_round.dance_teams.first.id), class: 'btn btn-info'
+                = link_to 'Details',  admin_dance_round_path(dance_round.id, dance_round.dance_teams.first.id), class: 'btn btn-info'
 
 
             -if dance_round.dance_teams.size > 1
@@ -53,8 +53,8 @@
                     -if dance_round.repeating? dance_round.dance_teams.second
                       .btn.btn-default.disabled wiederholung
                     -elsif !dance_round.repeated? dance_round.dance_teams.second
-                      = link_to 'Tanz wiederholen',  admin_repeat_dance_round_path(dance_round.id, dance_round.dance_teams.second.id), class: 'btn btn-warning'
+                      = link_to 'Tanz wiederholen',  admin_repeat_dance_round_path(dance_round.id, dance_round.dance_teams.second.id), method: :post, class: 'btn btn-warning'
                     -else
                       .btn.btn-default.disabled ...wird wiederholt
-                  = link_to 'Details',  admin_show_dance_team_dance_round_path(dance_round.id, dance_round.dance_teams.first.id), class: 'btn btn-info'
+                  = link_to 'Details',  admin_dance_round_path(dance_round.id, dance_round.dance_teams.first.id), class: 'btn btn-info'
 
