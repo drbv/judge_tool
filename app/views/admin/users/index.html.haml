@@ -1,5 +1,5 @@
 %h1 Übersicht aller Teilnehmer
-= link_to 'Offizielle und Tänzer importieren', admin_users_path, method: :post, class: 'btn btn-primary' if policy(User).create?
+= link_to 'Offizielle und Tänzer importieren', admin_users_path, method: :post, class: 'btn btn-primary show_loading_screen' if policy(User).create?
 
 .row
   .col-sm-6
