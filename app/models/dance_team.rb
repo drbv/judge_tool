@@ -31,5 +31,6 @@ class DanceTeam < ActiveRecord::Base
       dance_round_ids = dance_rounds.where(round_id: connected_round_ids)
       final_result += dance_round_mappings.where(dance_round_id: dance_round_ids,dance_team: self.id,repeated: false).first.result
     end
+    final_result.round(2)
   end
 end
