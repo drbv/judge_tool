@@ -18,10 +18,18 @@ class DanceTeam < ActiveRecord::Base
     "#{startnumber} #{full_name}"
   end
 
-  def get_final_result(round_type)
-    round_ids = Round.where(round_type_id: round_type.id).pluck(:id)
-    dance_round_ids = DanceRound.where(round_id:round_ids).pluck(:id)
-    dance_round_mappings.where(dance_round_id: dance_round_ids).pluck(:result).sum
-  end
+  def get_final_result(round)
+    final_result = dance_round_mappings.where(dance_round_id: round.dance_rounds.pluck(:id),dance_team: id,repeated: false).first.result
 
+    if round.round_type.name == "Endrunde Akrobatik"
+      connected_round_ids= Round.where(round_type_id: RoundType.find_by_name('Endrunde Fußtechnik').id).pluck(:id)
+      dance_round_ids = dance_rounds.where(round_id: connected_round_ids)
+      final_result += dance_round_mappings.where(dance_round_id: dance_round_ids,dance_team: self.id,repeated: false).first.result
+
+    elsif round.round_type.name == "Endrunde Fußtechnik"
+      connected_round_ids= Round.where(round_type_id: RoundType.find_by_name('Endrunde Akrobatik').id).pluck(:id)
+      dance_round_ids = dance_rounds.where(round_id: connected_round_ids)
+      final_result += dance_round_mappings.where(dance_round_id: dance_round_ids,dance_team: self.id,repeated: false).first.result
+    end
+  end
 end
