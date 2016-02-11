@@ -223,7 +223,15 @@ class DanceRound < ActiveRecord::Base
 
   def average_ratings(results)
     if !results.empty?
-      (results.sum/results.count).to_f
+      if results.size > 3
+        # sort results
+        results.sort!
+        # remove last entry
+        result.pop
+        # remove first entry
+        result.shift
+      end
+      results.sum/results.count
     else
       0
     end
