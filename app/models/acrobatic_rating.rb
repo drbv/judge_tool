@@ -1,5 +1,6 @@
 class AcrobaticRating < ActiveRecord::Base
   include ReopenedAttributes
+  before_save :calc_result
   belongs_to :acrobatic
   belongs_to :dance_team
   has_one :dance_round, through: :acrobatic
@@ -22,11 +23,7 @@ class AcrobaticRating < ActiveRecord::Base
   end
 
   def points
-    if full_mistakes.include?('P0')
-      @points = 0 - punishment
-    else
-      @points ||= acrobatic.acrobatic_type.max_points * (1 - rating.to_d / 100) - punishment
-    end
+    result
   end
 
   def points_without_punishment
@@ -62,6 +59,15 @@ class AcrobaticRating < ActiveRecord::Base
 
   def discussable_attributes
     %i[rating]
+  end
+
+  def calc_result
+    @punishment = nil
+    if full_mistakes.include?('P0')
+      self.result = 0 - punishment
+    else
+      self.result = acrobatic.acrobatic_type.max_points * (1 - rating.to_d / 100) - punishment
+    end
   end
 
 end

@@ -132,14 +132,18 @@ class Judges::DanceRoundsController < Judges::BaseController
   def adjust_mistakes
     return unless params[:adjusted]
     params[:adjusted].each do |dance_team_id, updated_mistakes|
-      current_dance_round.dance_ratings.where(dance_team_id: dance_team_id).update_all mistakes: updated_mistakes
+      current_dance_round.dance_ratings.where(dance_team_id: dance_team_id).each do |rating|
+        rating.update_attributes mistakes: updated_mistakes
+      end
     end
   end
 
   def adjust_acrobatic_mistakes
     return unless params[:adjusted_acrobatic]
     params[:adjusted_acrobatic].each do |acrobatic_id, updated_mistakes|
-      current_dance_round.acrobatics.find(acrobatic_id).acrobatic_ratings.update_all mistakes: updated_mistakes
+      current_dance_round.acrobatics.find(acrobatic_id).acrobatic_ratings.each do |rating|
+        rating.update_attributes mistakes: updated_mistakes
+      end
     end
   end
 

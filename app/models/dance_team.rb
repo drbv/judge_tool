@@ -17,4 +17,11 @@ class DanceTeam < ActiveRecord::Base
   def name_with_startnumber
     "#{startnumber} #{full_name}"
   end
+
+  def get_final_result(round_type)
+    round_ids = Round.where(round_type_id: round_type.id).pluck(:id)
+    dance_round_ids = DanceRound.where(round_id:round_ids).pluck(:id)
+    dance_round_mappings.where(dance_round_id: dance_round_ids).pluck(:result).sum
+  end
+
 end

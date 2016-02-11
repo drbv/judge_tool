@@ -71,6 +71,20 @@ class Round < ActiveRecord::Base
     User.with_role :observer, self
   end
 
+  def acrobatic_factor
+    if !dance_class.nil?
+      @acrobatic_factor ||= calc_acrobatic_factor
+    end
+  end
+
+  def calc_acrobatic_factor
+    if ((dance_class.name == "B-Klasse" || dance_class.name ="A-Klasse") && round_type.is_final_round)
+      8
+    else
+      4
+    end
+  end
+
   def generate_rating_export_file
     file_name="T#{self.tournament_number}_RT#{self.rt_id}.txt"
     File.write(Rails.root.join('tmp', 'files', file_name), '')

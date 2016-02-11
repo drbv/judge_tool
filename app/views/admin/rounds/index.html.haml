@@ -31,7 +31,7 @@
             - dance_round.dance_teams.each_with_index do |dance_team, index|
               %tr{class: "#{'success' if dance_round.active?} r#{round.id} collapse"}
                 - if index == 0
-                  %td{:rowspan => dance_teams.size}= "#{dance_round.position } #{"\u2713" if dance_round.closed?}"
+                  %td{:rowspan => dance_round.dance_teams.count}= "#{dance_round.position } #{"\u2713" if dance_round.closed?}"
                 %td{:colspan => 2}= dance_team.full_name
                 %td{'align' => 'right'}
                   -if !dance_round.round.closed?
@@ -41,4 +41,4 @@
                       = link_to 'Tanz wiederholen',  admin_repeat_dance_round_path(dance_round.id, dance_team.id), method: :post, class: 'btn btn-warning'
                     -else
                       .btn.btn-default.disabled ...wird wiederholt
-                  = link_to 'Details',  admin_dance_round_path(dance_round.id, dance_team.id), class: 'btn btn-info'
+                  = link_to 'Details',  admin_dance_round_path(dance_team.id,dance_round.id), class: 'btn btn-info'

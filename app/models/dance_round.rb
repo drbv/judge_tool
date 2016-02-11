@@ -56,6 +56,7 @@ class DanceRound < ActiveRecord::Base
   def close!
     self.round.generate_rating_export_file
     update_attributes finished: true, finished_at: Time.now
+    calc_final_result
   end
 
   def start!
@@ -177,10 +178,54 @@ class DanceRound < ActiveRecord::Base
   def repeating?(team)
     dance_round_mappings.where(dance_team_id: team.id).first.repeating
   end
+
+  def calc_final_result
+    if self.closed?
+      dance_round_mappings.each do |mapping|
+        dance_team = mapping.dance_team
+        final_result = average_ratings(dance_rating_results(dance_team))
+        final_result += average_ratings(acrobatic_rating_results(dance_team))
+        final_result -= dance_round_rating_result(dance_team)
+        mapping.update_attribute(:result,final_result)
+      end
+      true
+    else
+     false
+    end
+  end
+
   private
 
   def observer_ratings(observer, dance_team)
     dance_ratings.where(user_id: observer.id, dance_team_id: dance_team.id)
   end
 
+  def dance_round_rating_result(dance_team)
+    average_ratings(dance_round_ratings.where(dance_team_id: dance_team.id).pluck(:result))
+  end
+
+  def dance_rating_results(dance_team)
+    dance_ratings.where(dance_team_id: dance_team.id, user_id: dance_judges.pluck(:id)).pluck(:result)
+  end
+
+  def acrobatic_rating_results(dance_team)
+    results = []
+    acrobatics_judges.each do |acrobatics_judge|
+      acrobatic_ratings_array = acrobatic_ratings.where(dance_team_id: dance_team.id, user_id: acrobatics_judge.id).pluck(:result)
+      if acrobatic_ratings_array.count > round.dance_class.acrobatic_divider
+        results << 0
+      else
+        results << [(acrobatic_ratings_array.sum / round.dance_class.acrobatic_divider * round.acrobatic_factor),0].max
+      end
+    end
+    results
+  end
+
+  def average_ratings(results)
+    if !results.empty?
+      (results.sum/results.count).to_f
+    else
+      0
+    end
+  end
 end
