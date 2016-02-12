@@ -2,7 +2,7 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 ready = ->
-  $(document).on 'click touchend', '.mistakes a', ->
+  $(document).on 'click touchend', '.admin_ns .mistakes a', ->
     $(this).addClass('active')
     parentDiv = $(this).parent().parent().parent()
     parentDiv.find('.mistakes-list').append("<div class='btn-danger'>" + $(this).text() + "</div>")
@@ -12,7 +12,7 @@ ready = ->
     newVal += $(this).text()
     hiddenField.val(newVal)
     false
-  $(document).on 'click touchend', '.mistakes-list div', ->
+  $(document).on 'click touchend', '.admin_ns .mistakes-list div', ->
     mistakeList = $(this).parent()
     mistakeList.children().addClass('count')
     $(this).removeClass 'count'
