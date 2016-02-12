@@ -14,8 +14,13 @@
         %td
         %td
       - round.dance_rounds.order(:position).each do |dance_round|
-        %tr{class: "#{'success' if dance_round.active?}"}
-          %td
-          %td= dance_round.position
-          %td= raw dance_round.dance_teams.map(&:full_name).join("<br/>#{'<br/>' if round.acrobatics_judges.size > 0}")
-          %td= raw dance_round.dance_teams.map { |dance_team| dance_round.points_per_judge(dance_team).map { |rating_type, points|  "#{rating_type}: #{points.map{|point| number_with_precision(point)}.join('; ')}" }.join('<br/>') if dance_round.closed? }.join('<br/>')
+        - dance_round.dance_teams.each_with_index do |dance_team, index|
+          %tr{class: "#{'success' if dance_round.active?}"}
+            - if index == 0
+              %td{:rowspan => dance_round.dance_teams.count}= "#{dance_round.position } #{"\u2713" if dance_round.closed?}"
+            %td= dance_team.startnumber
+            %td= dance_team.full_name
+            - if dance_round.repeated?(dance_team)
+              %td="repeated"
+            - else
+              %td=dance_team.get_final_result(round) unless dance_round.repeated?(dance_team)
