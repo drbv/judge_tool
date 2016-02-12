@@ -3,6 +3,7 @@ class User < ActiveRecord::Base
   belongs_to :club
   has_many :dance_ratings
   has_many :acrobatic_ratings
+  has_many :dance_round_ratings
   before_validation(on: :create) do
     generate_credentials
   end

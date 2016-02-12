@@ -1,0 +1,11 @@
+%h1
+  = @round.round_type.name
+  = @round.dance_class && @round.dance_class.name
+%h2= "Runde #{@dance_round.position}/#{@round.dance_rounds.count+1}"
+%h3= @dance_team.full_name
+=form_for @dance_round_rating ,url: admin_rating_path(@dance_round_rating) do |f|
+  .admin_ns
+    = render partial: 'judges/dance_rounds/mistakes_bar', locals: {show: 'A', mistakes: @dance_round_rating.mistakes}
+    = f.hidden_field :mistakes, autocomplete: 'off'
+    = f.submit 'Grobfehler ändern', class: 'btn btn-danger'
+= link_to 'zurück', admin_rounds_path, class: 'btn btn-primary'

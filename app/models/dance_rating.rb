@@ -1,6 +1,6 @@
 class DanceRating < ActiveRecord::Base
+  before_save :calc_result
   include ReopenedAttributes
-
   belongs_to :dance_team
   belongs_to :dance_round
   belongs_to :user
@@ -23,7 +23,7 @@ class DanceRating < ActiveRecord::Base
   end
 
   def points
-    @points ||= [(female + male + dance - punishment), 0].max
+    result
   end
 
   def final!
@@ -134,6 +134,11 @@ class DanceRating < ActiveRecord::Base
 
   def attributes_group(attribute)
     attributes_groups.keys.select {|key| attributes_groups[key].include? attribute.to_sym }.first
+  end
+
+  def calc_result
+    @punishment = nil
+    self.result = [(female + male + dance - punishment), 0].max
   end
 
 end

@@ -58,7 +58,8 @@ module MS
           8.times do |k|
             next if team_data[:"Akro#{k+1}_#{round.round_type.acrobatics_from}"].blank?
             dance_round.acrobatics.build dance_team: team,
-                                         acrobatic_type: acrobatic_type(team_data[:"Akro#{k+1}_#{round.round_type.acrobatics_from}"], team_data[:"Wert#{k+1}_#{round.round_type.acrobatics_from}"])
+                                         acrobatic_type: acrobatic_type(team_data[:"Akro#{k+1}_#{round.round_type.acrobatics_from}"], team_data[:"Wert#{k+1}_#{round.round_type.acrobatics_from}"]),
+                                         position: k+1
           end
         end
         dance_round.save
@@ -150,8 +151,23 @@ module MS
 
     def create_dance_class(dance_class)
       @dance_class = DanceClass.find_by name: dance_class[:Startklasse_text]
-      @dance_class = DanceClass.create name: dance_class[:Startklasse_text] unless @dance_class
+      @dance_class = DanceClass.create name: dance_class[:Startklasse_text] ,acrobatic_divider: get_acrobatic_divider(dance_class[:Startklasse_text]) unless @dance_class
       @dance_class
+    end
+
+    def get_acrobatic_divider(dance_class_name)
+      case dance_class_name
+        when "A-Klasse"
+           6
+        when "B-Klasse"
+           5
+        when "C-Klasse"
+           4
+        when "Juniorenklasse"
+           3
+        else
+           1
+      end
     end
 
     def import_officials

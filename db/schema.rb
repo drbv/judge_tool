@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150922210914) do
+ActiveRecord::Schema.define(version: 20160131160909) do
 
   create_table "acrobatic_rating_history_entries", force: :cascade do |t|
     t.integer  "rating",              default: 0
@@ -139,6 +139,19 @@ ActiveRecord::Schema.define(version: 20150922210914) do
   add_index "dance_round_mappings", ["dance_round_id", "dance_team_id", "user_id"], name: "observer_dance_team_mapping"
   add_index "dance_round_mappings", ["dance_round_id", "dance_team_id"], name: "dance_round_dance_team_mapping"
   add_index "dance_round_mappings", ["repeated_mapping_id"], name: "index_dance_round_mappings_on_repeated_mapping_id"
+
+  create_table "dance_round_ratings", force: :cascade do |t|
+    t.string   "mistakes"
+    t.integer  "dance_team_id"
+    t.integer  "dance_round_id"
+    t.integer  "user_id"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
+  add_index "dance_round_ratings", ["dance_round_id"], name: "index_dance_round_ratings_on_dance_round_id"
+  add_index "dance_round_ratings", ["dance_team_id"], name: "index_dance_round_ratings_on_dance_team_id"
+  add_index "dance_round_ratings", ["user_id"], name: "index_dance_round_ratings_on_user_id"
 
   create_table "dance_rounds", force: :cascade do |t|
     t.integer  "round_id"

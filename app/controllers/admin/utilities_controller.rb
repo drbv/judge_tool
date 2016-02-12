@@ -11,8 +11,9 @@ class Admin::UtilitiesController < Admin::BaseController
         File.open(Rails.root.join('tmp', uploaded_file.original_filename), 'wb') do |file|
           file.write(uploaded_file.read)
         end
+        flash[:success]="Datenbank importiert"
       else
-        fail()
+        flash[:danger]="Datenbank konnte nicht importiert werden </br> Es existiert eine Datenbank von einem anderen Turnier"
       end
     end
     redirect_to admin_utilities_index_path

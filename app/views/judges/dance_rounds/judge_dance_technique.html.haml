@@ -45,4 +45,4 @@
             .enabled
               = render partial: 'mistakes_bar', locals: {show: 'TSUV'}
               = r.hidden_field :mistakes, autocomplete: 'off'
-  = f.submit 'Wertung absenden', class: 'btn btn-primary', data: { confirm: 'Sicher alles gewertet?' }
+  = f.submit 'Wertung absenden', class: 'btn btn-primary show_loading_screen', data: { confirm: 'Sicher alles gewertet?' }

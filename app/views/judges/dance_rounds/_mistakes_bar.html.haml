@@ -24,4 +24,6 @@
       - %w(P0).each do |mistake|
         = link_to mistake, '#', class: 'btn-info'
   .mistakes-list
-
+    - if defined?(mistakes)
+      - mistakes.split(',').each do |mistake|
+        .btn-danger= mistake

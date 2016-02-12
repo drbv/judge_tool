@@ -1,4 +1,8 @@
 class DanceRoundPolicy < ApplicationPolicy
+  def admin_show?
+    user && user.has_role?(:admin)
+  end
+
   def show?
     user && user.has_role?(:judge)
   end
