@@ -35,7 +35,7 @@ Rails.application.routes.draw do
     end
   end
 
-  post '/admin/rounds/:id/:dance_team_id', to: 'admin/rounds#repeat', as: :admin_repeat_dance_round
+  post '/admin/rounds/:dance_round_id/:dance_team_id', to: 'admin/rounds#repeat', as: :admin_repeat_dance_round
 
   resource :round, only: %i(show)
   resource :dance_round, only: %i(show)
