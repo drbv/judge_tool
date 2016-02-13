@@ -43,4 +43,3 @@ group :development do
   gem 'capistrano-rails'
 end
 
-gem 'mysql2'
