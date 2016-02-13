@@ -8,7 +8,7 @@ set :deploy_to, '/home/judge/'
 set :branch, 'master'
 set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/secrets.yml', 'db/judge_tool.sqlite3')
 
-set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle')
+set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', 'tmp/files', 'tmp')
 set :unicorn_config_path, "#{shared_path}/config/unicorn.rb"
 set :unicorn_pid, "#{current_path}/tmp/pids/unicorn.pid"
 
