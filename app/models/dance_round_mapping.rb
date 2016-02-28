@@ -14,7 +14,7 @@ class DanceRoundMapping < ActiveRecord::Base
 
   def new_mapping
     @last_dance_round = dance_round.round.dance_rounds.order(:position).last
-    if @last_dance_round.dance_teams.count >= dance_round.round.max_teams
+    if @last_dance_round.dance_teams.count >= dance_round.round.max_teams || @last_dance_round.closed?
       @last_dance_round = dance_round.round.dance_rounds.create position: (@last_dance_round.position + 1)
     end
     @last_dance_round.dance_round_mappings.create dance_team: dance_team, repeating: true
