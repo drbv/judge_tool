@@ -227,9 +227,9 @@ class DanceRound < ActiveRecord::Base
         # sort results
         results.sort!
         # remove last entry
-        result.pop
+        results.pop
         # remove first entry
-        result.shift
+        results.shift
       end
       results.sum/results.count
     else
