@@ -4,7 +4,6 @@ lock '3.4.0'
 set :application, 'judge-tool'
 set :repo_url, 'git@github.com:drbv/judge_tool.git'
 set :deploy_to, '/home/judge/'
-#set :branch, 'import_export_module'
 set :branch, 'master'
 set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/secrets.yml', 'db/judge_tool.sqlite3')
 
