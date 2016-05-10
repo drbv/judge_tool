@@ -5,6 +5,7 @@ class Admin::RatingsController < ApplicationController
     authorize @dance_round_rating
     if @dance_round_rating.update_attributes(dance_round_rating_params)
       flash[:success] = 'Abzüge gespeichert'
+      reload_beamer
       if @dance_round_rating.dance_round.calc_final_result
         flash[:success] = 'Ergebnis Tanzrunde neu berechnet'
       else

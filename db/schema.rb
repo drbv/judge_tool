@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160131160909) do
+ActiveRecord::Schema.define(version: 20160210221322) do
 
   create_table "acrobatic_rating_history_entries", force: :cascade do |t|
     t.integer  "rating",              default: 0
@@ -26,15 +26,16 @@ ActiveRecord::Schema.define(version: 20160131160909) do
   add_index "acrobatic_rating_history_entries", ["acrobatic_rating_id"], name: "index_acrobatic_rating_history_entries_on_acrobatic_rating_id"
 
   create_table "acrobatic_ratings", force: :cascade do |t|
-    t.integer  "rating",        default: 0
+    t.integer  "rating",                                default: 0
     t.string   "mistakes"
-    t.boolean  "danced",        default: false
+    t.boolean  "danced",                                default: false
     t.integer  "acrobatic_id"
     t.integer  "dance_team_id"
     t.integer  "user_id"
-    t.integer  "reopened",      default: 0
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
+    t.integer  "reopened",                              default: 0
+    t.datetime "created_at",                                            null: false
+    t.datetime "updated_at",                                            null: false
+    t.decimal  "result",        precision: 6, scale: 4, default: 0.0
   end
 
   add_index "acrobatic_ratings", ["acrobatic_id"], name: "index_acrobatic_ratings_on_acrobatic_id"
@@ -79,8 +80,9 @@ ActiveRecord::Schema.define(version: 20160131160909) do
   create_table "dance_classes", force: :cascade do |t|
     t.string   "name"
     t.integer  "safety_level"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+    t.integer  "acrobatic_divider", default: 1
   end
 
   create_table "dance_rating_history_entries", force: :cascade do |t|
@@ -102,21 +104,22 @@ ActiveRecord::Schema.define(version: 20160131160909) do
   add_index "dance_rating_history_entries", ["dance_rating_id"], name: "index_dance_rating_history_entries_on_dance_rating_id"
 
   create_table "dance_ratings", force: :cascade do |t|
-    t.integer  "female_base_rating",       default: 0
-    t.integer  "female_turn_rating",       default: 0
-    t.integer  "male_base_rating",         default: 0
-    t.integer  "male_turn_rating",         default: 0
-    t.integer  "choreo_rating",            default: 0
-    t.integer  "dance_figure_rating",      default: 0
-    t.integer  "team_presentation_rating", default: 0
+    t.integer  "female_base_rating",                               default: 0
+    t.integer  "female_turn_rating",                               default: 0
+    t.integer  "male_base_rating",                                 default: 0
+    t.integer  "male_turn_rating",                                 default: 0
+    t.integer  "choreo_rating",                                    default: 0
+    t.integer  "dance_figure_rating",                              default: 0
+    t.integer  "team_presentation_rating",                         default: 0
     t.string   "mistakes"
-    t.integer  "reopened",                 default: 0
+    t.integer  "reopened",                                         default: 0
     t.integer  "dance_team_id"
     t.integer  "dance_round_id"
     t.integer  "user_id"
-    t.boolean  "final",                    default: false
-    t.datetime "created_at",                               null: false
-    t.datetime "updated_at",                               null: false
+    t.boolean  "final",                                            default: false
+    t.datetime "created_at",                                                       null: false
+    t.datetime "updated_at",                                                       null: false
+    t.decimal  "result",                   precision: 6, scale: 4, default: 0.0
   end
 
   add_index "dance_ratings", ["dance_round_id", "dance_team_id"], name: "find_by_round_and_dance_team"
@@ -131,9 +134,10 @@ ActiveRecord::Schema.define(version: 20160131160909) do
     t.integer "dance_round_id"
     t.integer "dance_team_id"
     t.integer "user_id"
-    t.boolean "repeated",            default: false
-    t.boolean "repeating",           default: false
+    t.boolean "repeated",                                    default: false
+    t.boolean "repeating",                                   default: false
     t.integer "repeated_mapping_id"
+    t.decimal "result",              precision: 6, scale: 4, default: 0.0
   end
 
   add_index "dance_round_mappings", ["dance_round_id", "dance_team_id", "user_id"], name: "observer_dance_team_mapping"
@@ -145,8 +149,9 @@ ActiveRecord::Schema.define(version: 20160131160909) do
     t.integer  "dance_team_id"
     t.integer  "dance_round_id"
     t.integer  "user_id"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.datetime "created_at",                                           null: false
+    t.datetime "updated_at",                                           null: false
+    t.decimal  "result",         precision: 6, scale: 4, default: 0.0
   end
 
   add_index "dance_round_ratings", ["dance_round_id"], name: "index_dance_round_ratings_on_dance_round_id"

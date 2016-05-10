@@ -1,8 +1,4 @@
 - if current_dance_round
+  #judge_status_via_websocket
   #judge_statusses
-    %div
-      = render partial: '/judges/dance_rounds/observer_statusses'
-    %div
-      = render partial: '/judges/dance_rounds/dance_judge_statusses'
-    %div
-      = render partial: '/judges/dance_rounds/acrobatic_judge_statusses'
+    = render partial: '/judges/dance_rounds/judge_statusses_all'

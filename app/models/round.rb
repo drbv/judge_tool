@@ -3,6 +3,7 @@ class Round < ActiveRecord::Base
   belongs_to :round_type
   belongs_to :dance_class
   has_many :dance_rounds
+  has_many :dance_teams, through: :dance_rounds
   require 'uri'
 
   def self.active
@@ -69,6 +70,10 @@ class Round < ActiveRecord::Base
 
   def observers
     User.with_role :observer, self
+  end
+
+  def dance_round_position(dance_team)
+    dance_rounds.select {|dance_round| dance_round.dance_teams.include?(dance_team)}.last.position
   end
 
   def acrobatic_factor

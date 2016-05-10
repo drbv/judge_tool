@@ -3,6 +3,6 @@
   - current_dance_round.dance_teams.each_with_index do |dance_team,index|
     .dance_team
       %h2= "#{dance_team.startnumber}   #{dance_team.full_name}"
-      %h3= dance_team.club.name
-  = render partial: '/judges/dance_rounds/waiting_table'
+      %h2= dance_team.get_final_result(@round)
+      %h3{class: 'red-font'}="#{'TSO malus' if dance_team.tso_malus?(@round)}"
 #beamer_reload
