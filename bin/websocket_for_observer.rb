@@ -12,18 +12,18 @@ EM.run do
         # ausgelöst, wenn Verbindung zum Client hergestellt
         client_websocket.onopen do
             client_id = client_websocket.object_id
-            puts 'Client ' + client_id.to_s + ' connected'
+            #puts 'Client ' + client_id.to_s + ' connected'
  
             if !@clients.include? client_id
                 @clients[client_id] = client_websocket
             end
-            puts @clients.size 
+            #puts @clients.size 
         end
  
         # ausgelöst, wenn Nachricht vom Client empfangen
         client_websocket.onmessage do |message|
             client_id = client_websocket.object_id
-            puts 'From Client ' + client_id.to_s + ' received message: ' + message
+            #puts 'From Client ' + client_id.to_s + ' received message: ' + message
 
             @clients.each do |client_id, client_ws|
                 client_ws.send(message.to_s)
@@ -33,7 +33,7 @@ EM.run do
         # ausgelöst, wenn Verbindung zum Client geschlossen
         client_websocket.onclose do
             client_id = client_websocket.object_id
-            puts 'Client ' + client_id.to_s + ' disconnected'
+            #puts 'Client ' + client_id.to_s + ' disconnected'
  
             if @clients.include? client_id
                 @clients.delete client_id

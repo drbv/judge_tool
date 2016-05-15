@@ -51,6 +51,7 @@ class Admin::RoundsController < Admin::BaseController
     authorize @round
     if import_dance_round_from_round(@round)
       @round.start!
+      reload_beamer
     end
     redirect_to admin_rounds_path
   end
@@ -65,6 +66,7 @@ class Admin::RoundsController < Admin::BaseController
       @anchor_name = "r#{Round.next.id}"
       if import_dance_round_from_round(Round.next)
         Round.next.start!
+        reload_beamer
       else
         @anchor_name = ''
       end
