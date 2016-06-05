@@ -23,6 +23,18 @@ class DanceRound < ActiveRecord::Base
     end
   end
 
+  def is_ko_winner?(dance_team)
+      dance_round_results = []
+      dance_teams.each do |dance_team|
+        dance_round_results << dance_team.get_final_result(round)
+      end
+      if dance_round_results.max == dance_team.get_final_result(round)
+        true
+      else
+        false
+      end
+  end
+
   def self.next
     where(started: false, finished: false).order(:position).first
   end
@@ -61,7 +73,7 @@ class DanceRound < ActiveRecord::Base
 
   def start!
     update_attributes started: true, started_at: Time.now
-    observers=round.observers.sort_by{|observer| observer.licence}
+    observers=round.observers.sort_by{|observer| observer.licence}.reverse
     if observers.count == 1
       dance_round_mappings.each {|mapping| mapping.update_attribute :user_id, observers.first.id}
     else
