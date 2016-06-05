@@ -4,7 +4,7 @@
       %h1= dance_round_header
   .row
     - current_dance_round.dance_teams.each do |dance_team|
-      .dance_team{class: "#{'col-md-'}#{(12/current_dance_round.dance_teams.size).to_i}"}
+      .dance_team_beamer{class: "#{'col-md-'}#{(12/current_dance_round.dance_teams.size).to_i}"}
         .info_normal=dance_team.startnumber
         - dance_team.dancers.each do|dancer|
           .info_normal=dancer.full_name
