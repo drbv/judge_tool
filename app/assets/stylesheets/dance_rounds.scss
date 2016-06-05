@@ -9,20 +9,20 @@
 
 
 .beamer {
-  .dance_team_beamer {
+  .dance-team-beamer {
     padding-bottom: 3em;
     padding-top: 1em;
     text-align: center;
-    .info_normal {
+    .info-normal {
       font-size: 3em;
       color: green;
     }
-    .info_big {
-      font-size: 6em
+    .info-big {
+      font-size: 6em;
       color: yellow;
     }
 
-    .info_small {
+    .info-small {
       font-size: 2em;
       color: blue;
     }
@@ -42,6 +42,7 @@
     font-size: 4em;
     margin-bottom: 0.5em;
     margin-top: 0.5em;
+    color: yellow;
 
 
   }

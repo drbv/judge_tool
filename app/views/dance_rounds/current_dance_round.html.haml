@@ -4,11 +4,11 @@
       %h1= dance_round_header
   .row
     - current_dance_round.dance_teams.each do |dance_team|
-      .dance_team_beamer{class: "#{'col-md-'}#{(12/current_dance_round.dance_teams.size).to_i}"}
-        .info_normal=dance_team.startnumber
+      .dance-team-beamer{class: "#{'col-md-'}#{(12/current_dance_round.dance_teams.size).to_i}"}
+        .info-normal=dance_team.startnumber
         - dance_team.dancers.each do|dancer|
-          .info_normal=dancer.full_name
-        .info_small=dance_team.club.name
+          .info-normal=dancer.full_name
+        .info-small=dance_team.club.name
   .row
     .col-md-12.center
       =render partial: '/judges/dance_rounds/waiting_table'

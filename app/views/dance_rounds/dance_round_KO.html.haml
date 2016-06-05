@@ -4,16 +4,16 @@
       %h1= dance_round_header
   .row
     - current_dance_round.dance_teams.each do |dance_team|
-      .dance_team_beamer{class: "#{'col-md-'}#{(12/current_dance_round.dance_teams.size).to_i}"}
+      .dance-team-beamer{class: "#{'col-md-'}#{(12/current_dance_round.dance_teams.size).to_i}"}
         .info_normal=dance_team.startnumber
         - dance_team.dancers.each do|dancer|
-          .info_normal=dancer.full_name
+          .info-normal=dancer.full_name
         -if  current_dance_round.is_ko_winner?(dance_team)
-          .info_big
+          .info-big
             =image_tag 'winner_left.png', width: '96', height: '96'
             = dance_team.get_final_result(@round)
             =image_tag 'winner_right.png', width: '96', height: '96'
         -else
-          .info_big= dance_team.get_final_result(@round)
-        .info_normal{class: 'red-font'}="#{'TSO malus' if dance_team.tso_malus?(@round)}"
+          .info-big= dance_team.get_final_result(@round)
+        .info-normal{class: 'red-font'}="#{'TSO malus' if dance_team.tso_malus?(@round)}"
 #beamer_reload
