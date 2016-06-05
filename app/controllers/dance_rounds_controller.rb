@@ -13,7 +13,7 @@ class DanceRoundsController < ApplicationController
             if @round.round_type.name.include? 'KO'
               render :dance_round_KO, layout: "beamer"
             else
-              @dance_team_result_list = @round.dance_teams.select{|dance_team| dance_team.has_danced?(@round)}.sort_by {|dance_team| dance_team.get_final_result(@round)}.reverse
+              @dance_team_result_list = @round.dance_teams.uniq.select{|dance_team| dance_team.has_danced?(@round)}.sort_by {|dance_team| dance_team.get_final_result(@round)}.reverse
               render :round_results, layout: "beamer"
             end
 
