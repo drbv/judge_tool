@@ -22,14 +22,26 @@
 }
 
 .beamer {
-
   .dance_team {
-    font-size: 3em;
-    padding-bottom: 1em;
+    padding-bottom: 3em;
     padding-top: 1em;
+    text-align: center;
+    .info_normal {
+      font-size: 3em;
+    }
+    .info_big {
+      font-size: 6em;
+    }
+    .info_small {
+      font-size: 2em;
+    }
   }
   .red-font {
     color: red;
+  }
+
+  .center {
+    text-align: center;
   }
 
   h1 {
@@ -38,9 +50,20 @@
     font-size: 4em;
     margin-bottom: 0.5em;
     margin-top: 0.5em;
-  }
-  table {
-    font-size: 2em;
+
 
   }
+  .middle {
+    padding-top: 20%;
+  }
+
+  table {
+    font-size: 2em
+
+  }
+  .active_dance_team {
+    font-weight: bold;
+    text-align: center;
+  }
+
 }
