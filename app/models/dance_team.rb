@@ -19,6 +19,33 @@ class DanceTeam < ActiveRecord::Base
   end
 
   def get_final_result(round)
+    @final_results ||= {}
+    @final_results[round.id] ||= calculate_final_result(round)
+  end
+
+  def tso_malus?(round)
+    tso_dance_round_id = dance_rounds.where(round_id: round.id).order(:position).last
+    drating = dance_round_ratings.where(dance_round_id: tso_dance_round_id).first
+    if drating && drating.result > 0
+      true
+    else
+      false
+    end
+  end
+
+  def has_danced?(round)
+
+    if dance_ratings
+      dance_ratings.where(dance_round_id: round.dance_rounds.pluck(:id)).pluck(:final).size > 0
+    else
+      false
+    end
+
+  end
+
+  private
+
+  def calculate_final_result(round)
     final_result = dance_round_mappings.where(dance_round_id: round.dance_rounds.pluck(:id),dance_team: id,repeated: false).first.result
 
     if round.round_type.name == "Endrunde Akrobatik"

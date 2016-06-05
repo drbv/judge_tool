@@ -1,4 +1,50 @@
 ready = ->
+  if document.getElementById('judge_status_via_websocket')
+    ws = new WebSocket("ws://"+location.hostname+":8080");
+    ws.onopen = ->
+      console.log("Connection is opened");
+
+    ws.onclose = ->
+      console.log("Connection is closed");
+
+
+    ws.onmessage = (msg) ->
+      console.log msg
+      if msg.data == 'reload'
+        window.location.href = window.location.href
+      else
+        $("#judge_statusses").html msg.data;
+
+  if document.getElementById('observer_ws_channel')
+    ws = new WebSocket("ws://"+location.hostname+":8081");
+    ws.onopen = ->
+      console.log("Connection is opened");
+
+    ws.onclose = ->
+      console.log("Connection is closed");
+
+
+    ws.onmessage = (msg) ->
+      console.log msg
+      if msg.data == 'reload'
+        window.location.href = window.location.href
+
+  if document.getElementById('beamer_reload')
+    ws = new WebSocket("ws://"+location.hostname+":8082");
+    ws.onopen = ->
+      console.log("Connection is opened");
+
+    ws.onclose = ->
+      console.log("Connection is closed");
+
+
+    ws.onmessage = (msg) ->
+      console.log msg
+      if msg.data == 'reload'
+        window.location.href = window.location.href
+
+
+
   startReload = ->
     $.get window.location.pathname, (data) ->
       # TODO: Figure out, why comparision fails always
@@ -7,7 +53,7 @@ ready = ->
       if $('#main').html() != data
         $('#main').html(data)
 
-  if document.getElementById('reload')
+  if document.getElementById('reload') && !document.getElementById('judge_status_via_websocket')
       intervalHandler = setInterval startReload, Math.floor(Math.random() * 5000 + 1000)
 
   checkJudgeStatus = (judgeStatus) ->
@@ -28,13 +74,6 @@ ready = ->
           window.location.href = window.location.href
 
 
-  $('#judge_statusses .alert.alert-danger, #judge_statusses .alert.alert-info').each (loading) ->
-    judgeStatus = $(this)
-    setTimeout(
-      ->
-        checkJudgeStatus(judgeStatus)
-      , 1000
-    )
   calculateOverallRating = ->
     $('#dance_teams > div.dance_team').each ->
       $danceTeam = $(this)

@@ -23,6 +23,8 @@ gem 'rolify'
 gem 'unicorn'
 
 gem 'rubocop'
+gem 'em-websocket'
+gem 'websocket-client-simple'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
@@ -34,7 +36,7 @@ group :development, :test do
   gem 'cucumber-rails', require: false
   gem 'rspec-rails'
   gem 'web-console', '~> 2.0'
-  gem 'spring'
+  #gem 'spring'
 end
 
 group :development do

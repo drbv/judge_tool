@@ -7,9 +7,6 @@
     = csrf_meta_tags
   %body
     .container{style: 'padding:0px'}
-      %nav.navbar.navbar-inverse{role: 'navigation'}
-        = render :partial => '/shared/navigation'
-      #breadcrumbs
       #flash
         - flash.each do |flash_type, message|
           %div{class: "alert alert-#{flash_type}"}= raw message
@@ -23,6 +20,7 @@
           Sie haben Javascript nicht aktiviert. Es existieren Funktionalitäten auf Domain Transfer Agent, die Javascript
           benötigen. Sie können also aktuell nicht den vollen Funktionsumfang von Domain Transfer Agent benutzen. Bitte
           aktivieren Sie Javascript in Ihren Browsereinstellungen.
-    .container
+    .container-fluid
       #main
         = yield
+        =link_to 'back', root_path

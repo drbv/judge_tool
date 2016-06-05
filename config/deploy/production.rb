@@ -1,1 +1,4 @@
-server '192.168.1.32', user: 'judge', roles: %w{app web db}
+set :branch, ask('branch to deploy ( default master )', 'master', echo: true)
+set :server_ip, ask('Give the server ip', nil, echo: true)
+set :user, ask('user ( default judge )', 'judge', echo: true)
+server fetch(:server_ip),user: fetch(:user), roles: %{web app db}

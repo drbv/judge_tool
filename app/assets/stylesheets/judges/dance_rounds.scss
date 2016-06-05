@@ -117,17 +117,6 @@ h3 {
 #judge_statusses {
   div {
     display: inline-block;
-    .alert-danger, .alert-info {
-      padding-left: 4em;
-      background-repeat: no-repeat;
-      background-position: left 9px center;
-    }
-    .alert.alert-danger {
-      background-image: url(image_path("icon-loader-danger.gif"));
-    }
-    .alert.alert-info {
-      background-image: url(image_path("icon-loader-info.gif"));
-    }
   }
 }
 

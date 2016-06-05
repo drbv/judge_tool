@@ -62,4 +62,8 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def reload_beamer
+    $beamer.send 'reload'
+  end
+
 end

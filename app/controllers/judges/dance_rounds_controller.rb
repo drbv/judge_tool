@@ -18,7 +18,11 @@ class Judges::DanceRoundsController < Judges::BaseController
     unless @dance_round.nil?
       authorize @dance_round
       @dance_round.start!
+
     end
+    reload_judges
+    reload_beamer
+    reload_observer
     redirect_to judges_dance_round_path
   end
 
@@ -32,7 +36,21 @@ class Judges::DanceRoundsController < Judges::BaseController
       current_dance_round.save!
       acrobatics.each(&:save!)
     end
+    refresh_judge_statusse
+    reload_observer
     judge_dance_teams
+  end
+
+  def refresh_judge_statusse
+    $judge_status_bars.send render_to_string partial: '/judges/dance_rounds/judge_statusses_all'
+  end
+
+  def reload_judges
+    $judge_status_bars.send 'reload'
+  end
+
+  def reload_observer
+    $observer.send 'reload'
   end
 
   def accept
@@ -43,7 +61,9 @@ class Judges::DanceRoundsController < Judges::BaseController
       reopen!
     else
       close!
+      reload_beamer
     end
+    refresh_judge_statusse
     redirect_to judges_dance_round_path
   end
 
@@ -126,6 +146,7 @@ class Judges::DanceRoundsController < Judges::BaseController
   def close_dance_round!
     if current_dance_round.dance_ratings.where(user_id: current_round.observers.map(&:id)).all?(&:final?)
       current_dance_round.close!
+      reload_judges
     end
   end
 
