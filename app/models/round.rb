@@ -39,7 +39,7 @@ class Round < ActiveRecord::Base
 
   def start!
     self.started = true
-    self.start_time = Time.now
+    #self.start_time = Time.now
     save
   end
 
