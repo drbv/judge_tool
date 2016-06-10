@@ -3,7 +3,7 @@ require 'eventmachine'
 require 'em-websocket'
 # Liste mit allen Clients, die verbunden sind
 @clients = {}
- 
+Process.daemon 
 # EventMachine-Loop starten
 EM.run do
     # WebSocket-Server erstellen 
