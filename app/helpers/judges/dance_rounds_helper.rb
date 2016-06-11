@@ -6,7 +6,7 @@ module Judges::DanceRoundsHelper
     else
       if dance_round.dance_ratings.where(dance_team_id: team.id).any? { |rating| rating.diff_to_big?(attr) }
         html_classes << 'danger'
-        html_classes << 'markable' if current_dance_round.ready?(current_user)
+        #html_classes << 'markable' if current_dance_round.ready?(current_user)
       end
     end
     !html_classes.empty? && html_classes.join(' ')
@@ -16,7 +16,7 @@ module Judges::DanceRoundsHelper
     html_classes = []
     if acrobatic.acrobatic_ratings.where(dance_team_id: team.id).any? { |rating| rating.diff_to_big? }
       html_classes << 'danger'
-      html_classes << 'markable' if current_dance_round.ready?(current_user)
+      #html_classes << 'markable' if current_dance_round.ready?(current_user)
     end
     !html_classes.empty? && html_classes.join(' ')
   end
