@@ -83,7 +83,7 @@ class Round < ActiveRecord::Base
   end
 
   def calc_acrobatic_factor
-    if ((dance_class.name == "B-Klasse" || dance_class.name ="A-Klasse") && round_type.is_final_round)
+    if ((dance_class.name == "B-Klasse" || dance_class.name == "A-Klasse") && round_type.is_final_round)
       8
     else
       4
