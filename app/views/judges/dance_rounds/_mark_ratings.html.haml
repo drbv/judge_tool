@@ -14,7 +14,11 @@
                   %td= raw current_user.short_name
                   - if current_dance_round.ready?(current_user)
                     %td mean
-                - %i(female male dance full_mistakes).each do |attr|
+                - if $show_all_values_to_observer
+                  - obs_values = %i(female male dance full_mistakes)
+                - else
+                  - obs_values = %i(full_mistakes)
+                - obs_values.each do |attr|
                   %tr{class: dance_rating_class(attr, current_dance_round, dance_team)}
                     %td= t "dance_ratings.attributes.#{attr}"
                     - current_dance_round.dance_judges.each do |judge|
@@ -37,7 +41,7 @@
         .row
           - current_user.dance_teams(current_dance_round).each do |dance_team|
             %div{class: "col-sm-#{12 / current_dance_round.dance_teams.count}"}
-              %h3=dance_team.name_with_startnumber
+              %h3="Akrobatik"
               %table.table.table-striped
                 %tbody
                   %tr
@@ -48,18 +52,19 @@
                     - if current_dance_round.ready?(current_user)
                       %td mean
                   - current_dance_round.acrobatics.where(dance_team_id: dance_team.id).each do |acrobatic|
-                    %tr{class: acrobatic_rating_class(acrobatic, dance_team)}
-                      %td= acrobatic.acrobatic_type.short_name
-                      - current_dance_round.acrobatics_judges.each do |judge|
-                        - rating = @acrobatic_ratings[judge.id][acrobatic.id]
-                        %td
-                          = rating.rating if rating
-                          = hidden_field_tag "reopen_acrobatic[#{judge.id}][#{acrobatic.id}", '0'
-                      %td -
-                      - if current_dance_round.ready?(current_user)
-                        %td
+                    - if $show_all_values_to_observer
+                      %tr{class: acrobatic_rating_class(acrobatic, dance_team)}
+                        %td= acrobatic.acrobatic_type.short_name
+                        - current_dance_round.acrobatics_judges.each do |judge|
+                          - rating = @acrobatic_ratings[judge.id][acrobatic.id]
+                          %td
+                            = rating.rating if rating
+                            = hidden_field_tag "reopen_acrobatic[#{judge.id}][#{acrobatic.id}", '0'
+                        %td -
+                        - if current_dance_round.ready?(current_user)
+                          %td
                     %tr{class: "#{'danger' if acrobatic.mistake_diff_to_big(dance_team)}"}
-                      %td
+                      %td= acrobatic.acrobatic_type.short_name
                       - current_dance_round.acrobatics_judges.each do |judge|
                         %td= @acrobatic_ratings[judge.id][acrobatic.id].full_mistakes if @acrobatic_ratings[judge.id][acrobatic.id]
                       %td=  @acrobatic_ratings[current_user.id][acrobatic.id].full_mistakes if @acrobatic_ratings[current_user.id][acrobatic.id]

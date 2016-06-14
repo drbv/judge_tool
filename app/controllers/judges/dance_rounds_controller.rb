@@ -57,7 +57,7 @@ class Judges::DanceRoundsController < Judges::BaseController
     authorize current_dance_round
     adjust_mistakes
     adjust_acrobatic_mistakes
-    if reopen?
+    if $show_all_values_to_observer && reopen?
       reopen!
     else
       close!

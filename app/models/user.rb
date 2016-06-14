@@ -27,7 +27,7 @@ class User < ActiveRecord::Base
   end
 
   def name_in_two_letters
-    ""
+    "#{first_name.first}#{last_name[0..1]}"
   end
 
   def judge?(round)
