@@ -5,7 +5,7 @@
   .row
     - current_dance_round.dance_teams.each do |dance_team|
       .dance-team-beamer{class: "#{'col-md-'}#{(12/current_dance_round.dance_teams.size).to_i}"}
-        .info_normal=dance_team.startnumber
+        .info-normal=dance_team.startnumber
         - dance_team.dancers.each do|dancer|
           .info-normal=dancer.full_name
         -if  current_dance_round.is_ko_winner?(dance_team)
