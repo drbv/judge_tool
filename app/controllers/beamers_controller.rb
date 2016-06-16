@@ -9,34 +9,54 @@ class BeamersController < ApplicationController
         if current_round.round_type.no_dance? || current_round.judges.empty?
           render :round_name, layout: "beamer"
         else
-          if current_dance_round && (beamer.screen=="current_team" || beamer.screen=="auto")
-            render :current_dance_round, layout: "beamer"
-          else
-            @dance_round = DanceRound.where(round_id: current_round.id, started: true, finished: true).order(:position).last
-            if @dance_round
-              @round = @dance_round.round
-              if beamer.screen=="current_team"
-                render :current_dance_round, layout: "beamer"
+          if beamer.screen=="moderator"
+            @round=current_round
+              if @round.dance_rounds.where(round_id: @round.id, started: false, finished: false).count == @round.dance_rounds.count
+                @dance_round = DanceRound.where(round_id: @round.id).order(:position).first
+                #Es wurde nch keine Tanzrunde gestartet
+              elsif current_dance_round
+                @dance_round = current_dance_round
+                # ich bin in einer tanzrunde
 
-              elsif @round.round_type.name.include? 'KO'
-                render :dance_round_KO, layout: "beamer"
               else
-                @dance_team_result_list = @round.dance_teams.uniq.select{|dance_team| dance_team.has_danced?(@round)}.sort_by {|dance_team| dance_team.get_final_result(@round)}.reverse
-                render :round_results, layout: "beamer"
+                # Ich bin nach einer Tanzrunde
+                @dance_round = DanceRound.where(round_id: @round.id, started: true, finished: true).order(:position).last
+
               end
 
+            @next_dance_round = DanceRound.where(round_id: @round.id, position: @dance_round.position+1).first
+
+            render :moderator_current, layout: "beamer"
+
+
+        elsif current_dance_round && (beamer.screen=="current_team" || beamer.screen=="auto")
+          render :current_dance_round, layout: "beamer"
+        else
+          @dance_round = DanceRound.where(round_id: current_round.id, started: true, finished: true).order(:position).last
+          if @dance_round
+            @round = @dance_round.round
+            if beamer.screen=="current_team"
+              render :current_dance_round, layout: "beamer"
+
+            elsif @round.round_type.name.include? 'KO'
+              render :dance_round_KO, layout: "beamer"
             else
-              if current_round.dance_rounds.count > 0
-                @round=current_round
-                @dance_round=@round.dance_rounds.first
-                @dance_team_result_list = @round.dance_teams.uniq.select{|dance_team| dance_team.has_danced?(@round)}.sort_by {|dance_team| dance_team.get_final_result(@round)}.reverse
-                render :round_results, layout: "beamer"
-              else
-                render :round_name, layout: "beamer"
-              end
-
+              @dance_team_result_list = @round.dance_teams.uniq.select{|dance_team| dance_team.has_danced?(@round)}.sort_by {|dance_team| dance_team.get_final_result(@round)}.reverse
+              render :round_results, layout: "beamer"
             end
+
+          else
+            if current_round.dance_rounds.count > 0
+              @round=current_round
+              @dance_round=@round.dance_rounds.first
+              @dance_team_result_list = @round.dance_teams.uniq.select{|dance_team| dance_team.has_danced?(@round)}.sort_by {|dance_team| dance_team.get_final_result(@round)}.reverse
+              render :round_results, layout: "beamer"
+            else
+              render :round_name, layout: "beamer"
+            end
+
           end
+        end
         end
       else
         if Round.where(closed: true).count > 0
