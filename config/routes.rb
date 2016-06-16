@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
 
+
+  get 'beamers/refresh_all'
+
   get 'admin/utilities/index'
   post 'admin/utilities/db_upload'
   get 'admin/utilities/judge_tool_reset'
@@ -40,6 +43,7 @@ Rails.application.routes.draw do
   resource :round, only: %i(show)
   resource :dance_round, only: %i(show)
   resources :pages, only: :show
+  resources :beamers, only: %i(destroy create show index update edit)
   get 'login', to: 'sessions#new'
   post 'login', to: 'sessions#create'
   delete 'logout', to: 'sessions#destroy'

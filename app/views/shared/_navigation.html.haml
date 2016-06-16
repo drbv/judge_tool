@@ -4,7 +4,7 @@
     %span.icon-bar
     %span.icon-bar
     %span.icon-bar
-  =link_to 'EWS 2.1.1', root_path, class: 'navbar-brand active'
+  =link_to 'EWS 2.2.0', root_path, class: 'navbar-brand active'
 
 .collapse.navbar-collapse#navbar{'aria-expanded' => 'false'}
   %ul.nav.navbar-nav
@@ -13,6 +13,8 @@
     %li{class: "#{'active' if params[:controller] == 'judges/dance_rounds'}" }= link_to 'Werten', judges_dance_round_path if policy(DanceRound).show?
     %li{class: "#{'active' if controller_name == 'utilities'}"}= link_to 'Tools', admin_utilities_index_path if policy(User).index?
     %li{class: "#{'active' if params[:controller] == 'dance_rounds'}"}= link_to 'Tanzrunde', dance_round_path
+    %li{class: "#{'active' if controller_name == 'beamers'}"}= link_to 'Beamer', beamers_path if policy(Beamer).index?
+
 
 
   %ul.nav.navbar-nav.navbar-right

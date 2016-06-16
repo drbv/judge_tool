@@ -1,0 +1,9 @@
+%h1= dance_round_header
+= render partial: '/judges/dance_rounds/waiting_table'
+.row.dance_team
+  - @dance_round.dance_teams.each do |dance_team|
+    .col-sm6
+      %p= dance_team.full_name
+      %p= " Startnummer: #{dance_team.startnumber}"
+      %h2=dance_team.get_final_result(current_dance_round.round)
+#beamer_reload
