@@ -93,3 +93,22 @@ Nach der letzten Tanzrunde einer Runde werden die Werte in Access zurückgeschri
 => Das Turnierprogramm berechnet Plätze usw... wie gehabt
 2.) die Berechnung der Plätze/Punkte findet im judge_tool statt und es wird nur das Endergebnis eines Paares zurück geschrieben
 
+#Installiren unter Ubuntu
+
+getestet mit Ubuntu 14.04 Server
+1. Ubutu Server installieren
+2. ubuntu update & upgrade ausführen
+3. Bennutzer für ews anlegen
+4. Benötigte Pakete installieren:
+        apt-get install mdbtools-dev mdbtools nodejs cifs-utils git
+5. nginx installieren
+        apt-get install nginx  
+6. Als Benutzer rvm installieren
+        \curl -sSL https://get.rvm.io | bash -s stable --ruby
+7. gem bundler installieren
+        gem install bundler
+8. files für capistrano orbereiten
+9. capistrano deploy
+10. Assets precompilen
+
+
