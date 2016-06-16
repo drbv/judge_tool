@@ -3,7 +3,7 @@ lock '3.4.0'
 
 set :application, 'judge-tool'
 set :repo_url, 'git@github.com:drbv/judge_tool.git'
-set :deploy_to, ask('deploy driecrory', '/home/judge', echo: true)  
+set :deploy_to, ask('deploy driecrory', '/home/ews', echo: true)
 set :branch, 'master'
 set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/secrets.yml', 'db/judge_tool.sqlite3')
 
@@ -13,15 +13,17 @@ set :unicorn_pid, "#{current_path}/tmp/pids/unicorn.pid"
 
 namespace :deploy do
 
-  after :publishing, 'unicorn:restart'
-
-  after :restart, :clear_cache do
-    on roles(:web), in: :groups, limit: 3, wait: 10 do
-      # Here we can do anything such as:
-      # within release_path do
-      #   execute :rake, 'cache:clear'
-      # end
+  task :restart do
+    invoke 'unicorn:stop'
+    on roles(fetch(:unicorn_roles)) do
+      200.times do
+        break unless test("[ -e #{fetch :unicorn_pid}]")
+        sleep 0.1
+      end
     end
-  end
+    invoke 'unicorn:start'
+  end  
+
+  after :published, :restart
 
 end
