@@ -1,0 +1,43 @@
+.beamer
+  .row
+    .col-md-12
+      %h1= dance_round_header
+  .row
+    - @dance_round.dance_teams.each do |dance_team|
+      .dance-team-beamer{class: "#{'col-md-'}#{(12/current_dance_round.dance_teams.size).to_i}"}
+        .info-normal=dance_team.startnumber
+        - dance_team.dancers.each do|dancer|
+          .info-normal=dancer.full_name
+        .info-normal=dance_team.club.name
+        -if  current_dance_round.is_ko_winner?(dance_team) && current_dance_round.closed?
+          .info-big
+            =image_tag 'winner_left.png', width: '96', height: '96'
+            = dance_team.get_final_result(@round)
+            =image_tag 'winner_right.png', width: '96', height: '96'
+        -else
+          .info-big= dance_team.get_final_result(@round)
+        .info-normal{class: 'red-font'}="#{'TSO malus' if dance_team.tso_malus?(@round)}"
+  .row
+    .col-md-12.center
+      =render partial: '/judges/dance_rounds/waiting_table'
+  - if @next_dance_round
+    .row
+      .col-md-12
+        %h1= dance_round_header(@next_dance_round)
+    .row
+      - @next_dance_round.dance_teams.each do |dance_team|
+        .dance-team-beamer{class: "#{'col-md-'}#{(12/@next_dance_round.dance_teams.size).to_i}"}
+          .info-normal=dance_team.startnumber
+          - dance_team.dancers.each do|dancer|
+            .info-normal=dancer.full_name
+          .info-normal=dance_team.club.name
+          -if  @next_dance_round.is_ko_winner?(dance_team) && @next_dance_round.closed?
+            .info-big
+              =image_tag 'winner_left.png', width: '96', height: '96'
+              = dance_team.get_final_result(@round)
+              =image_tag 'winner_right.png', width: '96', height: '96'
+          -else
+            .info-big= dance_team.get_final_result(@round)
+          .info-normal{class: 'red-font'}="#{'TSO malus' if dance_team.tso_malus?(@round)}"
+#beamer_reload
+

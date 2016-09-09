@@ -1,0 +1,2 @@
+sudo mount -t cifs "//<IP>/DRBV-V14" /home/ews/current/tmp/files -o user=<win-user>,uid=<ubuntu-user>,gid=<ubuntu-user>
+#ln -s /home/ews/current/tmp/files/*.mdb /home/ews/current/tmp

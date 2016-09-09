@@ -1,0 +1,29 @@
+= link_to 'New Beamer', beamers_path, method: :post, class: 'btn btn-primary' if policy(Beamer).create?
+= link_to 'refresh all Beamer',beamers_refresh_all_path,class: 'btn btn-primary'
+%table.table.table-striped.table-hover
+  %thead
+    %tr
+      %th Beamer
+      %th Anzeige
+      %th
+      %th
+  %tbody
+  - Beamer.all.each do |beamer|
+    %tr
+      %td="Beamer #{beamer.id}"
+      %td=beamer.screen
+      %td
+        =link_to 'Result',beamer_path(:id => beamer.id,:screen => 'current_result' ), method: :put, class: 'btn btn-info'
+        =link_to 'Team',beamer_path(:id => beamer.id,:screen => 'current_team' ), method: :put, class: 'btn btn-primary'
+        =link_to 'Moderator',beamer_path(:id => beamer.id,:screen => 'moderator' ), method: :put, class: 'btn btn-danger'
+        =link_to 'Auto',beamer_path(:id => beamer.id,:screen => 'auto' ), method: :put, class: 'btn btn-success'
+
+
+
+      %td
+        =link_to 'show', beamer_path(beamer), method: :get, class: 'btn btn-success'
+        =link_to 'delete', beamer_path(beamer), method: :delete, class: 'btn btn-danger' if policy(Beamer).delete?
+        =link_to 'remote', edit_beamer_path(beamer), method: :get, class: 'btn btn-warning'
+
+
+
