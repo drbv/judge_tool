@@ -31,6 +31,9 @@ class ApplicationController < ActionController::Base
     admin.save
     admin.update_attribute(:pin, '1234')
     @current_user = admin
+    beamer = User.new login: 'beamer'
+    beamer.add_role :beamers
+    beamer.save
     session[:user_id] = admin.id
   end
 

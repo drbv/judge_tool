@@ -1,0 +1,2 @@
+module BeamerHelper
+end

@@ -1,0 +1,9 @@
+.remote_control
+  %h1 Remote Controler für Beamer #{@beamer.id}
+  %h1 Status: #{@beamer.screen}
+  =link_to ' Result',beamer_path(:id => @beamer.id,:screen => 'current_result' ), method: :put, class: 'btn btn-info'
+  =link_to ' Dance-Team',beamer_path(:id => @beamer.id,:screen => 'current_team' ), method: :put, class: 'btn btn-primary'
+  =link_to 'Moderator',beamer_path(:id => @beamer.id,:screen => 'moderator' ), method: :put, class: 'btn btn-danger'
+  =link_to 'Automode',beamer_path(:id => @beamer.id,:screen => 'auto' ), method: :put, class: 'btn btn-success'
+
+=link_to 'back',beamers_path, method: :get, class: 'btn btn-primary'
