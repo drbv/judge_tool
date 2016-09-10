@@ -9,7 +9,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def create?
-    user && user.has_role?(:admin) && User.count <= 1
+    user && user.has_role?(:admin) && User.count <= 2
   end
 
   class Scope < Scope
