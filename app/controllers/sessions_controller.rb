@@ -4,7 +4,7 @@ class SessionsController < ApplicationController
   end
 
   def create
-    @user = User.find_by login: params[:user][:login]
+    @user = User.find_by login: params[:user][:login].downcase
     if @user && @user.pin == params[:user][:pin]
       session[:user_id] = @user.id
       case
