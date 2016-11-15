@@ -96,7 +96,8 @@ module MS
                             position: round[:Rundenreihenfolge].to_i,
                             rt_id: round[:RT_ID],
                             tournament_number: @access_database[:Turnier].first[:Turnier_Nummer],
-                            max_teams: round[:Anz_Paare].to_i
+                            max_teams: round[:Anz_Paare].to_i,
+                            acrobatic_divider: get_acrobatic_divider(round[:Startklasse], round[:Runde])
       @access_database[:Startklasse_Wertungsrichter].select { |mapping| mapping[:Startklasse] == round[:Startklasse] }.each do |judge_role|
         next if judge_role[:WR_function] == 'X'
         next if judge_role[:WR_function] == 'Ak' and @round.has_no_acrobatics?
@@ -152,19 +153,28 @@ module MS
 
     def create_dance_class(dance_class)
       @dance_class = DanceClass.find_by name: dance_class[:Startklasse_text]
-      @dance_class = DanceClass.create name: dance_class[:Startklasse_text] ,acrobatic_divider: get_acrobatic_divider(dance_class[:Startklasse_text]) unless @dance_class
+      @dance_class = DanceClass.create name: dance_class[:Startklasse_text] unless @dance_class
       @dance_class
     end
 
-    def get_acrobatic_divider(dance_class_name)
+    def get_acrobatic_divider(dance_class_name, round_type)
       case dance_class_name
-        when "A-Klasse"
-           6
-        when "B-Klasse"
-           5
-        when "C-Klasse"
+        when "RR_A"
+
+           if round_type.include?('End_r') || round_type.include?('KO_r') || round_type.include?('Stich_r_1pl')
+             6
+           else
+             5
+           end
+        when "RR_B"
+          if round_type.include?('End_r') || round_type.include?('KO_r') || round_type.include?('Stich_r_1pl')
+            6
+          else
+            5
+          end
+        when "RR_C"
            4
-        when "Juniorenklasse"
+        when "RR_J"
            3
         else
            1
@@ -196,6 +206,7 @@ module MS
         end
         judge.add_role judge_data[:WR_Azubi] == '0' ? :judge : :trainee
         judge.save
+        judge.update_attribute(:pin,judge_data[:WR_kenn]) unless judge_data[:WR_kenn].blank?
       end
     end
 

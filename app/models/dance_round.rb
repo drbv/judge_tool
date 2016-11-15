@@ -224,10 +224,10 @@ class DanceRound < ActiveRecord::Base
     results = []
     acrobatics_judges.each do |acrobatics_judge|
       acrobatic_ratings_array = acrobatic_ratings.where(dance_team_id: dance_team.id, user_id: acrobatics_judge.id).pluck(:result)
-      if acrobatic_ratings_array.count > round.dance_class.acrobatic_divider
+      if acrobatic_ratings_array.count > round.acrobatic_divider
         results << 0
       else
-        results << [(acrobatic_ratings_array.sum / round.dance_class.acrobatic_divider * round.acrobatic_factor),0].max
+        results << [(acrobatic_ratings_array.sum / round.acrobatic_divider * round.acrobatic_factor),0].max
       end
     end
     results
