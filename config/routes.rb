@@ -5,6 +5,8 @@ Rails.application.routes.draw do
 
   get 'admin/utilities/index'
   post 'admin/utilities/db_upload'
+  post 'admin/utilities/set_ews1_endpoint'
+  get 'admin/utilities/check_ews1_endpoint'
   get 'admin/utilities/judge_tool_reset'
 
 
