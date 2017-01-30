@@ -7,7 +7,12 @@ class Admin::UsersController < Admin::BaseController
 
   def create
     authorize User
+    begin
     access_database.import_persons!
+    rescue Exception=>e
+      flash[:danger]="#{e}"
+
+    end
     redirect_to admin_users_path
   end
 

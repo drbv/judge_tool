@@ -6,17 +6,19 @@ module MS
     end
 
     def initialize
+      download_database
       guess_database
-      raise FileNotFound.new("File at #{@path} not found!") unless File.exists?(@path)
       @access_database = Mdb.open @path
     end
 
     def import_persons!
+      download_database
       import_officials
       import_dance_teams
     end
 
     def import_round!
+      download_database
       @round_created=false
       @access_database['Rundentab'].sort_by { |round| round[:Rundenreihenfolge].to_i }.each do |round|
         next if !@round_created && find_round(round)
@@ -48,6 +50,7 @@ module MS
     end
 
     def import_dance_rounds!(round)
+      download_database
       observers = round.observers.order(:licence).to_a
       dance_rounds(round).each do |dance_round_no, dance_teams|
         dance_round = round.dance_rounds.build position: dance_round_no
@@ -182,6 +185,7 @@ module MS
     end
 
     def import_officials
+      download_database
       update_admin
       create_judges
     end
@@ -211,6 +215,7 @@ module MS
     end
 
     def import_dance_teams
+      download_database
       puts "Starting to import dance_teams\n"
       dance_teams = []
       @access_database[:Paare].each do |team|
@@ -238,8 +243,42 @@ module MS
                 puts "Load mdb from: #{mdb_files_in_tmp.first}"
                 mdb_files_in_tmp.first
               else
-                fail 'Datenbank nicht gefunden'
+                raise FileNotFound.new("Datenbankfile wurde nicht gefunden")
               end
     end
+
+    def download_database
+      if $ews1_use_auto_upload
+        tdaten = "T#{$ews1_tournamentnr}_TDaten.mdb"
+        uri = URI("http://#{$ews1_ip}:8080/#{tdaten}")
+        req = Net::HTTP::Get.new(uri)
+        req.basic_auth 'ews2', $ews1_password
+        begin
+
+          Net::HTTP.start(uri.hostname, uri.port) {|http|
+
+              http.request req do |response|
+                old_file=Dir.glob(Rails.root.join('tmp', '*.mdb')).first
+                if old_file.blank? || old_file.to_s.include?($ews1_tournamentnr)
+                  File.open(Rails.root.join('tmp', tdaten), 'wb') do |file|
+                    response.read_body do |chunk|
+                      file.write chunk
+                    end
+                  end
+                end
+
+              end
+            }
+
+
+        rescue
+          raise FileNotFound.new("Verbindung zum EWS1 nicht vorhanden")
+          return false
+        end
+      end
+    else
+      return false
+      end
   end
+
 end
