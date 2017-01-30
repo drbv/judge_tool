@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160614211425) do
+ActiveRecord::Schema.define(version: 20161107214454) do
 
   create_table "acrobatic_rating_history_entries", force: :cascade do |t|
     t.integer  "rating",              default: 0
@@ -86,9 +86,8 @@ ActiveRecord::Schema.define(version: 20160614211425) do
   create_table "dance_classes", force: :cascade do |t|
     t.string   "name"
     t.integer  "safety_level"
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
-    t.integer  "acrobatic_divider", default: 1
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
   end
 
   create_table "dance_rating_history_entries", force: :cascade do |t|
@@ -239,6 +238,7 @@ ActiveRecord::Schema.define(version: 20160614211425) do
     t.datetime "updated_at",                        null: false
     t.integer  "rt_id"
     t.integer  "tournament_number"
+    t.integer  "acrobatic_divider", default: 1
   end
 
   add_index "rounds", ["dance_class_id"], name: "index_rounds_on_dance_class_id"
