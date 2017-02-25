@@ -275,10 +275,9 @@ module MS
           raise FileNotFound.new("Verbindung zum EWS1 nicht vorhanden")
           return false
         end
-      end
     else
       return false
       end
-  end
-
+    end
+    end
 end
