@@ -1,1 +1,0 @@
-$observer = WebSocket::Client::Simple.connect 'ws://localhost:8081'
