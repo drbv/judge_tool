@@ -1,0 +1,10 @@
+version: '2.0'
+services:
+  ews2: 
+    image: sparzentny/ews2:stable
+    ports:
+      - "80:80"
+      - "8081:8081"
+      - "8082:8082"
+      - "8083:8083"
+    restart: always
