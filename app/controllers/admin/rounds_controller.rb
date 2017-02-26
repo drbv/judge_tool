@@ -6,6 +6,7 @@ class Admin::RoundsController < Admin::BaseController
 
   def create
     authorize Round
+    Round.destroy_all(:started => false)
     access_database.import_round!
     flash[:success]="Runden importiert"
     redirect_to admin_rounds_path
