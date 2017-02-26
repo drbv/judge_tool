@@ -23,5 +23,5 @@ RUN mv /root/config/nginx_server.conf /etc/nginx/nginx.conf
 RUN RAILS_ENV=production bundle exec rake db:migrate
 RUN RAILS_ENV=production bundle exec rake assets:precompile
 RUN apt-get autoremove -y build-essential 
-EXPOSE 80 8081 8082 8083
+EXPOSE 80 8080 8081 8082
 CMD /root/config/start_all.sh
