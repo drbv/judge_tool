@@ -64,9 +64,9 @@ class AcrobaticRating < ActiveRecord::Base
   def calc_result
     @punishment = nil
     if full_mistakes.include?('P0')
-      self.result = 0 - punishment
+      self.result = 0
     else
-      self.result = acrobatic.acrobatic_type.max_points * (1 - rating.to_d / 100) - punishment
+      self.result = acrobatic.acrobatic_type.max_points * (1 - rating.to_d / 100)
     end
   end
 

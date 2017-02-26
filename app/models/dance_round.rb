@@ -223,11 +223,17 @@ class DanceRound < ActiveRecord::Base
   def acrobatic_rating_results(dance_team)
     results = []
     acrobatics_judges.each do |acrobatics_judge|
-      acrobatic_ratings_array = acrobatic_ratings.where(dance_team_id: dance_team.id, user_id: acrobatics_judge.id).pluck(:result)
+      all_acrobatic_ratings=acrobatic_ratings.where(dance_team_id: dance_team.id, user_id: acrobatics_judge.id)
+      punishment=0
+      all_acrobatic_ratings.each do |rating|
+        punishment+=rating.punishment
+      end
+      acrobatic_ratings_array = all_acrobatic_ratings.pluck(:result)
+
       if acrobatic_ratings_array.count > round.acrobatic_divider
         results << 0
       else
-        results << [(acrobatic_ratings_array.sum / round.acrobatic_divider * round.acrobatic_factor),0].max
+        results << [(acrobatic_ratings_array.sum / round.acrobatic_divider * round.acrobatic_factor - punishment),0].max
       end
     end
     results
