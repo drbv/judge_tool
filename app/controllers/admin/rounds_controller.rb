@@ -88,7 +88,7 @@ class Admin::RoundsController < Admin::BaseController
               return false
             end
           else
-            flash[:danger]="Die Runde enthält keine Paare, wenn das beabsichtigt ist muss die Runde aus dem Zeitplan gelöscht werden"
+            flash[:danger]="Runde enthält keine Paare, Rundenauslosung prüfen oder Runde löschen"
             return false
           end
         else
