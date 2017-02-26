@@ -10,19 +10,19 @@
 = form_tag admin_utilities_set_ews1_endpoint_path do
   = label_tag :ip ,"EWS1 Server IP: "
   %br
-  = text_field_tag :ip, $ews1_ip
+  = text_field_tag :ip, @ip
   %br
   = label_tag :password , "Passwort:"
   %br
-  = text_field_tag :password, $ews1_password
+  = text_field_tag :password, @password
   %br
   = label_tag :tournamentnr , "Turniernr:"
   %br
-  = text_field_tag :tournamentnr, $ews1_tournamentnr
+  = text_field_tag :tournamentnr, @tournamentnumber
   %br
   %br
   = label_tag :use_auto_upload, "auto upload benutzen"
-  = check_box_tag :use_auto_upload, 'true', $ews1_use_auto_upload
+  = check_box_tag :use_auto_upload, 'true', @use_auto_upload
   %br
   %br
   = submit_tag  "update & check", class: 'btn btn-success show_loading_screen'

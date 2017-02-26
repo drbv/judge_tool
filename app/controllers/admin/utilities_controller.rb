@@ -2,6 +2,10 @@ class Admin::UtilitiesController < Admin::BaseController
   require 'uri'
   require 'net/http'
   def index
+    @ip=$ews1_ip
+    @password=$ews1_password
+    @tournamentnumber=$ews1_tournamentnr
+    @use_auto_upload=$ews1_use_auto_upload
   end
 
   def db_upload
