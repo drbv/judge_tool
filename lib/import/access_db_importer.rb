@@ -6,19 +6,18 @@ module MS
     end
 
     def initialize
-      download_database
+      if download_database
       guess_database
       @access_database = Mdb.open @path
+        end
     end
 
     def import_persons!
-      download_database
       import_officials
       import_dance_teams
     end
 
     def import_round!
-      download_database
       @round_created=false
       @access_database['Rundentab'].sort_by { |round| round[:Rundenreihenfolge].to_i }.each do |round|
         next if !@round_created && find_round(round)
@@ -50,7 +49,6 @@ module MS
     end
 
     def import_dance_rounds!(round)
-      download_database
       observers = round.observers.order(:licence).to_a
       dance_rounds(round).each do |dance_round_no, dance_teams|
         dance_round = round.dance_rounds.build position: dance_round_no
@@ -185,7 +183,6 @@ module MS
     end
 
     def import_officials
-      download_database
       update_admin
       create_judges
     end
@@ -215,7 +212,6 @@ module MS
     end
 
     def import_dance_teams
-      download_database
       puts "Starting to import dance_teams\n"
       dance_teams = []
       @access_database[:Paare].each do |team|
@@ -247,7 +243,7 @@ module MS
               end
     end
 
-    def download_database
+    def download_database2
       if $ews1_use_auto_upload
         tdaten = "T#{$ews1_tournamentnr}_TDaten.mdb"
         uri = URI("http://#{$ews1_ip}:8080/#{tdaten}")
@@ -256,28 +252,40 @@ module MS
         begin
 
           Net::HTTP.start(uri.hostname, uri.port) {|http|
-
+            old_file=Dir.glob(Rails.root.join('tmp', '*.mdb')).first
               http.request req do |response|
-                old_file=Dir.glob(Rails.root.join('tmp', '*.mdb')).first
+
                 if old_file.blank? || old_file.to_s.include?($ews1_tournamentnr)
                   File.open(Rails.root.join('tmp', tdaten), 'wb') do |file|
                     response.read_body do |chunk|
                       file.write chunk
                     end
                   end
+                else
+                  raise StandardError.new("kein oder Datenbank von anderem Turnier vorhanden")
                 end
 
               end
             }
 
 
-        rescue
-          raise FileNotFound.new("Verbindung zum EWS1 nicht vorhanden")
+        rescue => ex
+          raise FileNotFound.new("Es gab ein Problem bei der Verbdinung zum ews1 -- #{ex.message}")
           return false
         end
     else
       return false
       end
     end
+    def download_database
+      if $ews1_use_auto_upload
+
+        tdaten = "T#{$ews1_tournamentnr}_TDaten.mdb"
+        system "cd #{Rails.root.join 'tmp'} && curl http://ews2:#{$ews1_password}@#{$ews1_ip}:8080/#{tdaten} > #{tdaten}"
+
+
+      end
+    end
+
     end
 end
