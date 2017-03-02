@@ -6,13 +6,11 @@ class Admin::RoundsController < Admin::BaseController
 
   def create
     authorize Round
-    if User.all.count > 3
-      Round.destroy_all(:started => false)
+    Round.destroy_all(:started => false)
+    if update_database
       access_database.import_round!
       flash[:success]="Runden importiert"
-    else
-      flash[:danger]="Es existieren noch keine Benutzer"
-    end
+      end
     redirect_to admin_rounds_path
   end
 
@@ -113,7 +111,6 @@ class Admin::RoundsController < Admin::BaseController
         access_database.download_database
         return true
     rescue => ex
-      logger.error ex.message
       flash[:danger]="Fehler beim importieren <br>Error: #{ex.message}"
       return false
     end
