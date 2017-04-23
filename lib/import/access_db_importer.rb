@@ -278,6 +278,7 @@ module MS
       end
     end
     def download_database
+      load_variables
       if $ews1_use_auto_upload
 
         tdaten = "T#{$ews1_tournamentnr}_TDaten.mdb"
@@ -285,6 +286,13 @@ module MS
 
 
       end
+    end
+
+    def load_variables
+      $ews1_ip = Rails.cache.read(:ews1_ip) || "0.0.0.0"
+      $ews1_password = Rails.cache.read(:ews1_password) || "secret"
+      $ews1_tournamentnr = Rails.cache.read(:ews1_tournamentnr) || "12345"
+      $ews1_use_auto_upload = Rails.cache.read(:ews1_use_auto_upload) || true
     end
 
     end
