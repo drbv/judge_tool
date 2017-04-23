@@ -2,6 +2,7 @@ class Admin::UtilitiesController < Admin::BaseController
   require 'uri'
   require 'net/http'
   def index
+    load_variables
     @ip=$ews1_ip
     @password=$ews1_password
     @tournamentnumber=$ews1_tournamentnr
@@ -24,43 +25,31 @@ class Admin::UtilitiesController < Admin::BaseController
     redirect_to admin_utilities_index_path
   end
 
-  def update_ews1_config_file
-    ews1_conf_file = "config/ews1.conf"
-    ews1_data = YAML.load_file ews1_conf_file
-    ews1_data["ews1_ip"] = $ews1_ip
-    ews1_data["ews1_password"] = $ews1_password
-    ews1_data["ews1_tournamentnr"] = $ews1_tournamentnr
-    ews1_data["ews1_use_auto_upload"] = $ews1_use_auto_upload
-    File.open(ews1_conf_file, 'w') { |f| YAML.dump(ews1_data, f) }
-
-  end
-
   def set_ews1_endpoint
-    $ews1_ip = params[:ip]
-    $ews1_password = params[:password]
-    # check if there is an Tournament already
-    $ews1_tournamentnr = params[:tournamentnr]
+    Rails.cache.write :ews1_ip, params[:ip]
+    Rails.cache.write :ews1_password, params[:password]
+    Rails.cache.write :ews1_tournamentnr, params[:tournamentnr]
 
     if !params[:use_auto_upload].nil?
       $ews1_use_auto_upload = true
+      Rails.cache.write :ews1_use_auto_upload, true
     else
-      $ews1_use_auto_upload = false
+      Rails.cache.write :ews1_use_auto_upload, false
     end
-    update_ews1_config_file
+
     check_ews1_endpoint
   end
 
   def reset_ews1_config_file
-    $ews1_ip = "0.0.0.0"
-    $ews1_password = "supersecret"
-    # check if there is an Tournament already
-    $ews1_tournamentnr = "1234567"
-    $ews1_use_auto_upload = true
-    update_ews1_config_file
+    Rails.cache.write :ews1_use_auto_upload, true
+    Rails.cache.write :ews1_ip, "0.0.0.0"
+    Rails.cache.write :ews1_password, "passwort"
+    Rails.cache.write :ews1_tournamentnr, "123456"
     return true
   end
 
   def check_ews1_endpoint
+    load_variables
     uri = URI("http://#{$ews1_ip}:8080/T#{$ews1_tournamentnr}_TDaten.mdb")
     req = Net::HTTP::Get.new(uri)
     req.basic_auth 'ews2', $ews1_password
@@ -101,4 +90,12 @@ class Admin::UtilitiesController < Admin::BaseController
     redirect_to admin_utilities_index_path
 
   end
+
+  def load_variables
+    $ews1_ip = Rails.cache.read(:ews1_ip) || "0.0.0.0"
+    $ews1_password = Rails.cache.read(:ews1_password) || "secret"
+    $ews1_tournamentnr = Rails.cache.read(:ews1_tournamentnr) || "12345"
+    $ews1_use_auto_upload = Rails.cache.read(:ews1_use_auto_upload) || true
+  end
+
 end
