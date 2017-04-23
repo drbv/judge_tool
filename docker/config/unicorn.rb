@@ -2,7 +2,7 @@
 # Local modifications will be overwritten.
 #
 
-worker_processes 2
+worker_processes 4
 
 user "root"
 
