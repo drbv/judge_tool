@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   post 'admin/utilities/set_ews1_endpoint'
   get 'admin/utilities/check_ews1_endpoint'
   get 'admin/utilities/judge_tool_reset'
+  get 'admin/utilities/create_and_send_debug_file'
 
 
   namespace :admin do

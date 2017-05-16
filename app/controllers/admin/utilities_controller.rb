@@ -59,7 +59,7 @@ class Admin::UtilitiesController < Admin::BaseController
         http.request(req)
       }
       if res.response.kind_of? Net::HTTPSuccess
-        flash[:success]=" Verbindugn zum ews1 vorhanden"
+        flash[:success]=" Verbindung zum TLP/EWS1 vorhanden"
       elsif res.response.kind_of? Net::HTTPUnauthorized
         flash[:danger]=" Passwort nicht gültig"
       elsif res.response.kind_of? Net::HTTPNotFound
@@ -105,4 +105,10 @@ class Admin::UtilitiesController < Admin::BaseController
     end
   end
 
+  def create_and_send_debug_file
+    load_variables
+    export_file_name=$ews1_tournamentnr+"_"+Time.now.strftime("%Y_%m_%d-%H_%M")+"_export.zip"
+    create_debug_file=system("zip -r #{export_file_name} tmp/*.mdb tmp/files/ db/judge_tool.sqlite3 log")
+    send_file Rails.root.join(Rails.root.join(export_file_name))
+  end
 end

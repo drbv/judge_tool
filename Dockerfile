@@ -1,6 +1,6 @@
 FROM ruby:2.3.3-slim 
 
-RUN apt-get update && apt-get install -y mdbtools-dev mdbtools nodejs build-essential zlib1g-dev liblzma-dev libsqlite3-dev nginx curl 
+RUN apt-get update && apt-get install -y mdbtools-dev mdbtools nodejs build-essential zlib1g-dev liblzma-dev libsqlite3-dev nginx curl zip 
 
 COPY ./Gemfile* /root/
 WORKDIR /root

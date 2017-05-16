@@ -28,6 +28,9 @@
   = submit_tag  "update & check", class: 'btn btn-success show_loading_screen'
   = link_to 'check', admin_utilities_check_ews1_endpoint_path, class: 'btn btn-primary show_loading_screen'
 
+%h1 Download Turnier Zusammenfassung:
+=link_to "Download", admin_utilities_create_and_send_debug_file_path,  class: 'btn btn-primary'
+
 %h1 Reset Judge Tool
 =link_to 'Reset', admin_utilities_judge_tool_reset_path, class: 'btn btn-danger show_loading_screen', data: {confirm: "Alle Daten werden gelöscht" }
 
