@@ -218,8 +218,8 @@ module MS
         dance_team.name = team[:Name_Team]
         dance_team.startbook_number = team[:Startbuch]
         dance_team.startnumber = team[:Startnr]
-        dance_team.dancers.build first_name: team[:He_Vorname], last_name: team[:He_Nachname], age: team[:He_Alterskontrolle] unless team[:He_Nachname].blank?
         dance_team.dancers.build first_name: team[:Da_Vorname], last_name: team[:Da_Nachname], age: team[:Da_Alterskontrolle] unless team[:Da_Nachname].blank?
+        dance_team.dancers.build first_name: team[:He_Vorname], last_name: team[:He_Nachname], age: team[:He_Alterskontrolle] unless team[:He_Nachname].blank?
         if club = Club.find_by(number: team[:Verein_nr])
           dance_team.club = club
         else
