@@ -1,9 +1,36 @@
 #loading
   %div
-%h1 Datenbank Upload
-= form_tag admin_utilities_db_upload_path, html: {class: "bg-info"},multipart: true do
-  = file_field_tag :database_file
-  = submit_tag "Import"
+%h1 Datenbank austausch
+%h2 manuell
+= form_tag admin_utilities_db_upload_path,multipart: true do
+  = file_field_tag :database_file, class: ''
+  %br
+  = submit_tag "Import" , class: 'btn btn-success'
+%h2 automatisch
+= form_tag admin_utilities_set_ews1_endpoint_path do
+  = label_tag :ip ,"EWS1 Server IP: "
+  %br
+  = text_field_tag :ip, @ip
+  %br
+  = label_tag :password , "Passwort:"
+  %br
+  = text_field_tag :password, @password
+  %br
+  = label_tag :tournamentnr , "Turniernr:"
+  %br
+  = text_field_tag :tournamentnr, @tournamentnumber
+  %br
+  %br
+  = label_tag :use_auto_upload, "auto upload benutzen"
+  = check_box_tag :use_auto_upload, 'true', @use_auto_upload
+  %br
+  %br
+  = submit_tag  "update & check", class: 'btn btn-success show_loading_screen'
+  = link_to 'check', admin_utilities_check_ews1_endpoint_path, class: 'btn btn-primary show_loading_screen'
+
+%h1 Download Turnier Zusammenfassung:
+=link_to "Download", admin_utilities_create_and_send_debug_file_path,  class: 'btn btn-primary'
+
 %h1 Reset Judge Tool
-=link_to 'Reset', admin_utilities_judge_tool_reset_path, class: 'btn btn-danger show_loading_screen'
+=link_to 'Reset', admin_utilities_judge_tool_reset_path, class: 'btn btn-danger show_loading_screen', data: {confirm: "Alle Daten werden gelöscht" }
 

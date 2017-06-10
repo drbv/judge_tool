@@ -7,8 +7,20 @@ class Admin::UsersController < Admin::BaseController
 
   def create
     authorize User
-    access_database.import_persons!
+    if update_database
+      access_database.import_persons!
+    end
     redirect_to admin_users_path
+  end
+
+  def update_database
+    begin
+      access_database.download_database
+      return true
+    rescue => ex
+      flash[:danger]="Fehler beim importieren <br>Error: #{ex.message}"
+      return false
+    end
   end
 
   end

@@ -6,8 +6,8 @@ module MS
     end
 
     def initialize
+      download_database
       guess_database
-      raise FileNotFound.new("File at #{@path} not found!") unless File.exists?(@path)
       @access_database = Mdb.open @path
     end
 
@@ -218,8 +218,8 @@ module MS
         dance_team.name = team[:Name_Team]
         dance_team.startbook_number = team[:Startbuch]
         dance_team.startnumber = team[:Startnr]
-        dance_team.dancers.build first_name: team[:He_Vorname], last_name: team[:He_Nachname], age: team[:He_Alterskontrolle] unless team[:He_Nachname].blank?
         dance_team.dancers.build first_name: team[:Da_Vorname], last_name: team[:Da_Nachname], age: team[:Da_Alterskontrolle] unless team[:Da_Nachname].blank?
+        dance_team.dancers.build first_name: team[:He_Vorname], last_name: team[:He_Nachname], age: team[:He_Alterskontrolle] unless team[:He_Nachname].blank?
         if club = Club.find_by(number: team[:Verein_nr])
           dance_team.club = club
         else
@@ -238,8 +238,65 @@ module MS
                 puts "Load mdb from: #{mdb_files_in_tmp.first}"
                 mdb_files_in_tmp.first
               else
-                fail 'Datenbank nicht gefunden'
+                raise FileNotFound.new("Datenbankfile wurde nicht gefunden")
               end
     end
-  end
+
+    def download_database2
+      if $ews1_use_auto_upload
+        tdaten = "T#{$ews1_tournamentnr}_TDaten.mdb"
+        uri = URI("http://#{$ews1_ip}:8080/#{tdaten}")
+        req = Net::HTTP::Get.new(uri)
+        req.basic_auth 'ews2', $ews1_password
+        begin
+
+          Net::HTTP.start(uri.hostname, uri.port) {|http|
+            old_file=Dir.glob(Rails.root.join('tmp', '*.mdb')).first
+              http.request req do |response|
+
+                if old_file.blank? || old_file.to_s.include?($ews1_tournamentnr)
+                  File.open(Rails.root.join('tmp', tdaten), 'wb') do |file|
+                    response.read_body do |chunk|
+                      file.write chunk
+                    end
+                  end
+                else
+                  raise StandardError.new("kein oder Datenbank von anderem Turnier vorhanden")
+                end
+
+              end
+            }
+
+
+        rescue => ex
+          raise FileNotFound.new("Es gab ein Problem bei der Verbdinung zum ews1 -- #{ex.message}")
+          return false
+        end
+    else
+      return false
+      end
+    end
+    def download_database
+      load_variables
+      if $ews1_use_auto_upload
+
+        tdaten = "T#{$ews1_tournamentnr}_TDaten.mdb"
+        system "cd #{Rails.root.join 'tmp'} && curl http://ews2:#{$ews1_password}@#{$ews1_ip}:8080/#{tdaten} > #{tdaten}"
+
+
+      end
+    end
+
+    def load_variables
+      $ews1_ip = Rails.cache.read(:ews1_ip) || "0.0.0.0"
+      $ews1_password = Rails.cache.read(:ews1_password) || "secret"
+      $ews1_tournamentnr = Rails.cache.read(:ews1_tournamentnr) || "12345"
+      if Rails.cache.read(:ews1_use_auto_upload).nil?
+        $ews1_use_auto_upload = true
+      else
+        $ews1_use_auto_upload =  Rails.cache.read(:ews1_use_auto_upload)
+      end
+    end
+
+    end
 end

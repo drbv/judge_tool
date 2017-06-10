@@ -5,15 +5,15 @@
       %th Richter
       %th Rolle
   %tbody
-    - @round.observers.each do |observer|
+    - @round.observers.order(:licence).to_a.each_with_index do |observer, index|
       %tr
         %td= observer.full_name
-        %td Observer
+        %td= "Observer #{index+1}"
     - @round.dance_judges.each do |dance_judge|
       %tr
         %td= dance_judge.full_name
-        %td Tanzrichter
+        %td Tanz
     - @round.acrobatics_judges.each do |acro_judge|
       %tr
         %td= acro_judge.full_name
-        %td Akrobatikrichter
+        %td Akrobatik

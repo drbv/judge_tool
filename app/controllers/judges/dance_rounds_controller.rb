@@ -33,8 +33,19 @@ class Judges::DanceRoundsController < Judges::BaseController
     else
       set_dance_ratings
       acrobatics = set_acrobatics_ratings
-      current_dance_round.save!
-      acrobatics.each(&:save!)
+      @count=0
+      while @count < 10 do
+        ActiveRecord::Base.transaction do
+          begin
+            current_dance_round.save!
+            acrobatics.each(&:save!)
+            @count = 10
+          rescue
+            #retry the transaction
+          end
+        end
+        @count +=1
+      end
     end
     refresh_judge_statusse
     reload_observer
