@@ -8,15 +8,17 @@ class BeamersController < ApplicationController
       if current_round
         if current_round.round_type.no_dance? || current_round.judges.empty?
 
-          if current_round.round_type.name="Siegerehrung"
+          if current_round.round_type.name=="Siegerehrung"
             @round=Round.where(dance_class_id: current_round.dance_class.id, started: true, closed: true).order(:position).last
             if @round.nil?
+              @round=current_round
               render :round_name, layout: "beamer"
             else
               @dance_team_result_list = get_dance_team_result_list(@round)
               render :round_ceremony, layout: "beamer"
             end
           else
+            @round=current_round
             render :round_name, layout: "beamer"
           end
 
