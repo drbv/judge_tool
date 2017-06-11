@@ -10,7 +10,10 @@
       %th="Punkte"
     - @dance_team_result_list.each_with_index do |dance_team, index|
       %tr
-        %td.center="#{index+1}."
+        - if index > 0 && dance_team.get_final_result(@round) == @dance_team_result_list[index-1].get_final_result(@round)
+          %td.center="#{index}."
+        - else
+          %td.center="#{index+1}."
         %td.center #{dance_team.startnumber}
         %td{class: "#{'active_dance_team' if @dance_round.dance_teams.include?(dance_team)}"}= " #{dance_team.full_name} "
         %td{class: 'red-font'}="#{'Regelverstoß' if dance_team.tso_malus?(@round)}"
