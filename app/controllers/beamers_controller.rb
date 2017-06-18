@@ -7,7 +7,21 @@ class BeamersController < ApplicationController
       beamer = Beamer.find(params[:id])
       if current_round
         if current_round.round_type.no_dance? || current_round.judges.empty?
-          render :round_name, layout: "beamer"
+
+          if current_round.round_type.name=="Siegerehrung"
+            @round=Round.where(dance_class_id: current_round.dance_class.id, started: true, closed: true).order(:position).last
+            if @round.nil?
+              @round=current_round
+              render :round_name, layout: "beamer"
+            else
+              @dance_team_result_list = get_dance_team_result_list(@round)
+              render :round_ceremony, layout: "beamer"
+            end
+          else
+            @round=current_round
+            render :round_name, layout: "beamer"
+          end
+
         else
           if beamer.screen=="moderator"
             @round=current_round
@@ -67,7 +81,12 @@ class BeamersController < ApplicationController
 
 
       end
-    end
+  end
+
+  def get_dance_team_result_list(round)
+    round.dance_teams.uniq.select{|dance_team| dance_team.has_danced?(@round)}.sort_by {|dance_team| dance_team.get_final_result(@round)}.reverse
+  end
+
 
   def edit
     @beamers = Beamer.find(params[:id])
