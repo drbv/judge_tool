@@ -35,27 +35,27 @@ class DanceRating < ActiveRecord::Base
   end
 
   def female_max
-    10
+    dance_class_sepcific_max_value
   end
 
   def male_max
-    10
+    dance_class_sepcific_max_value
   end
 
   def dance_max
-    20
+    dance_class_sepcific_max_value * 2
   end
 
   def female
-    10 * (1 - (female_base_rating + female_turn_rating).to_d / 200)
+    dance_class_sepcific_max_value * (1 - (female_base_rating + female_turn_rating).to_d / 200)
   end
 
   def male
-    10 * (1 - (male_base_rating + male_turn_rating).to_d / 200)
+    dance_class_sepcific_max_value * (1 - (male_base_rating + male_turn_rating).to_d / 200)
   end
 
   def dance
-    20 * (1 - (choreo_rating * 0.3 + dance_figure_rating * 0.3 + team_presentation_rating * 0.4).to_d / 100)
+    dance_class_sepcific_max_value * 2 * (1 - (choreo_rating * 0.3 + dance_figure_rating * 0.3 + team_presentation_rating * 0.4).to_d / 100)
   end
 
   def diff_to_big?(attr)
@@ -130,6 +130,29 @@ class DanceRating < ActiveRecord::Base
       male: %i[male_base_rating male_turn_rating],
       dance: %i[choreo_rating dance_figure_rating team_presentation_rating]
     }
+  end
+
+  def dance_class_sepcific_max_value
+    case self.dance_round.round.dance_class.name
+      when "RR_A"
+        if round_type.include?('End_r') || round_type.include?('KO_r') || round_type.include?('Stich_r_1pl')
+          8.75
+        else
+          12.5
+        end
+      when "RR_B"
+        if round_type.include?('End_r') || round_type.include?('KO_r') || round_type.include?('Stich_r_1pl')
+          8.75
+        else
+          12.5
+        end
+      when "RR_C"
+        12
+      when "RR_J"
+        9
+      else
+        9
+    end
   end
 
   def attributes_group(attribute)
