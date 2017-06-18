@@ -229,12 +229,7 @@ class DanceRound < ActiveRecord::Base
         punishment+=rating.punishment
       end
       acrobatic_ratings_array = all_acrobatic_ratings.pluck(:result)
-
-      if acrobatic_ratings_array.count > round.acrobatic_divider
-        results << 0
-      else
-        results << [(acrobatic_ratings_array.sum / round.acrobatic_divider * round.acrobatic_factor - punishment),0].max
-      end
+      results << [(acrobatic_ratings_array.sum - punishment),0].max
     end
     results
   end

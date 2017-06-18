@@ -9,8 +9,12 @@
         = link_to mistake, '#', class: 'btn-warning'
   - if defined?(show) && show.include?('S')
     %div
-      - %w(S2 S10 S20).each do |mistake|
-        = link_to mistake, '#', class: 'btn-warning'
+      - if show.include?('S20')
+        - %w(S20).each do |mistake|
+          = link_to mistake, '#', class: 'btn-warning'
+      - else
+        - %w(S2 S10 S20).each do |mistake|
+          = link_to mistake, '#', class: 'btn-warning'
   - if defined?(show) && show.include?('V')
     %div
       - %w(V5).each do |mistake|
