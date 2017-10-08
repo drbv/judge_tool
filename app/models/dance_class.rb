@@ -6,4 +6,8 @@ class DanceClass < ActiveRecord::Base
     name.include?("Formation")
   end
 
+  def is_boogie?
+    name.include?("BW") || name.include?("Boogie") || name.include?("Woogie")
+  end
+
 end

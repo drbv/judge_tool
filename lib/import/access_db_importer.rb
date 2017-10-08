@@ -102,6 +102,7 @@ module MS
         next if judge_role[:WR_function] == 'X'
         next if judge_role[:WR_function] == 'Ak' and @round.has_no_acrobatics?
         next if @round.dance_class.is_formation?
+        next if @round.dance_class.is_boogie?
         judge = User.find_by licence: @access_database[:Wert_Richter].select { |wr| wr[:WR_ID] == judge_role[:WR_ID] }.first[:WR_Lizenznr]
         judge.add_role translate_role(judge_role[:WR_function]), @round
       end
