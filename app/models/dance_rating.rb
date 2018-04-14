@@ -134,24 +134,26 @@ class DanceRating < ActiveRecord::Base
 
   def dance_class_sepcific_max_value
     case self.dance_round.round.dance_class.name
-      when "RR_A"
-        if round_type.include?('End_r') || round_type.include?('KO_r') || round_type.include?('Stich_r_1pl')
+      when "A-Klasse"
+        if self.dance_round.round.round_type.is_final_round
           8.75
         else
           12.5
         end
-      when "RR_B"
-        if round_type.include?('End_r') || round_type.include?('KO_r') || round_type.include?('Stich_r_1pl')
+      when "B-Klasse"
+        if self.dance_round.round.round_type.is_final_round
           8.75
         else
           12.5
         end
-      when "RR_C"
+      when "C-Klasse"
         12
-      when "RR_J"
+      when "Juniorenklasse"
+        9
+      when "Schülerklasse"
         9
       else
-        9
+        999
     end
   end
 

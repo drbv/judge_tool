@@ -1,6 +1,8 @@
 source 'https://rubygems.org'
 gem 'daemons'
-gem 'rails', '4.2.1'
+gem 'em-websocket'
+gem 'eventmachine'
+gem 'rails', '4.2.8'
 gem 'sqlite3'
 gem 'mdb'
 

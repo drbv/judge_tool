@@ -1,4 +1,4 @@
-FROM ruby:2.3.3-slim 
+FROM ruby:2.4.1-slim 
 
 RUN apt-get update && apt-get install -y mdbtools-dev mdbtools nodejs build-essential zlib1g-dev liblzma-dev libsqlite3-dev nginx curl zip 
 
