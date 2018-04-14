@@ -5,4 +5,8 @@ class RoundType < ActiveRecord::Base
      name.include?("Endrunde")
   end
 
+  def with_short_rating?
+    !name.include?("Endrunde")
+  end
+
 end

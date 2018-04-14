@@ -8,39 +8,70 @@
           = r.hidden_field :dance_team_id, value: dance_team.id
           .points{max: 10}
             .blue
-              %h4 Technik Herr - Grundtechnik
-              .enabled
-                = render partial: 'rating_bar', locals: {set_to: 0}
-                = r.hidden_field :male_base_rating, autocomplete: 'off'
-              %h4 Technik Herr - Haltung- und Drehtechnik
-              .enabled
-                = render partial: 'rating_bar', locals: {set_to: 0}
-                = r.hidden_field :male_turn_rating, autocomplete: 'off'
+              - if @dance_round.round.round_type.with_short_rating?
+                %h4 Technik Herr
+                .enabled
+                  = render partial: 'rating_bar', locals: {set_to: 0}
+                  = r.hidden_field :male_base_rating, autocomplete: 'off'
+                  = r.hidden_field :male_turn_rating, autocomplete: 'off'
+              - else
+                %h4 Technik Herr - Grundtechnik
+                .enabled
+                  = render partial: 'rating_bar', locals: {set_to: 0}
+                  = r.hidden_field :male_base_rating, autocomplete: 'off'
+                %h4 Technik Herr - Haltung- und Drehtechnik
+                .enabled
+                  = render partial: 'rating_bar', locals: {set_to: 0}
+                  = r.hidden_field :male_turn_rating, autocomplete: 'off'
+
+
             .rose
-              .points{max: 10}
-                %h4 Technik Dame - Grundtechnik
-                .enabled
-                  = render partial: 'rating_bar', locals: {set_to: 0}
-                  = r.hidden_field :female_base_rating, autocomplete: 'off'
-                %h4 Technik Dame - Haltung- und Drehtechnik
-                .enabled
-                  = render partial: 'rating_bar', locals: {set_to: 0}
-                  = r.hidden_field :female_turn_rating, autocomplete: 'off'
-          .points{max: 6}
-            %h4 Tanz - Choreographie
-            .enabled
-              = render partial: 'rating_bar', locals: {set_to: 0}
-              = r.hidden_field :choreo_rating, autocomplete: 'off'
-          .points{max: 6}
-            %h4 Tanz - Tanzfiguren
-            .enabled
-              = render partial: 'rating_bar', locals: {set_to: 0}
-              = r.hidden_field :dance_figure_rating, autocomplete: 'off'
-          .points{max: 8}
-            %h4 Tanz - Tänzerische Darstellung
-            .enabled
-              = render partial: 'rating_bar', locals: {set_to: 0}
-              = r.hidden_field :team_presentation_rating, autocomplete: 'off'
+              - if @dance_round.round.round_type.with_short_rating?
+                .points{max: 10}
+                  %h4 Technik Dame
+                  .enabled
+                    = render partial: 'rating_bar', locals: {set_to: 0}
+                    = r.hidden_field :female_base_rating, autocomplete: 'off'
+                    = r.hidden_field :female_turn_rating, autocomplete: 'off'
+              - else
+                .points{max: 10}
+                  %h4 Technik Dame - Grundtechnik
+                  .enabled
+                    = render partial: 'rating_bar', locals: {set_to: 0}
+                    = r.hidden_field :female_base_rating, autocomplete: 'off'
+                  %h4 Technik Dame - Haltung- und Drehtechnik
+                  .enabled
+                    = render partial: 'rating_bar', locals: {set_to: 0}
+                    = r.hidden_field :female_turn_rating, autocomplete: 'off'
+
+
+          - if @dance_round.round.round_type.with_short_rating?
+            .points{max: 6}
+              %h4 Tanz
+              .enabled
+                = render partial: 'rating_bar', locals: {set_to: 0}
+                = r.hidden_field :choreo_rating, autocomplete: 'off'
+                = r.hidden_field :dance_figure_rating, autocomplete: 'off'
+                = r.hidden_field :team_presentation_rating, autocomplete: 'off'
+          - else
+            .points{max: 6}
+              %h4 Tanz - Choreographie
+              .enabled
+                = render partial: 'rating_bar', locals: {set_to: 0}
+                = r.hidden_field :choreo_rating, autocomplete: 'off'
+            .points{max: 6}
+              %h4 Tanz - Tanzfiguren
+              .enabled
+                = render partial: 'rating_bar', locals: {set_to: 0}
+                = r.hidden_field :dance_figure_rating, autocomplete: 'off'
+            .points{max: 8}
+              %h4 Tanz - Tänzerische Darstellung
+              .enabled
+                = render partial: 'rating_bar', locals: {set_to: 0}
+                = r.hidden_field :team_presentation_rating, autocomplete: 'off'
+
+
+
           .points{mistake_type: 'abs'}
             .enabled
               = render partial: 'mistakes_bar', locals: {show: 'TSUV'}
