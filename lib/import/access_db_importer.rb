@@ -148,7 +148,7 @@ module MS
     def create_round_type(round, no_dance)
       @round_type = RoundType.find_by name: round[:Rundentext]
       @round_type = RoundType.create name: round[:Rundentext], no_dance: no_dance,
-                                     acrobatics_from: ((round[:R_IS_ENDRUNDE] == '1' || round[:Rundentext].include?("KO") )? 'ER' : (%w(Vor_r Hoff_r).include?(round[:Runde]) ? 'VR' : 'ZR')) unless @round_type
+                                     acrobatics_from: ((round[:R_IS_ENDRUNDE] == '1' || round[:Rundentext].include?("KO") || round[:Rundentext].include?("Semi") )? 'ER' : (%w(Vor_r Hoff_r).include?(round[:Runde]) ? 'VR' : 'ZR')) unless @round_type
       @round_type
     end
 

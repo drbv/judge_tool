@@ -137,12 +137,16 @@ class DanceRating < ActiveRecord::Base
       when "A-Klasse"
         if self.dance_round.round.round_type.is_final_round
           8.75
+        elsif self.dance_round.round.round_type.is_semi_final_round?
+          14.25
         else
           12.5
         end
       when "B-Klasse"
         if self.dance_round.round.round_type.is_final_round
           8.75
+        elsif self.dance_round.round.round_type.is_semi_final_round?
+          14.25
         else
           12.5
         end

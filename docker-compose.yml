@@ -1,7 +1,7 @@
 version: '2.0'
 services:
   ews2: 
-    image: sparzentny/ews2:latest
+    image: sparzentny/ews2:latest_stable
     ports:
       - "80:80"
       - "8080:8080"
