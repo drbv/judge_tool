@@ -202,7 +202,7 @@ class DanceRound < ActiveRecord::Base
         final_result = average_ratings(dance_rating_results(dance_team))
         final_result += average_ratings(acrobatic_rating_results(dance_team))
         final_result -= dance_round_rating_result(dance_team)
-        mapping.update_attribute(:result,final_result)
+        mapping.update_attribute(:result,[final_result,0].max)
       end
       true
     else
