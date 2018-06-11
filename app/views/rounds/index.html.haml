@@ -6,11 +6,13 @@
       %th Startzeit
       %th
         %th
+          %th
   %tbody
     - @rounds.each do |round|
       %tr{class: "#{'info' if round.active?}"}
         %td= "#{round.round_type.name} #{round.dance_class.name if round.dance_class}"
         %td= l round.start_time, format: :time
+        %td
         %td
         %td
       - round.dance_rounds.order(:position).each do |dance_round|
@@ -19,8 +21,9 @@
             - if index == 0
               %td{:rowspan => dance_round.dance_teams.count}= "#{dance_round.position } #{"\u2713" if dance_round.closed?}"
             %td= dance_team.startnumber
-            %td= dance_team.full_name
+            %td= link_to dance_team.full_name, dance_team_path(dance_team)
             - if dance_round.repeated?(dance_team)
               %td="repeated"
             - else
+              %td=dance_team.get_detailed_result(round) unless dance_round.repeated?(dance_team)
               %td=dance_team.get_final_result(round) unless dance_round.repeated?(dance_team)

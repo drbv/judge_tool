@@ -50,6 +50,43 @@ class DanceRating < ActiveRecord::Base
     dance_class_sepcific_max_value * (1 - (female_base_rating + female_turn_rating).to_d / 200)
   end
 
+  def female_base_rating_result
+    dance_class_sepcific_max_value * 0.5 * (1 - (female_base_rating).to_d / 100)
+  end
+
+  def female_turn_rating_result
+    dance_class_sepcific_max_value * 0.5 * (1 - (female_turn_rating).to_d / 100)
+  end
+
+  def male
+    dance_class_sepcific_max_value * (1 - (male_base_rating + male_turn_rating).to_d / 200)
+  end
+
+  def male_base_rating_result
+    dance_class_sepcific_max_value * 0.5 * (1 - (male_base_rating).to_d / 100)
+  end
+
+  def male_turn_rating_result
+    dance_class_sepcific_max_value * 0.5 * (1 - (male_turn_rating).to_d / 100)
+  end
+
+  def dance
+    dance_class_sepcific_max_value * 2 * (1 - (choreo_rating * 0.3 + dance_figure_rating * 0.3 + team_presentation_rating * 0.4).to_d / 100)
+  end
+
+  def choreo_rating_result
+    dance_class_sepcific_max_value * 2 * 0.3 * (1 - choreo_rating.to_d / 100)
+  end
+
+  def dance_figure_rating_result
+    dance_class_sepcific_max_value * 2* 0.3 * (1 - dance_figure_rating.to_d / 100)
+  end
+
+  def team_presentation_rating_result
+    dance_class_sepcific_max_value * 2* 0.4 * (1 - team_presentation_rating.to_d / 100)
+  end
+
+
   def male
     dance_class_sepcific_max_value * (1 - (male_base_rating + male_turn_rating).to_d / 200)
   end
@@ -57,6 +94,7 @@ class DanceRating < ActiveRecord::Base
   def dance
     dance_class_sepcific_max_value * 2 * (1 - (choreo_rating * 0.3 + dance_figure_rating * 0.3 + team_presentation_rating * 0.4).to_d / 100)
   end
+
 
   def diff_to_big?(attr)
     !observer_rating? && (dance_round.dance_ratings_average(attr, dance_team) - send(attr)).abs >= send("#{attr}_max") * 0.2
@@ -101,6 +139,40 @@ class DanceRating < ActiveRecord::Base
     (1 - team_presentation_rating.to_d/100) * 10
   end
 
+  def dance_class_sepcific_max_value
+    case self.dance_round.round.dance_class.name
+    when "A-Klasse"
+      if self.dance_round.round.round_type.is_final_round
+        8.75
+      elsif self.dance_round.round.round_type.is_semi_final_round?
+        14.25
+      else
+        12.5
+      end
+    when "B-Klasse"
+      if self.dance_round.round.round_type.is_final_round
+        8.75
+      elsif self.dance_round.round.round_type.is_semi_final_round?
+        14.25
+      else
+        12.5
+      end
+    when "C-Klasse"
+      12
+    when "Juniorenklasse"
+      9
+    when "Schülerklasse"
+      9
+    else
+      #This should nevr be the case, but if the value will be high enough to get attention
+      999999
+    end
+  end
+
+  def result_without_punishment
+     self.result + self.punishment
+  end
+
   private
 
   def add_history_entry
@@ -132,34 +204,7 @@ class DanceRating < ActiveRecord::Base
     }
   end
 
-  def dance_class_sepcific_max_value
-    case self.dance_round.round.dance_class.name
-      when "A-Klasse"
-        if self.dance_round.round.round_type.is_final_round
-          8.75
-        elsif self.dance_round.round.round_type.is_semi_final_round?
-          14.25
-        else
-          12.5
-        end
-      when "B-Klasse"
-        if self.dance_round.round.round_type.is_final_round
-          8.75
-        elsif self.dance_round.round.round_type.is_semi_final_round?
-          14.25
-        else
-          12.5
-        end
-      when "C-Klasse"
-        12
-      when "Juniorenklasse"
-        9
-      when "Schülerklasse"
-        9
-      else
-        999
-    end
-  end
+
 
   def attributes_group(attribute)
     attributes_groups.keys.select {|key| attributes_groups[key].include? attribute.to_sym }.first
@@ -167,7 +212,7 @@ class DanceRating < ActiveRecord::Base
 
   def calc_result
     @punishment = nil
-    self.result = [(female + male + dance - punishment), 0].max
+    self.result = female + male + dance - punishment
   end
 
 end

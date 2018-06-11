@@ -1,0 +1,97 @@
+%h1
+  = @dance_team.full_name
+
+- @dance_team.dance_rounds.each do |dance_round|
+  %h2= "#{dance_round.round.round_type.name} #{dance_round.round.dance_class.name if dance_round.round.dance_class}"
+  %h4= " #{dance_round.get_detailed_result_string(@dance_team)} = #{@dance_team.get_final_result(dance_round.round)}"
+  %table.table.table-striped
+    %thead
+      %tr
+        %th{:colspan => '2'}= "GT Herr ( #{(dance_round.dance_ratings.first.dance_class_sepcific_max_value.to_d / 2).round(3)})"
+        %th{:colspan => '2'}= "DT Herr ( #{(dance_round.dance_ratings.first.dance_class_sepcific_max_value.to_d / 2).round(3)})"
+        %th{:colspan => '2'}= "GT Dame ( #{(dance_round.dance_ratings.first.dance_class_sepcific_max_value.to_d / 2).round(3)})"
+        %th{:colspan => '2'}= "DT Dame ( #{(dance_round.dance_ratings.first.dance_class_sepcific_max_value.to_d / 2).round(3)})"
+        %th{:colspan => '2'}= "TF ( #{(dance_round.dance_ratings.first.dance_class_sepcific_max_value.to_d * 2 *0.3).round(3)})"
+        %th{:colspan => '2'}= "Cho ( #{(dance_round.dance_ratings.first.dance_class_sepcific_max_value.to_d * 2 *0.3).round(3)})"
+        %th{:colspan => '2'}= "TD ( #{(dance_round.dance_ratings.first.dance_class_sepcific_max_value.to_d * 2 *0.4).round(3)})"
+        %th{:colspan => '2'} Fehler
+        %th Ergebnis
+      %tbody
+        %tr
+          %td %
+          %td Pkt
+          %td %
+          %td Pkt
+          %td %
+          %td Pkt
+          %td %
+          %td Pkt
+          %td %
+          %td Pkt
+          %td %
+          %td Pkt
+          %td %
+          %td Pkt
+          %td
+          %td Pkt
+          %td
+      - dance_round.dance_ratings.where(dance_team_id: @dance_team.id, user_id: dance_round.dance_judges.map(&:id)).each do |dance_rating|
+        %tr{class: "#{if @dance_team.dance_rating_result_related?(dance_rating) then 'success' else 'danger' end}"}
+          %td="#{100-dance_rating.male_base_rating}%"
+          %td="#{dance_rating.male_base_rating_result.round(3)}"
+          %td="#{100-dance_rating.male_turn_rating}%"
+          %td="#{dance_rating.male_turn_rating_result.round(3)}"
+          %td="#{100-dance_rating.female_base_rating}%"
+          %td="#{dance_rating.female_base_rating_result.round(3)}"
+          %td="#{100-dance_rating.female_turn_rating}%"
+          %td="#{dance_rating.female_turn_rating_result.round(3)}"
+          %td="#{100-dance_rating.dance_figure_rating}%"
+          %td="#{dance_rating.dance_figure_rating_result.round(3)}"
+          %td="#{100-dance_rating.choreo_rating}%"
+          %td="#{dance_rating.choreo_rating_result.round(3)}"
+          %td="#{100-dance_rating.team_presentation_rating}%"
+          %td="#{dance_rating.team_presentation_rating_result.round(3)}"
+          %td="#{dance_rating.full_mistakes}"
+          %td="#{dance_rating.punishment}"
+          %td.result=dance_rating.result.round(3)
+      %tr.table_result
+        %td{:colspan => '16'}
+        %td=dance_round.calc_final_dance_result(@dance_team).round(3)
+  - unless dance_round.acrobatics_judges.empty? or dance_round.round.has_no_acrobatics?
+    - acrobatic_count=dance_round.acrobatics.where(dance_team_id: @dance_team.id).count
+    %table.table.table-striped
+      %thead
+        %tr
+          %th #
+          %th Wert
+          %th Name
+        %tbody
+        -dance_round.acrobatics.where(dance_team_id: @dance_team.id).each do |acrobatic|
+          %tr
+            %td="AK#{acrobatic.position}"
+            %td=acrobatic.acrobatic_type.max_points.to_d
+            %td=acrobatic.acrobatic_type.short_name
+
+    %table.table.table-striped
+      %thead
+        %tr
+          - dance_round.acrobatics.where(dance_team_id: @dance_team.id).each do |acrobatic|
+            %th{:colspan => '3'}= "AK#{acrobatic.position} (#{acrobatic.acrobatic_type.max_points.to_d})"
+          %th Ergebnis
+        %tbody
+          %tr
+            - acrobatic_count.times do
+              %td %
+              %td F
+              %td Pkt
+            %td
+          - dance_round.acrobatics_judges.each do |judge|
+            %tr{class: "#{if dance_round.acrobatic_rating_result_related?(judge, @dance_team) then 'success' else 'danger' end}"}
+              - dance_round.acrobatic_ratings.where(user_id: judge.id, dance_team_id: @dance_team.id).each do |acrobatic_rating|
+                %td="#{100-acrobatic_rating.rating}%"
+                %td="#{acrobatic_rating.full_mistakes}"
+                %td="#{acrobatic_rating.result.round(3)}"
+              %td= "#{dance_round.acrobatic_result_for_judge(judge,@dance_team)}"
+          %tr.table_result
+            %td{:colspan => "#{acrobatic_count*3}"}
+            %td= dance_round.calc_final_acrobatic_result(@dance_team)

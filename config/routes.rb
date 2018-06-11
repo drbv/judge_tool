@@ -47,6 +47,7 @@ Rails.application.routes.draw do
   resource :dance_round, only: %i(show)
   resources :pages, only: :show
   resources :beamers, only: %i(destroy create show index update edit)
+  resources :dance_teams, only: %i(show)
   get 'login', to: 'sessions#new'
   post 'login', to: 'sessions#create'
   delete 'logout', to: 'sessions#destroy'

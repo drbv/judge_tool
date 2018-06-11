@@ -7,6 +7,7 @@
       %th.center="Nummer"
       %th="Paar"
       %th
+      %th
       %th="Punkte"
     - @dance_team_result_list.each_with_index do |dance_team, index|
       %tr
@@ -17,5 +18,6 @@
         %td.center #{dance_team.startnumber}
         %td{class: "#{'active_dance_team' if @dance_round.dance_teams.include?(dance_team)}"}= " #{dance_team.full_name} "
         %td{class: 'red-font'}="#{'Regelverstoß' if dance_team.tso_malus?(@round)}"
+        %td="#{dance_team.get_detailed_result(@round)} "
         %td=dance_team.get_final_result(@round)
 #beamer_reload

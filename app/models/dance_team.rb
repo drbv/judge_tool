@@ -23,6 +23,10 @@ class DanceTeam < ActiveRecord::Base
     @final_results[round.id] ||= calculate_final_result(round)
   end
 
+  def get_final_dance_rating_result(round)
+    dance_round_mappings.where(dance_round_id: round.dance_rounds.pluck(:id),dance_team: id,repeated: false).first.result
+  end
+
   def tso_malus?(round)
     tso_dance_round_id = dance_rounds.where(round_id: round.id).order(:position).last
     drating = dance_round_ratings.where(dance_round_id: tso_dance_round_id).first
@@ -30,6 +34,21 @@ class DanceTeam < ActiveRecord::Base
       true
     else
       false
+    end
+  end
+
+  def dance_rating_result_related?(d_rating)
+    d_ratings= self.dance_ratings.where(dance_round_id: d_rating.dance_round.id,user_id: d_rating.dance_round.dance_judges.pluck(:id)).sort_by {|rating| rating.result}
+    if d_ratings.count < 4
+      true
+    else
+      d_ratings.pop
+      d_ratings.shift
+      if  d_ratings.map(&:id).include? d_rating.id
+        true
+      else
+        false
+      end
     end
   end
 
@@ -43,15 +62,19 @@ class DanceTeam < ActiveRecord::Base
 
   end
 
+  def get_detailed_result(round)
+    dance_round_mappings.where(dance_round_id: round.dance_rounds.pluck(:id) ,dance_team: self.id,repeated: false).first.dance_round.get_detailed_result_string(self)
+  end
+
   private
 
   def calculate_final_result(round)
-    final_result = dance_round_mappings.where(dance_round_id: round.dance_rounds.pluck(:id),dance_team: id,repeated: false).first.result
+    final_result = [dance_round_mappings.where(dance_round_id: round.dance_rounds.pluck(:id),dance_team: id,repeated: false).first.result,0].max
 
     if round.round_type.name == "Endrunde Akrobatik"
       connected_round_ids= Round.where(round_type_id: RoundType.find_by_name('Endrunde Fußtechnik').id).pluck(:id)
       dance_round_ids = dance_rounds.where(round_id: connected_round_ids)
-      final_result += dance_round_mappings.where(dance_round_id: dance_round_ids,dance_team: self.id,repeated: false).first.result
+      final_result += [dance_round_mappings.where(dance_round_id: dance_round_ids,dance_team: self.id,repeated: false).first.result,0].max
 
     #elsif round.round_type.name == "Endrunde Fußtechnik"
     #  connected_round_ids= Round.where(round_type_id: RoundType.find_by_name('Endrunde Akrobatik').id).pluck(:id)

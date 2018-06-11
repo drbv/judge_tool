@@ -191,6 +191,10 @@ class DanceRound < ActiveRecord::Base
     dance_round_mappings.where(dance_team_id: team.id).first.repeating
   end
 
+  def calc_final_dance_result(dance_team)
+    average_ratings(dance_rating_results(dance_team))
+  end
+
   def calc_final_result
     if self.closed?
       dance_round_mappings.each do |mapping|
@@ -205,6 +209,57 @@ class DanceRound < ActiveRecord::Base
      false
     end
   end
+
+  def acrobatic_rating_result_related?(judge, dance_team)
+    if remove_invalid_results(acrobatic_rating_results(dance_team)).include? acrobatic_result_for_judge(judge, dance_team)
+      true
+    else
+      false
+    end
+  end
+
+
+  def calc_final_acrobatic_result(dance_team)
+    average_ratings(acrobatic_rating_results(dance_team))
+  end
+
+  def acrobatic_result_for_judge(judge, dance_team)
+    acrobatic_ratings_from_judge = acrobatic_ratings.where(dance_team_id: dance_team.id, user_id: judge.id)
+    result=0
+    acrobatic_ratings_from_judge.each do |rating|
+      result+=rating.punishment + rating.result
+    end
+    result
+  end
+
+  def get_detailed_result_string(dance_team)
+    # Tanz + Akrobatik - Grobfehler(Tanz,Akro,Turnierleiter)
+    # Bei Akrobatik Endrunden zzgl Fußtechnik
+
+    dance_result = average_ratings(dance_rating_results_without_punishment(dance_team)).round(2)
+    punishment = average_ratings(dance_rating_punishment(dance_team))
+    detailed_string =  "#{dance_result} "
+    if !acrobatics_judges.empty?
+      acrobatic_result = average_ratings(acrobatic_rating_results_without_punishment(dance_team)).round(2)
+      punishment += average_ratings(acrobatic_rating_punishment(dance_team))
+      detailed_string += " + #{acrobatic_result} "
+    end
+    punishment += dance_round_rating_result(dance_team)
+    detailed_string += " - #{punishment}"
+
+    if self.round.round_type.name == "Endrunde Akrobatik"
+      connected_round= Round.where(round_type_id: RoundType.find_by_name('Endrunde Fußtechnik').id,dance_class_id: self.round.dance_class.id).first
+      possible_dance_rounds=connected_round.dance_rounds.pluck(:id)
+      footwork_result=dance_team.dance_round_mappings.where(dance_round_id: possible_dance_rounds, repeated: false).first.result
+      detailed_string += " + #{[footwork_result.round(2),0].max}"
+    end
+
+
+
+
+    detailed_string
+  end
+
 
   private
 
@@ -229,20 +284,63 @@ class DanceRound < ActiveRecord::Base
         punishment+=rating.punishment
       end
       acrobatic_ratings_array = all_acrobatic_ratings.pluck(:result)
-      results << [(acrobatic_ratings_array.sum - punishment),0].max
+      results << (acrobatic_ratings_array.sum - punishment)
     end
+    results
+  end
+
+  def acrobatic_rating_results_without_punishment(dance_team)
+    results = []
+    acrobatics_judges.each do |acrobatics_judge|
+      all_acrobatic_ratings=acrobatic_ratings.where(dance_team_id: dance_team.id, user_id: acrobatics_judge.id)
+      results << all_acrobatic_ratings.pluck(:result).sum
+    end
+    results
+  end
+
+  def acrobatic_rating_punishment(dance_team)
+    punishments = []
+    acrobatics_judges.each do |acrobatics_judge|
+      all_acrobatic_ratings=acrobatic_ratings.where(dance_team_id: dance_team.id, user_id: acrobatics_judge.id)
+      punishment=0
+      all_acrobatic_ratings.each do |rating|
+        punishment+=rating.punishment
+      end
+      punishments << punishment
+    end
+    punishments
+  end
+
+  def dance_rating_results_without_punishment(dance_team)
+   results = []
+   dance_ratings.where(dance_team_id: dance_team.id, user_id: dance_judges.pluck(:id)).each do | d_rating|
+      results << d_rating.result_without_punishment
+    end
+    results
+  end
+
+  def dance_rating_punishment(dance_team)
+    punishments = []
+    dance_ratings.where(dance_team_id: dance_team.id, user_id: self.dance_judges.pluck(:id)).each do | dance_rating|
+      punishments << dance_rating.punishment
+    end
+    punishments
+  end
+
+  def remove_invalid_results(results)
+    # sort results
+    results.sort!
+    # remove last entry
+    results.pop
+    # remove first entry
+    results.shift
     results
   end
 
   def average_ratings(results)
     if !results.empty?
       if results.size > 3
-        # sort results
-        results.sort!
-        # remove last entry
-        results.pop
-        # remove first entry
-        results.shift
+        remove_invalid_results(results)
       end
       results.sum/results.count
     else
