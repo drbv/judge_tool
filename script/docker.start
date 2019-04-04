@@ -1,0 +1,2 @@
+docker stop $(docker ps -aq) && docker rm $(docker ps -aq)
+docker run -d -p 80:80 -p 8080:8080 -p 8081:8081 -p 8082:8082 --restart always sparzentny/ews2:2.5.1
