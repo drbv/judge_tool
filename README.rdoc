@@ -1,3 +1,5 @@
+== Das System wird zum 06.04 eingestellt
+
 == README
 
 If you want to use `rake import`, make sure, you have installed mdbtools.
